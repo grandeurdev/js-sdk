@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="alert alert-success" id="result">
+            
+          </div>
+          <!-- Enter email -->
+          <label for="name"><b>Email</b></label>
+          <input class="form-control" type="text" placeholder="Enter Email" id="email" required>
+          <br>
+          <!-- Enter password -->
+          <label for="psw"><b>Password</b></label>
+          <input class="form-control" type="text" placeholder="Enter Password" id="pwd" required>
+          <br>
+
+          <!-- Enter Display name -->
+          <label for="dname"><b>Display Name</b></label>
+          <input class="form-control" type="text" placeholder="Enter Display name" id="dname" required>
+          <br>
+
+          <!-- Enter phone -->
+          <label for="phone"><b>Phone</b></label>
+          <input class="form-control" type="tel" value="" placeholder="Enter phone number" id="phone" required>
+          <br>
+
+          <!-- Enter Code -->
+          <label for="code"><b>Code</b></label>
+          <input class="form-control" type="number" value="" placeholder="Enter code" id="code" required>
+          <br>
+
+
+
+
+          <!-- Login button -->
+          <button onclick="login()" class="btn btn-primary">Login</button>
+
+          <!-- Logout button -->
+          <button onclick="logout()" class="btn btn-danger">Logout</button>
+
+          <!-- Request Code button -->
+          <button onclick="requestCode()" class="btn btn-success">Request Code</button>
+          
+          <!-- Register button -->
+          <button onclick="register()" class="btn btn-success">Register Now</button>
+        
+        </div>
+      </div>
+    </div>
+    <script src="./dist/apollo.js"></script>
+    <script>
+      var email;
+      var password;
+      var dname;
+      var phone;
+      var code;
+      var token;
+      // For output only
+      var output=document.getElementById("result");
+
+      // Get Project Reference
+      var apolloProject = apollo.init("ck412ssij0007xr239uos8jfk");
+
+      // Get credentials
+      getData=()=>{
+           // Get email from user
+           email=document.getElementById("email").value;
+
+           // Get password from user
+           password=document.getElementById("pwd").value;
+
+          //  Get display name
+          dname=document.getElementById("dname").value;
+
+          // Get phone from user
+          phone=document.getElementById("phone").value;
+
+          //Get code from user
+          code=document.getElementById("code").value;
+
+      }
+
+      //To test auth.login
+      login=() => {
+
+        // Get credentails
+        getData();
+        // Here we will test login functionality
+        apolloProject.auth().login(email,password).then(res=>{
+          console.log(res);
+            if(res.code=="AUTH-ACCOUNT-LOGGEDIN"){
+                // if successfull
+                output.innerHTML="Login Successful";
+            } 
+            else if(res.code=="AUTH-ACCOUNT-ALREADY-LOGGEDIN"){
+              // if already logged in
+              output.innerHTML="Already logged in";
+            }
+            else if(res.code=="DATA-INVALID"){
+              // if successfull
+              output.innerHTML="Please enter data";
+            }
+            else if(res.code=="AUTH-ACCOUNT-INVALID-PASSWORD"){
+              // if password is invalid
+              output.innerHTML="Invalid Password";
+
+            }
+          
+        });
+      }
+      // To test auth.logout
+      logout=()=>{
+        apolloProject.auth().logout().then(res=>{
+          console.log(res);
+          // Sucessfully Logout
+          if(res.code=="AUTH-ACCOUNT-LOGGEDOUT"){
+              output.innerHTML="Sucessfully Logout";
+          }
+        });
+      }
+
+      //To test auth.sendCode
+      requestCode=()=>{
+        // Get credentails
+        getData();
+
+        apolloProject.auth().sendCode(email,password,dname,phone).then(res=>{
+          console.log(res);
+
+          // Phone code sent
+          if(res.code=="PHONE-CODE-SENT"){
+            output.innerHTML="Phone code sent";
+          }
+          token=res.token;
+        });
+      } 
+
+      register=()=>{
+        // Get credentails
+        getData();
+
+        apolloProject.auth().register(token,code).then(res=>{
+          console.log(res);
+          // if code is invalid
+          if(res.code=="DATA-INVALID"){
+            output.innerHTML="Code incorrect"
+          }
+          // if code is valid
+          else if(res.code="AUTH-ACCOUNT-REGISTERED"){
+            output.innerHTML="Registered Successfully";
+          }
+        })
+      }
+      
+      
+    </script>
+  </body>
+</html>
