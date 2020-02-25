@@ -9,14 +9,14 @@
 // Class
 class auth {
     // Constructor
-    constructor(config) {
+    constructor(handlers) {
         // Configuration
-        this.config = config;
+        this.post = handlers.post
     }
 
     login(email, password) {
         // This function sends "login a user" request with required data to the server
-        return this.post("loginwithemail", {email: email, password: password});
+        return this.post.send("/auth/loginwithemail", {email: email, password: password});
     }
 
     sendCode(email, password, displayName, phone) {
@@ -40,54 +40,23 @@ class auth {
         }
 
         // Else submit the request
-        return this.post("register", {email: email, password: password, displayName: displayName, phone: phone, requiredConfirmation: true});
+        return this.post.send("/auth/register", {email: email, password: password, displayName: displayName, phone: phone, requiredConfirmation: true});
     }
 
     register(token, verificationCode) {
         console.log(verificationCode);
         // This function sends "verify code and register" request with registration data to the server
-        return this.post("register", {token: token, verificationCode: verificationCode});
+        return this.post.send("/auth/register", {token: token, verificationCode: verificationCode});
     }
 
     isAuthenticated() {
         // This function sends "check if a user's logged in" request with required data to the server
-        return this.post("protectedpage", {});
+        return this.post.send("/auth/protectedpage", {});
     }
 
     logout() {
         // This function sends "logout the user" request to the server
-        return this.post("logout", {});
-    }
-
-    post(path, data) {
-        // Get the URL
-        const url = this.config.url + "/auth/" + path + "?apiKey=" + this.config.apiKey;
-
-        // Return new Promise
-        return new Promise((resolve, reject) => {
-            // Send Request
-            fetch(url, {
-                method: "POST", // Request is of Type Post
-                mode: "cors",   // Cross Origin is the Type
-                body: JSON.stringify(data), // Data
-                credentials: "include", // Do Send the Credentials
-                SameSite: 'none',
-                headers: {
-                "Content-Type": "application/json"    // JSON data type
-                }
-            })
-            .then (res => res.json())
-            .then (
-                (result) => {
-                    // Results
-                    resolve(result);
-                },
-                (error) => {
-                    // Erorr Happend
-                    reject(error);
-                }
-            );
-        });
+        return this.post.send("/auth/logout", {});
     }
 }
 

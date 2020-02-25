@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="alert alert-success" id="result">
+            
+          </div>
+          <input type="text" class="form-control" id="deviceId">
+          <button onclick="pair()" class="btn btn-warning">Pair Device</button>
+        </div>
+      </div>
+    </div>
+    <script src="./apollo.js"></script>
+    <script>
+       var result=document.getElementById("result");
+       // Get Project Reference
+       var apolloProject = apollo.init("ck412ssij0007xr239uos8jfk");
+       var device=apolloProject.device();
+       pair = ()=>{
+          var data = {
+              deviceID: document.getElementById("deviceId").value,
+          };
+         device.pairDevice(data); 
+       }
+       
+    </script>
+  </body>
+</html>
