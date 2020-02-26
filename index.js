@@ -5,12 +5,15 @@ import device from "./src/device.apollo";
 
 // Handlers
 import post from "./src/handlers/post.handler";
+import duplex from "./src/handlers/duplex.handler";
 
 // The main config object to stores the
 // base urls of the Grandeur Server
 const config = {
     url: "https://api.grandeur.tech",
     node: "wss://api.grandeur.tech"
+    // url: "http://10.50.202.127:3000",
+    // node: "ws://10.50.202.127:3000"
 }
 
 // Function that initializes 
@@ -23,11 +26,17 @@ function init(apiKey) {
     // Post Handler
     const postHandler = new post(apolloConfig);
 
+    // Duplex Handler
+    const duplexHandler = new duplex(apolloConfig);
+    duplexHandler.init();
+    
     // Handlers
     const handlers = {
-        post: postHandler
+        post: postHandler,
+        duplex: duplexHandler
     };
 
+    // Return reference to the classes
     return {
         auth: () => new auth(handlers),
         storage: () => new storage(handlers),

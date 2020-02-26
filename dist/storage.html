@@ -31,23 +31,18 @@
        var files=apolloProject.storage();
        uploadFile = ()=>{
           
-          // Get file directory reference
+          // Get data
           var file = document.getElementById('userFile').files[0];
-          data = new FormData();
-          data.append("file", file);
-          // Get file name
-          data.append("filename", document.getElementById("userFileName").value);
+          var filename = document.getElementById("userFileName").value;
 
-          // Call the Function to Login the User
-          files.uploadFile(data);
+          // Upload file
+          files.uploadFile(file, filename);
        }
        getUrl = ()=>{
-         
-        var data = {
-             filename: document.getElementById("userFileUrl").value
-        }
-        // Call the Function to Login the User
-        files.getFileUrl(data);
+        
+        var filename = document.getElementById("userFileUrl").value;
+        // Get file url
+        files.getFileUrl(filename);
 
        }
     </script>
