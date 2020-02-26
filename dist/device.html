@@ -23,7 +23,10 @@
           <button onclick="getDeviceSummary()" class="btn btn-default btn-sm">getDeviceSummary</button>
           <button onclick="getDeviceParms()" class="btn btn-primary btn-sm">getDeviceParms</button>
           <button onclick="setDeviceSummary()" class="btn btn-success btn-sm">setDeviceSummary</button>
-          <button onclick="setDeviceParms()" class="btn btn-success btn-sm">setDeviceParms</button>
+          <button onclick="setDeviceParms()" class="btn btn-danger btn-sm">setDeviceParms</button>
+          <button onclick="getDeviceDetails()" class="btn btn-warning btn-sm">getDeviceDetails</button>
+          <button onclick="setDeviceName()" class="btn btn-success btn-sm">setDeviceName</button>
+          <button onclick="getDeviceStatus()" class="btn btn-primary btn-sm">getDeviceStatus</button>
         </div>
       </div>
     </div>
@@ -76,10 +79,10 @@
           current: 1010
         };
         var deviceID = document.getElementById("deviceId").value;
-        device.setDeviceSummary(deviceID,"summary").then(res => {
+        device.setDeviceSummary(deviceID, summary).then(res => {
            console.log(res);
          });
-       }
+       } 
        setDeviceParms = () => {
         var summary = {
           voltage: 1200,
@@ -90,7 +93,25 @@
            console.log(res);
          });
        }
-       
+       getDeviceDetails = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.getDeviceDetails(deviceID).then(res => {
+           console.log(res);
+         });
+       }
+       setDeviceName = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.setDeviceName(deviceID, "CutiPie").then(res => {
+           console.log(res);
+         });
+       }
+       getDeviceStatus = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.getDeviceStatus(deviceID).then(res => {
+           console.log(res);
+         });
+       }
+
     </script>
   </body>
 </html>
