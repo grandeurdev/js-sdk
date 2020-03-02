@@ -21,7 +21,7 @@ We will see that in the examples below.
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
-```javascript
+```java
 apolloProject.auth().login(email,password).then(res=>{
     console.log(res);
     // Response will be printed on console.
