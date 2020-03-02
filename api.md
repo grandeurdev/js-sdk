@@ -7,7 +7,7 @@ It has several modules i.e auth, device and storage.
 ### Get Started
 To get started with **Apollo JavaScript SDK**, you first need to create a new **Apollo** project with a valid token which will be provided by Grandeur.
 How to do that? Here is an example for you.
-```javascript
+```python
 var apolloProject = apollo.init("your token here");
 // initalize's your project with your respected token.
 ```
@@ -22,6 +22,18 @@ Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
 ```java
+apolloProject.auth().login(email,password).then(res=>{
+    console.log(res);
+    // Response will be printed on console.
+});
+```
+```c
+apolloProject.auth().login(email,password).then(res=>{
+    console.log(res);
+    // Response will be printed on console.
+});
+```
+```swift
 apolloProject.auth().login(email,password).then(res=>{
     console.log(res);
     // Response will be printed on console.
