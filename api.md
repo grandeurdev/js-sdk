@@ -1,8 +1,30 @@
 
 # Grandeur Cloud [![Version](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://cloud.grandeur.tech)
 We are making it easier for you to build internet of things based smart products with our cloud platform and software development kit. [Let`s Sign Up] and create something amazing rightnow!
-### API DOCUMENTATION
-####  1. JavaScript SDK
+### Get Started
+To get started with **Apollo JavaScript SDK**, you first need to create a new **Apollo** project with a valid token which will be provided by Grandeur.
+How to do that? Here is an example
+```javascript
+var apolloProject = apollo.init("abcdefghijklmnopqrs");
+```
+#
+#
+#
+`
+`
+`
+`
+`
+`
+`
+`
+`
+`
+`
+`
+`
+
+### JavaScript SDK
 JavaScript SDK provides functions which will be used to communicate with **Grandeur Cloud** from the front-end of your application.
 JavaScript SDK currently supports 3 modules.
 1. ##### Auth
