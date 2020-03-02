@@ -212,7 +212,6 @@ class duplexHandler {
         var id = Date.now();
         var packet = {header: {id: id, task: 'getSubscribedTopics'}};
         this.ws.send(JSON.stringify(packet));
-
         this.eventQueue[id] = callback;
     }
 
