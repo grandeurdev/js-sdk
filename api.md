@@ -7,7 +7,7 @@ It has several modules i.e auth, device and storage.
 ### Get Started
 To get started with **Apollo JavaScript SDK**, you first need to create a new **Apollo** project with a valid token which will be provided by Grandeur.
 How to do that? Here is an example for you.
-```python
+```java
 var apolloProject = apollo.init("your token here");
 // initalize's your project with your respected token.
 ```
@@ -24,19 +24,27 @@ In order to **login** you just have to pass email and password to the login() fu
 ```java
 apolloProject.auth().login(email,password).then(res=>{
     console.log(res);
-    // Response will be printed on console.
-});
-```
-```c
-apolloProject.auth().login(email,password).then(res=>{
-    console.log(res);
-    // Response will be printed on console.
-});
-```
-```swift
-apolloProject.auth().login(email,password).then(res=>{
-    console.log(res);
-    // Response will be printed on console.
+    // response will be printed on console that If user
+	// logged in or not with the response code.
 });
 ```
 Login function returns a promise which can be used accordingly.
+
+2. ##### Register
+Register a new user in a single step with this function.
+In order to **register** you first have to use sendCode function. 
+###### Send Code
+**Send code** authenticates a user with **one time code**, whenever this function is called a code has been sent to the specific user in order to **register** a new account. it returns a **token** will later on can be used to match with code sent to the user.
+**Send code** function requires email, password, display name and mobile number in order to work.
+Here is a working example on how to use send code :
+```java
+apolloProject.auth().sendCode(email,password,displayName,mobile).then(res=>{
+    console.log(res);
+    // response will be printed on console.
+    // response.token contains the token you have to pass to the register
+	// function
+});
+```
+Afterwards **register** can be called when you already have the token.
+**Register** function needs token which was returned by **sendCode**() and a code which is give by the user.
+
