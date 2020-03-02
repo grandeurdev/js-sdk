@@ -13,8 +13,9 @@ Auth() module provides major authentication functionalities.
  -  `sendCode` (This function sends send code request with provided data to the server).
  -  `isAuthenticated` (This function sends check if a user`s logged in request with required data to the server).
  -  `logout` (This function sends logout the user request to the server).
+
 2. ######Device
-Auth() module provides major authentication functionalities.
+Device() module provides all the device functionalities.
 
  -  `login` (This function sends login a user request with required data to the server).
  -  `register` (This function sends verify code and register request with registration data to the server).
@@ -22,7 +23,7 @@ Auth() module provides major authentication functionalities.
  -  `isAuthenticated` (This function sends check if a user`s logged in request with required data to the server).
  -  `logout` (This function sends logout the user request to the server).
 
-[Let's Sign Up]: https://cloud.grandeur.tech
+[Let`s Sign Up]: https://cloud.grandeur.tech
 
 
 
