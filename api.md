@@ -18,12 +18,12 @@ Auth provides a basic functionality to authenticate a user to **Grandeur Cloud**
 **Auth** can be used simply by calling **.auth()** of **apolloProject** created above.
 We will see that in the examples below.
 
-1. ##### Register
+1. ##### register
 Register a new user in a single step with this function.
 In order to **register** you first have to use sendCode function. 
-###### Send Code
-**Send code** authenticates a user with **one time code**, whenever this function is called a code has been sent to the specific user in order to **register** a new account. it returns a **token** will later on can be used to match with code sent to the user.
-**Send code** function requires email, password, display name and mobile number in order to work.
+###### sendCode
+**sendCode** authenticates a user with **one time code**, whenever this function is called a code has been sent to the specific user in order to **register** a new account. it returns a **token** will later on can be used to match with code sent to the user.
+**sendCode** function requires email, password, display name and mobile number in order to work.
 Here is a working example on how to use send code :
 ```java
 apolloProject.auth().sendCode(email,password,displayName,mobile).then(res=>{
@@ -35,7 +35,7 @@ apolloProject.auth().sendCode(email,password,displayName,mobile).then(res=>{
 ```
 Afterwards **register** can be called when you already have the token.
 
-**Register** function needs token which was returned by **sendCode**() and a code which is give by the user.
+**Register** function needs a token which was returned by **sendCode**() and a code which is give by the user.
 ```java
 apolloProject.auth().register(token,code).then(res=>{
     console.log(res);
@@ -43,7 +43,7 @@ apolloProject.auth().register(token,code).then(res=>{
    });
 ```
 
-2. ##### Login
+2. ##### login
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
@@ -56,4 +56,24 @@ apolloProject.auth().login(email,password).then(res=>{
 ```
 Login function returns a promise which can be used accordingly.
 
-
+3. ##### isAuthenticated
+This function is used to check if a user is authorized or not. It returns a respose with user profile if user is authorized and if user is not authorized it returns a response with a code **user-unauthorized**
+How to do that? Here it is : 
+```java
+apolloProject.auth().isAuthenticated().then(res=>{
+    console.log(res);
+    // response will be printed on console that If user
+	// logged in or not with the response code.
+});
+```
+4. ##### logout
+This simple function is called whenever user needed to be logged out.
+This function returns a **simple response** with the code **AUTH-ACCOUNT-LOGGEDOUT**.
+```java
+apolloProject.auth().logout().then(res=>{
+          if(res.code == "AUTH-ACCOUNT-LOGGEDOUT" ) {
+              // Sucessfully Logged Out
+			  console.log(res);
+          }
+});
+```

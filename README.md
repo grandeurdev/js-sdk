@@ -7,10 +7,9 @@ JavaScript SDK provides functions which will be used to communicate with **Grand
 JavaScript SDK currently supports 3 modules.
 1. ##### Auth
 Auth module provides major authentication functionalities.
-
- -  `login` (This function sends login a user request with required data to the server).
- -  `register` (This function sends verify code and register request with registration data to the server).
+ -  `register` (This function sends verify code and register request with registration data to the server.
  -  `sendCode` (This function sends send code request with provided data to the server).
+ -  `login` (This function sends login a user request with required data to the server).
  -  `isAuthenticated` (This function sends check if a user`s logged in request with required data to the server).
  -  `logout` (This function sends logout the user request to the server).
 
