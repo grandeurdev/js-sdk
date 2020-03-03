@@ -105,8 +105,8 @@ device.unpairDevice(deviceID).then(res => {
           console.log(res); 
 }); 
 ```
-2. ##### getUserDevices 
-This function gets a **list of all the paired devices** with the** authenticated ID**.   
+3. ##### getUserDevices 
+This function returns a **list of all the paired devices** with the current** authenticated ID**.   
 Here is a working example :
 ```java
 var device=apolloProject.device();
@@ -114,5 +114,76 @@ device.getUserDevices().then(res => {
            console.log(res);
 });
 ```
-
+4. ##### getOnlineDevicesCount 
+This function returns a **list of all the online devices** with the current** authenticated ID**.   
+Here is a working example :
+```java
+var device=apolloProject.device();
+device.getOnlineDevicesCount().then(res => {
+           console.log(res);
+});
+```
+5. ##### getDeviceSummary 
+This function asks for a **device ID** and returns a payload which includes data summary of that specific device.
+Here is a working example :
+```java
+var device=apolloProject.device();
+device.getDeviceSummary(deviceID).then(res => {
+           console.log(res);
+});
+```
+6. ##### getDeviceParms 
+This function asks for a **device ID** and returns the payload which includes all the parameters of that specific device.
+Here is a working example :
+```java
+var device=apolloProject.device();
+device.getDeviceParms(deviceID).then(res => {
+           console.log(res);
+});
+```
+7. ##### setDeviceSummary 
+This function asks for a **device ID** and a **JSON object** which includes summary parameters.
+Here is a working example :
+```java
+var device=apolloProject.device();
+var summary = {
+          voltage: 1200,
+          current: 1010
+        };
+device.setDeviceSummary(deviceID, summary).then(res => {
+           console.log(res);
+});
+```
+8. ##### setDeviceParms 
+This function asks for a **device ID** and a **JSON object** which includes device parameters.
+Here is a working example :
+```java
+var device = apolloProject.device();
+var params = {
+          voltage: 1200,
+          current: 1010
+        };
+device.setDeviceParms(deviceID, params).then(res => {
+           console.log(res);
+});
+```
+9. ##### setDeviceName 
+This function asks for a **device ID** and **a new name **and then it sets a new name for that specific device.
+Here is a working example :
+```java
+var device = apolloProject.device();
+var newName = "aNewTempName";
+device.setDeviceName(deviceID, newName).then(res => {
+           console.log(res);
+});
+```
+9. ##### getDeviceStatus 
+This function asks for a **device ID** and it returns a payload which the current device status of that specific device.
+Here is a working example :
+```java
+var device = apolloProject.device();
+device.getDeviceStatus(deviceID).then(res => {
+           console.log(res);
+});
+```
 
