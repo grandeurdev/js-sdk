@@ -34,6 +34,7 @@ apolloProject.auth().sendCode(email,password,displayName,mobile).then(res=>{
 });
 ```
 Afterwards **register** can be called when you already have the token.
+
 **Register** function needs token which was returned by **sendCode**() and a code which is give by the user.
 ```java
 apolloProject.auth().register(token,code).then(res=>{
