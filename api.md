@@ -26,7 +26,8 @@ In order to **register** you first have to use sendCode function.
 **sendCode** function requires email, password, display name and mobile number in order to work.
 Here is a working example on how to use send code :
 ```java
-apolloProject.auth().sendCode(email,password,displayName,mobile).then(res=>{
+var auth = apolloProject.auth();
+auth().sendCode(email,password,displayName,mobile).then(res=>{
     console.log(res);
     // response will be printed on console.
     // response.token contains the token you have to pass to the register
@@ -37,7 +38,8 @@ Afterwards **register** can be called when you already have the token.
 
 **Register** function needs a token which was returned by **sendCode**() and a code which is give by the user.
 ```java
-apolloProject.auth().register(token,code).then(res=>{
+var auth = apolloProject.auth();
+auth().register(token,code).then(res=>{
     console.log(res);
     // response will be printed on console.
    });
@@ -48,7 +50,8 @@ Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
 ```java
-apolloProject.auth().login(email,password).then(res=>{
+var auth = apolloProject.auth();
+auth.login(email,password).then(res=>{
     console.log(res);
     // response will be printed on console that If user
 	// logged in or not with the response code.
@@ -60,7 +63,8 @@ Login function returns a promise which can be used accordingly.
 This function is used to check if a user is authorized or not. It returns a respose with user profile if user is authorized and if user is not authorized it returns a response with a code **user-unauthorized**
 How to do that? Here it is : 
 ```java
-apolloProject.auth().isAuthenticated().then(res=>{
+var auth = apolloProject.auth();
+auth.isAuthenticated().then(res=>{
     console.log(res);
     // response will be printed on console that If user
 	// logged in or not with the response code.
@@ -70,10 +74,45 @@ apolloProject.auth().isAuthenticated().then(res=>{
 This simple function is called whenever user needed to be logged out.
 This function returns a **simple response** with the code **AUTH-ACCOUNT-LOGGEDOUT**.
 ```java
-apolloProject.auth().logout().then(res=>{
+var auth = apolloProject.auth();
+auth.logout().then(res=>{
           if(res.code == "AUTH-ACCOUNT-LOGGEDOUT" ) {
               // Sucessfully Logged Out
 			  console.log(res);
           }
 });
 ```
+- #### Device
+Device module provides all of the device features i.e if you want to pair or unpair a device, you need to add device module to your application.
+**Device** can be used simply by calling **.device()** of **apolloProject** created above.
+We will see that in the examples below.
+
+1. ##### pairDevice 
+This function is simply used to pair a device to **Grandeur Cloud (Grandeur Apollo)**. It asks for a **device ID** and send a request to the server to pair that specific device.  
+Here is a working example :
+```java
+var device=apolloProject.device();
+device.pairDevice(deviceID).then(res => {
+          console.log(res); 
+}); 
+```
+2. ##### unpairDevice 
+This function is simply used to unpair a device to **Grandeur Cloud (Grandeur Apollo)**. It asks for a **device ID** and send a request to the server to pair that specific device.  
+Here is a working example :
+```java
+var device=apolloProject.device();
+device.unpairDevice(deviceID).then(res => {
+          console.log(res); 
+}); 
+```
+2. ##### getUserDevices 
+This function gets a **list of all the paired devices** with the** authenticated ID**.   
+Here is a working example :
+```java
+var device=apolloProject.device();
+device.getUserDevices().then(res => {
+           console.log(res);
+});
+```
+
+
