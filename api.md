@@ -17,20 +17,8 @@ Now you can access all the amazing features of Grandeur Cloud and can change the
 Auth provides a basic functionality to authenticate a user to **Grandeur Cloud**(Grandeur Apollo).
 **Auth** can be used simply by calling **.auth()** of **apolloProject** created above.
 We will see that in the examples below.
-1. ##### Login
-Loging in the user is the basic functionality of authentication so we made
-it easier for you.
-In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
-```java
-apolloProject.auth().login(email,password).then(res=>{
-    console.log(res);
-    // response will be printed on console that If user
-	// logged in or not with the response code.
-});
-```
-Login function returns a promise which can be used accordingly.
 
-2. ##### Register
+1. ##### Register
 Register a new user in a single step with this function.
 In order to **register** you first have to use sendCode function. 
 ###### Send Code
@@ -47,4 +35,24 @@ apolloProject.auth().sendCode(email,password,displayName,mobile).then(res=>{
 ```
 Afterwards **register** can be called when you already have the token.
 **Register** function needs token which was returned by **sendCode**() and a code which is give by the user.
+```java
+apolloProject.auth().register(token,code).then(res=>{
+    console.log(res);
+    // response will be printed on console.
+   });
+```
+
+2. ##### Login
+Loging in the user is the basic functionality of authentication so we made
+it easier for you.
+In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
+```java
+apolloProject.auth().login(email,password).then(res=>{
+    console.log(res);
+    // response will be printed on console that If user
+	// logged in or not with the response code.
+});
+```
+Login function returns a promise which can be used accordingly.
+
 
