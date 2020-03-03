@@ -168,7 +168,7 @@ device.setDeviceParms(deviceID, params).then(res => {
 });
 ```
 9. ##### setDeviceName 
-This function asks for a **device ID** and **a new name **and then it sets a new name for that specific device.
+This function asks for a **device ID** and **a new name** and then it sets a new name for that specific device.
 Here is a working example :
 ```java
 var device = apolloProject.device();
@@ -186,4 +186,24 @@ device.getDeviceStatus(deviceID).then(res => {
            console.log(res);
 });
 ```
+- #### Storage
+This module is used to access all the storage features of **Grandeur Cloud** i.e to upload or download a file.
 
+1. ##### uploadFile 
+This function asks for a **file** and **file name** and uploads that file to the server.
+Here is a working example :
+```java
+var files=apolloProject.storage();
+files.uploadFile(file, filename).then(res => {
+           console.log(res);
+});
+```
+2. ##### getFileUrl 
+This function asks for a **file name** and gets that file from the server if that file exists.
+Here is a working example :
+```java
+var files=apolloProject.storage();
+files.uploadFile(file, filename).then(res => {
+           console.log(res);
+});
+```
