@@ -19,34 +19,128 @@ class auth {
         return this.post.send("/auth/loginwithemail", {email: email, password: password});
     }
 
-    sendCode(email, password, displayName, phone) {
-        // This function sends "send Code" request with provided data to the server
-        // First validate data
-        if (!displayName) {
-            // Invalid Name
-            return Promise.resolve({code: "DATA-INVALID", message: "Name is required."});
-        }
-        else if (!email.match(/[\w-]+@([\w-]+\.)+[\w-]+/g)) {
-            // Invalid Email
-            return Promise.resolve({code: "DATA-INVALID", message: "Please enter email in valid format."});
-        }
-        else if (!password.match(/^.{6,}$/g)) {
-            // Invalid Password
-            return Promise.resolve({code: "DATA-INVALID", message: "Password is required to atleast 6 character long."});
-        }
-        else if (!phone.match(/^[+]\d{0}[1-9]\d{1,14}$/g)) {
-            // Invalid Phone
-            return Promise.resolve({code: "DATA-INVALID", message: "Phone number is required to start with +<CountryCode> and cannot include spaces."});
-        }
+    async register(email, password, displayName, phone) {
+        // This function sends "register" request with provided data to the server
+        // submit the request
+        try {
+            // Get the response
+            var res = await this.post.send("/auth/register", {email: email, password: password, displayName: displayName, phone: phone});
+            
+            // and return a confirmation function if token sent
+            if (res.code === "PHONE-CODE-SENT")
+                return {
+                    code: res.code,
+                    message: res.message,
 
-        // Else submit the request
-        return this.post.send("/auth/register", {email: email, password: password, displayName: displayName, phone: phone, requiredConfirmation: true});
+                    // Append confirm function
+                    confirm : (verificationCode) => {
+                        // Confirmation function will get the token from the response object received
+                        // earlier as a result of register request with user data and will get code from
+                        // the user via the argument and then using the post handler function will submit
+                        // the request again
+                        return this.post.send("/auth/register", {token: res.token, verificationCode: verificationCode});
+                    }
+                }
+            else
+                return res;
+        }
+        catch (err) {
+            // Got an error then just throw it
+            throw err;
+        }
     }
 
-    register(token, verificationCode) {
-        console.log(verificationCode);
-        // This function sends "verify code and register" request with registration data to the server
-        return this.post.send("/auth/register", {token: token, verificationCode: verificationCode});
+    async updateProfile(displayName, displayPicture, phone) {
+        // This function sends "updateProfile" request with provided data to the server
+        // submit the request
+        try {
+            // Get the response
+            var res = await this.post.send("/auth/updateProfile", {displayName: displayName, phone: phone, displayPicture: displayPicture});
+            
+            // and return a confirmation function if token sent
+            if (res.code === "PHONE-CODE-SENT")
+                return {
+                    code: res.code,
+                    message: res.message,
+
+                    // Append confirm function
+                    confirm : (verificationCode) => {
+                        // Confirmation function will get the token from the response object received
+                        // earlier as a result of register request with user data and will get code from
+                        // the user via the argument and then using the post handler function will submit
+                        // the request again
+                        return this.post.send("/auth/updateProfile", {token: res.token, verificationCode: verificationCode});
+                    }
+                }
+            else
+                return res;
+        }
+        catch (err) {
+            // Got an error then just throw it
+            throw err;
+        }
+    }
+
+    async forgotPassword(email) {
+        // This function sends "forgotPassword" request with provided data to the server
+        // submit the request
+        try {
+            // Get the response
+            var res = await this.post.send("/auth/forgotPassword", {email: email});
+            
+            // and return a confirmation function if token sent
+            if (res.code === "PHONE-CODE-SENT")
+                return {
+                    code: res.code,
+                    message: res.message,
+
+                    // Append confirm function
+                    confirm : (verificationCode, password) => {
+                        // Confirmation function will get the token from the response object received
+                        // earlier as a result of register request with user data and will get code from
+                        // the user via the argument and then using the post handler function will submit
+                        // the request again
+                        return this.post.send("/auth/forgotPassword", {token: res.token, verificationCode: verificationCode, password: password});
+                    }
+                }
+            else
+                return res;
+        }
+        catch (err) {
+            // Got an error then just throw it
+            throw err;
+        }
+    }
+
+    async changePassword(password) {
+        // This function sends "changePassword" request with provided data to the server
+        // submit the request
+        try {
+            // Get the response
+            var res = await this.post.send("/auth/changePassword", {password: password});
+            
+            // and return a confirmation function if token sent
+            if (res.code === "PHONE-CODE-SENT")
+                return {
+                    code: res.code,
+                    message: res.message,
+
+                    // Append confirm function
+                    confirm : (verificationCode) => {
+                        // Confirmation function will get the token from the response object received
+                        // earlier as a result of register request with user data and will get code from
+                        // the user via the argument and then using the post handler function will submit
+                        // the request again
+                        return this.post.send("/auth/changePassword", {token: res.token, verificationCode: verificationCode});
+                    }
+                }
+            else
+                return res;
+        }
+        catch (err) {
+            // Got an error then just throw it
+            throw err;
+        }
     }
 
     isAuthenticated() {

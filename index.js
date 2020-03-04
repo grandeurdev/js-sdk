@@ -12,8 +12,6 @@ import duplex from "./src/handlers/duplex.handler";
 const config = {
     url: "https://api.grandeur.tech",
     node: "wss://api.grandeur.tech"
-    // url: "http://10.50.202.127:3000",
-    // node: "ws://10.50.202.127:3000"
 }
 
 // Function that initializes 
