@@ -63,6 +63,7 @@ then(res=>{
 // displayName can only have characters.
 // mobile number must start with country code
 // i.e +923331234567
+// res.token contains token you need to verify
 ```
 
 </td>
@@ -96,14 +97,34 @@ then(res=>{
 Afterwards **register** can be called when you already have the token.
 
 **Register** function needs a token which was returned by **sendCode**() and a code which is give by the user.
+<table>
+<tr>
+<th> Code </th>
+<th> Description </th>
+</tr>
+<tr>
+<td>
+
 ```java
-var auth = apolloProject.auth();
-auth().register(token,code).then(res=>{
+auth.register(token,code).then(res=>{
     console.log(res);
     // response can be fetched here.
     // response codes are given below
    });
 ```
+</td>
+<td>
+
+```java
+// token must be valid (fetched previously by sendCode())
+// code was sent to the user and collected from the
+// user
+
+```
+
+</td>
+</tr>
+</table>
 **Response codes for `register`** :
 <table>
 <tr>
@@ -118,8 +139,8 @@ auth().register(token,code).then(res=>{
 <td><pre>AUTH-ACCOUNT-REGISTRATION-FAILED</pre></td>
 <td>User's new account could not be created.</td>
 </tr>
-
 </table>
+
 2. ##### login
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
