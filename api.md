@@ -14,7 +14,7 @@ var apolloProject = apollo.init("your token here");
 Now you can access all the amazing features of Grandeur Cloud and can change the world!
 
 - #### Auth
-Auth provides a basic functionality to authenticate a user to **Grandeur Cloud**(Grandeur Apollo).
+Auth provides a basic functionality to `authenticate` a user to **Grandeur Cloud**(Grandeur Apollo).
 **Auth** can be used simply by calling **.auth()** of **apolloProject** created above.
 We will see that in the examples below.
 
