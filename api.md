@@ -5,19 +5,30 @@ We are making it easier for you to build internet of things based smart products
 JavaScript SDK provides all the required features which can be used to communicate with **Grandeur Apollo** from the front-end of your application.
 It has several modules i.e auth, device and storage.
 ### Get Started
-To get started with **Apollo JavaScript SDK**, you first need to create a new **Apollo** project with a valid token which will be provided by Grandeur.
+To get started with **Apollo JavaScript SDK**, you first need to add add a reference link to CDN file.
+For example :
+```java
+<script src="https://xyz.com/grandeur.apollo.js">
+// place this tag at the end of your body.
+</script>
+```
+Now you can create a new **Apollo** project with a API-KEY which can be accessed after creating a new account at Grandeur Cloud Dashbaord.
 How to do that? Here is an example for you.
 ```java
-var apolloProject = apollo.init("your token here");
+var apolloProject = apollo.init("YOUR-APIKEY-HERE");
 // initalize's your project with your respected token.
 ```
 Now you can access all the amazing features of Grandeur Cloud and can change the world!
 
 - #### Auth
 Auth provides a basic functionality to `authenticate` a user to **Grandeur Cloud**(Grandeur Apollo).
-**Auth** can be used simply by calling **.auth()** of **apolloProject** created above.
-We will see that in the examples below.
-
+**Auth** can be used simply by calling `.auth()` of **apolloProject** created above.
+```java
+var auth = apolloProject.auth();
+// creates an auth object which can
+// be used further.
+```
+We will see more in the examples below.
 1. ##### register
 Register a new user in a single step with this function.
 In order to **register** you first have to use sendCode function. 
@@ -25,15 +36,37 @@ In order to **register** you first have to use sendCode function.
 **sendCode** authenticates a user with **one time code**, whenever this function is called a code has been sent to the specific user in order to **register** a new account. it returns a **token** will later on can be used to match with code sent to the user.
 **sendCode** function requires email, password, display name and mobile number in order to work.
 Here is a working example on how to use send code :
+<table>
+<tr>
+<th> Code </th>
+<th> Results </th>
+</tr>
+<tr>
+<td>
+
 ```java
-var auth = apolloProject.auth();
-auth().sendCode(email,password,displayName,mobile).then(res=>{
-    console.log(res);
-    // response will be printed on console.
-    // response.token contains the token you have to pass to the register
-	// function
+auth.sendCode(email,password,displayName,mobile).
+then(res=>{
+    // response can be fetched here.
 });
 ```
+
+</td>
+<td>
+
+```java
+// sendCode() only accepts a valid email.
+// valid : abc@xyz.com
+// invalid : @.cij@aaa.c
+// password have minumum 6 characters long.
+// displayName can only have characters.
+// mobile number must start with country code
+// i.e +923331234567
+```
+
+</td>
+</tr>
+</table
 Afterwards **register** can be called when you already have the token.
 
 **Register** function needs a token which was returned by **sendCode**() and a code which is give by the user.
