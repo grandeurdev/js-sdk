@@ -43,24 +43,27 @@ Here is a working example on how to use send code :
 </tr>
 <tr>
 <td>
-<pre>
+
+```java
 auth.sendCode(email,password,displayName,mobile).
 then(res=>{
     // response can be fetched here.
     // response codes are given below.
 });
-</pre>
+```
 
 </td>
 <td>
-> sendCode() only accepts a valid email.
-> valid : abc@xyz.com
-> invalid : @.cij@aaa.c
-> password have minumum 6 characters long.
-> displayName can only have characters.
-> mobile number must start with country code
-> i.e +923331234567
 
+```java
+// sendCode() only accepts a valid email.
+// valid : abc@xyz.com
+// invalid : @.cij@aaa.c
+// password have minumum 6 characters long.
+// displayName can only have characters.
+// mobile number must start with country code
+// i.e +923331234567
+```
 
 </td>
 </tr>
@@ -80,6 +83,14 @@ then(res=>{
 <td><pre>PHONE-CODE-SENDING-FAILED</pre></td>
 <td>Verification code could not be sent to the phone number.</td>
 </tr>
+<tr>
+<td><pre>AUTH-ACCOUNT-DUPLICATE</pre></td>
+<td>Email is already registered with our server.</td>
+</tr>
+<tr>
+<td><pre>AUTH-ACCOUNT-DUPLICATE</pre></td>
+<td>A profile already exists with this email.</td>
+</tr>
 </table>
 
 Afterwards **register** can be called when you already have the token.
@@ -89,14 +100,31 @@ Afterwards **register** can be called when you already have the token.
 var auth = apolloProject.auth();
 auth().register(token,code).then(res=>{
     console.log(res);
-    // response will be printed on console.
+    // response can be fetched here.
+    // response codes are given below
    });
 ```
+**Response codes for `register`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><pre>AUTH-ACCOUNT-REGISTERED</pre></td>
+<td>User Account is successfully created.</td>
+</tr>
+<tr>
+<td><pre>AUTH-ACCOUNT-REGISTRATION-FAILED</pre></td>
+<td>User's new account could not be created.</td>
+</tr>
 
+</table>
 2. ##### login
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
+
 ```java
 var auth = apolloProject.auth();
 auth.login(email,password).then(res=>{
