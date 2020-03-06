@@ -48,6 +48,7 @@ Here is a working example on how to use send code :
 auth.sendCode(email,password,displayName,mobile).
 then(res=>{
     // response can be fetched here.
+    // response codes are given below.
 });
 ```
 
@@ -66,7 +67,24 @@ then(res=>{
 
 </td>
 </tr>
-</table
+</table>
+
+**Response codes for `sendCode`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>`PHONE-CODE-SENT`</td>
+<td>Verification code is successfully sent to the phone number.</td>
+</tr>
+<tr>
+<td>`PHONE-CODE-SENDING-FAILED`</td>
+<td>Verification code could not be sent to the phone number.</td>
+</tr>
+</table>
+
 Afterwards **register** can be called when you already have the token.
 
 **Register** function needs a token which was returned by **sendCode**() and a code which is give by the user.
