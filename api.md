@@ -39,31 +39,28 @@ Here is a working example on how to use send code :
 <table>
 <tr>
 <th> Code </th>
-<th> Results </th>
+<th> Description </th>
 </tr>
 <tr>
 <td>
-
-```java
+<pre>
 auth.sendCode(email,password,displayName,mobile).
 then(res=>{
     // response can be fetched here.
     // response codes are given below.
 });
-```
+</pre>
 
 </td>
 <td>
+> sendCode() only accepts a valid email.
+> valid : abc@xyz.com
+> invalid : @.cij@aaa.c
+> password have minumum 6 characters long.
+> displayName can only have characters.
+> mobile number must start with country code
+> i.e +923331234567
 
-```java
-// sendCode() only accepts a valid email.
-// valid : abc@xyz.com
-// invalid : @.cij@aaa.c
-// password have minumum 6 characters long.
-// displayName can only have characters.
-// mobile number must start with country code
-// i.e +923331234567
-```
 
 </td>
 </tr>
@@ -76,11 +73,11 @@ then(res=>{
 <th>Description</th>
 </tr>
 <tr>
-<td>`PHONE-CODE-SENT`</td>
+<td><pre>PHONE-CODE-SENT</pre></td>
 <td>Verification code is successfully sent to the phone number.</td>
 </tr>
 <tr>
-<td>`PHONE-CODE-SENDING-FAILED`</td>
+<td><pre>PHONE-CODE-SENDING-FAILED</pre></td>
 <td>Verification code could not be sent to the phone number.</td>
 </tr>
 </table>
