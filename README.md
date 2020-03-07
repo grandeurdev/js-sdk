@@ -195,57 +195,42 @@ auth.login(email,password).then(res=>{
 **Parameters :**
 
 <table>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>email</td>
-<td><em>string</em></td>
-<td>a formatted email address</td>
-</tr>
-<tr>
-<td>password</td>
-<td><em>string</em></td>
-<td>minimum 6 characters long</td>
-</tr>
+ <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+ </tr>
+ <tr>
+    <td>email</td>
+    <td><em>string</em></td>
+    <td>a formatted email address</td>
+ </tr>
+ <tr>
+    <td>password</td>
+    <td><em>string</em></td>
+    <td>minimum 6 characters long</td>
+ </tr>
 </table>
 
 **Response codes for `login`** :
 
 **AUTH-ACCOUNT-LOGGEDIN**
-&nbsp;&nbsp;&nbsp;&nbsp; User is successfully logged into its account.
-<table>
-<tr>
-<th>Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-LOGIN-FAILED</td>
-<td>User could not be logged into its account.</td>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-INVALID-PASSWORD</td>
-<td>Password entered by the user is incorrect.</td>
-</tr>
-<tr>
-<td>DATA-INVALID</td>
-<td>Both email and password need to have a valid format.</td>
-</tr>
-</table>
-
-Login function returns a promise which can be used accordingly.
+> User is successfully logged into its account.
+**AUTH-ACCOUNT-LOGIN-FAILED**
+> User could not be logged into its account.
+**AUTH-ACCOUNT-INVALID-PASSWORD**
+> Password entered by the user is incorrect.
+**DATA-INVALID**
+> Both email and password need to have a valid format.
 
 
-##### isAuthenticated
+#### isAuthenticated
+
+> login (): returns *Promise*
+
 This function is used to check if a user is authorized or not. It returns a respose with user profile if user is authorized and if user is not authorized it returns a response with a code **user-unauthorized**
 How to do that? Here it is : 
-```java
+```javascript
 auth.isAuthenticated().then(res=>{
     console.log(res);
      // response can be fetched here.
@@ -253,24 +238,16 @@ auth.isAuthenticated().then(res=>{
 });
 ```
 **Response codes for `isAuthenticated`** :
-<table>
-<tr>
-<th>Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>AUTH-AUTHORIZED</td>
-<td>Here's the user's data: (Data can be fetched from here) </td>
-</tr>
-<tr>
-<td>AUTH-UNAUTHORIZED</td>
-<td>You are not logged into your account.</td>
-</tr>
-</table>
+**AUTH-AUTHORIZED**
+> Here's the user's data: (Data can be fetched from here)
+**AUTH-UNAUTHORIZED**
+>> You are not logged into your account.
 
 
-##### logout
-This simple function is called whenever user needed to be logged out.
+
+#### logout
+> logout () returns *Promise*
+This simple function is called whenever user need to be logged out.
 
 ```java
 auth.logout().then(res=>{
@@ -280,16 +257,9 @@ auth.logout().then(res=>{
 ```
 
 **Response codes for `logout`** :
-<table>
-<tr>
-<th>Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-LOGGEDOUT</td>
-<td>You are successfully Logged out of your account. </td>
-</tr>
-</table>
+
+**AUTH-ACCOUNT-LOGGEDOUT**
+> You are successfully Logged out of your account.
 
 #### Device
 Device module provides all of the device features i.e if you want to pair or unpair a device, you need to add device module to your application.
