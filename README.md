@@ -179,13 +179,13 @@ auth.register(token,code).then(res=>{
 
 #### Login
 
-> login(email: *string*, password: *string*): returns *Promise*
+> login ( email: *string*, password: *string*): returns *Promise*
 
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
 
-```java
+```javascript
 auth.login(email,password).then(res=>{
     console.log(res);
     // response can be fetched here.
