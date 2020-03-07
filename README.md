@@ -213,14 +213,17 @@ auth.login(email,password).then(res=>{
 </table>
 
 **Response codes for `login`** :
+
+**AUTH-ACCOUNT-LOGGEDIN**
+>>User is successfully logged into its account.
 <table>
 <tr>
 <th>Code</th>
 <th>Description</th>
 </tr>
 <tr>
-<td>AUTH-ACCOUNT-LOGGEDIN</td>
-<td>User is successfully logged into its account.</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>AUTH-ACCOUNT-LOGIN-FAILED</td>
