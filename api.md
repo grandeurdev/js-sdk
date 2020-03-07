@@ -20,7 +20,7 @@ var apolloProject = apollo.init("YOUR-APIKEY-HERE");
 ```
 Now you can access all the amazing features of Grandeur Cloud and can change the world!
 
-- #### Auth
+#### Auth
 Auth provides a basic functionality to authenticate a user to **Grandeur Cloud**(Grandeur Apollo).
 **Auth** can be used simply by calling `.auth()` of **apolloProject** created above.
 ```java
@@ -29,7 +29,7 @@ var auth = apolloProject.auth();
 // be used further.
 ```
 We will see more in the examples below.
-1. ##### register
+##### register
 Register a new user in a single step with this function.
 In order to **register** you first have to use sendCode function. 
 ###### sendCode
@@ -77,19 +77,19 @@ then(res=>{
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>PHONE-CODE-SENT</pre></td>
+<td>PHONE-CODE-SENT</td>
 <td>Verification code is successfully sent to the phone number.</td>
 </tr>
 <tr>
-<td><pre>PHONE-CODE-SENDING-FAILED</pre></td>
+<td>PHONE-CODE-SENDING-FAILED</td>
 <td>Verification code could not be sent to the phone number.</td>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-DUPLICATE</pre></td>
+<td>AUTH-ACCOUNT-DUPLICATE</td>
 <td>Email is already registered with our server.</td>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-DUPLICATE</pre></td>
+<td>AUTH-ACCOUNT-DUPLICATE</td>
 <td>A profile already exists with this email.</td>
 </tr>
 </table>
@@ -133,31 +133,23 @@ auth.register(token,code).then(res=>{
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-REGISTERED</pre></td>
+<td>AUTH-ACCOUNT-REGISTERED</td>
 <td>User Account is successfully created.</td>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-REGISTRATION-FAILED</pre></td>
+<td>AUTH-ACCOUNT-REGISTRATION-FAILED</td>
 <td>User's new account could not be created.</td>
 </tr>
 <tr>
-<td><pre>DATA-INVALID</pre></td>
+<td>DATA-INVALID</td>
 <td>Both email and password need to have a valid format.</td>
 </tr>
 </table>
 
-2. ##### login
+#### login
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
-
-<table>
-<tr>
-<th> Code </th>
-<th> Description </th>
-</tr>
-<tr>
-<td>
 
 ```java
 auth.login(email,password).then(res=>{
@@ -166,18 +158,23 @@ auth.login(email,password).then(res=>{
     // response codes are given below
 });
 ```
+**Parameters :**
 
-</td>
-<td>
-
-```java
-// login() only accepts a valid email.
-// valid : abc@xyz.com
-// invalid : @.cij@aaa.c
-// password have minumum 6 characters long.
-```
-
-</td>
+<table>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>email</td>
+<td><em>string</em></td>
+<td>a formatted email address</td>
+</tr>
+<tr>
+<td>password</td>
+<td><em>string</em></td>
+<td>minimum 6 characters long</td>
 </tr>
 </table>
 
@@ -188,19 +185,19 @@ auth.login(email,password).then(res=>{
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-LOGGEDIN</pre></td>
+<td>AUTH-ACCOUNT-LOGGEDIN</td>
 <td>User is successfully logged into its account.</td>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-LOGIN-FAILED</pre></td>
+<td>AUTH-ACCOUNT-LOGIN-FAILED</td>
 <td>User could not be logged into its account.</td>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-INVALID-PASSWORD</pre></td>
+<td>AUTH-ACCOUNT-INVALID-PASSWORD</td>
 <td>Password entered by the user is incorrect.</td>
 </tr>
 <tr>
-<td><pre>DATA-INVALID</pre></td>
+<td>DATA-INVALID</td>
 <td>Both email and password need to have a valid format.</td>
 </tr>
 </table>
@@ -208,7 +205,7 @@ auth.login(email,password).then(res=>{
 Login function returns a promise which can be used accordingly.
 
 
-3. ##### isAuthenticated
+##### isAuthenticated
 This function is used to check if a user is authorized or not. It returns a respose with user profile if user is authorized and if user is not authorized it returns a response with a code **user-unauthorized**
 How to do that? Here it is : 
 ```java
@@ -225,17 +222,17 @@ auth.isAuthenticated().then(res=>{
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>AUTH-AUTHORIZED</pre></td>
+<td>AUTH-AUTHORIZED</td>
 <td>Here's the user's data: (Data can be fetched from here) </td>
 </tr>
 <tr>
-<td><pre>AUTH-UNAUTHORIZED</pre></td>
+<td>AUTH-UNAUTHORIZED</td>
 <td>You are not logged into your account.</td>
 </tr>
 </table>
 
 
-4. ##### logout
+##### logout
 This simple function is called whenever user needed to be logged out.
 
 ```java
@@ -252,12 +249,12 @@ auth.logout().then(res=>{
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>AUTH-ACCOUNT-LOGGEDOUT</pre></td>
+<td>AUTH-ACCOUNT-LOGGEDOUT</td>
 <td>You are successfully Logged out of your account. </td>
 </tr>
 </table>
 
-- #### Device
+#### Device
 Device module provides all of the device features i.e if you want to pair or unpair a device, you need to add device module to your application.
 **Device** can be used simply by calling **.device()** of **apolloProject** created above.
 
@@ -269,7 +266,7 @@ var device = apolloProject.device();
 
 We will see that in the examples below.
 
-1. ##### pairDevice 
+##### pairDevice 
 This function is simply used to pair a device to **Grandeur Cloud (Grandeur Apollo)**. It asks for a **device ID** and send a request to the server to pair that specific device.  
 Here is a working example :
 <table>
@@ -306,24 +303,24 @@ device.pairDevice(deviceID).then(res => {
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>DEVICE-PAIRED</pre></td>
+<td>DEVICE-PAIRED</td>
 <td>Device is successfully paired with the user account. </td>
 </tr>
 <tr>
-<td><pre>DEVICE-ALREADY-PAIRED</pre></td>
+<td>DEVICE-ALREADY-PAIRED</td>
 <td>Device is already paired. </td>
 </tr>
 <tr>
-<td><pre>DEVICE-ID-INVALID</pre></td>
+<td>DEVICE-ID-INVALID</td>
 <td>Device ID is not registered with the project.</td>
 </tr>
 <tr>
-<td><pre>DATA-INVALID</pre></td>
+<td>DATA-INVALID</td>
 <td>Device ID is required for pairing it.</td>
 </tr>
 </table>
 
-2. ##### unpairDevice 
+##### unpairDevice 
 This function is simply used to unpair a device to **Grandeur Cloud (Grandeur Apollo)**. It asks for a **device ID** and send a request to the server to pair that specific device.  
 Here is a working example :
 <table>
@@ -360,19 +357,19 @@ device.unpairDevice(deviceID).then(res => {
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>DEVICE-UNPAIRED</pre></td>
+<td>DEVICE-UNPAIRED</td>
 <td>Device is successfully unpaired with the user account. </td>
 </tr>
-<td><pre>DEVICE-ID-INVALID</pre></td>
+<td>DEVICE-ID-INVALID</td>
 <td>Device ID is not registered with the project.</td>
 </tr>
 <tr>
-<td><pre>DATA-INVALID</pre></td>
+<td>DATA-INVALID</td>
 <td>Device ID is required for pairing it.</td>
 </tr>
 </table>
 
-3. ##### getUserDevices 
+##### getUserDevices 
 This function returns a **list of all the paired devices** with the current** authenticated ID**.   
 Here is a working example :
 ```java
@@ -389,12 +386,12 @@ device.getUserDevices().then(res => {
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>DEVICES-LIST-FETCHED</pre></td>
+<td>DEVICES-LIST-FETCHED</td>
 <td>List of requested devices is successfully fetched.</td>
 </tr>
 </table>
 
-4. ##### getOnlineDevicesCount 
+##### getOnlineDevicesCount 
 This function returns a **list of all the online devices** with the current** authenticated ID**.   
 Here is a working example :
 
@@ -412,12 +409,12 @@ device.getOnlineDevicesCount().then(res => {
 <th>Description</th>
 </tr>
 <tr>
-<td><pre>DEVICES-ONLINE-COUNT-FETCHED</pre></td>
+<td>DEVICES-ONLINE-COUNT-FETCHED</td>
 <td>Number of online devices is successfully fetched.</td>
 </tr>
 </table>
 
-5. ##### getDeviceSummary 
+##### getDeviceSummary 
 This function asks for a **device ID** and returns a payload which includes data summary of that specific device.
 Here is a working example :
 ```java
@@ -426,7 +423,7 @@ device.getDeviceSummary(deviceID).then(res => {
            console.log(res);
 });
 ```
-6. ##### getDeviceParms 
+##### getDeviceParms 
 This function asks for a **device ID** and returns the payload which includes all the parameters of that specific device.
 Here is a working example :
 ```java
@@ -435,7 +432,7 @@ device.getDeviceParms(deviceID).then(res => {
            console.log(res);
 });
 ```
-7. ##### setDeviceSummary 
+##### setDeviceSummary 
 This function asks for a **device ID** and a **JSON object** which includes summary parameters.
 Here is a working example :
 ```java
@@ -448,7 +445,7 @@ device.setDeviceSummary(deviceID, summary).then(res => {
            console.log(res);
 });
 ```
-8. ##### setDeviceParms 
+##### setDeviceParms 
 This function asks for a **device ID** and a **JSON object** which includes device parameters.
 Here is a working example :
 ```java
@@ -461,17 +458,17 @@ device.setDeviceParms(deviceID, params).then(res => {
            console.log(res);
 });
 ```
-9. ##### setDeviceName 
+##### setDeviceName 
 This function asks for a **device ID** and **a new name** and then it sets a new name for that specific device.
 Here is a working example :
 ```java
 var device = apolloProject.device();
-var newName = "aNewTempName";
+var newName = "newDeviceName";
 device.setDeviceName(deviceID, newName).then(res => {
            console.log(res);
 });
 ```
-10. ##### getDeviceStatus 
+##### getDeviceStatus 
 This function asks for a **device ID** and it returns a payload which the current device status of that specific device.
 Here is a working example :
 ```java
@@ -480,10 +477,10 @@ device.getDeviceStatus(deviceID).then(res => {
            console.log(res);
 });
 ```
-- #### Storage
+#### Storage
 This module is used to access all the storage features of **Grandeur Cloud** i.e to upload or download a file.
 
-1. ##### uploadFile 
+##### uploadFile 
 This function asks for a **file** and **file name** and uploads that file to the server.
 Here is a working example :
 ```java
@@ -492,7 +489,7 @@ files.uploadFile(file, filename).then(res => {
            console.log(res);
 });
 ```
-2. ##### getFileUrl 
+##### getFileUrl 
 This function asks for a **file name** and gets that file from the server if that file exists.
 Here is a working example :
 ```java
