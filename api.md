@@ -148,7 +148,7 @@ auth.register(token,code).then(res=>{
 
 #### Login
 
-`login(email: *string*, password: *string*): returns Promise`
+> `login(email: string, password: string): returns Promise`
 
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
