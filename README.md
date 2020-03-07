@@ -38,14 +38,14 @@ Storage module provides basic storage functionalities.
 ### Get Started
 To get started with **Apollo JavaScript SDK**, you first need to add add a reference link to CDN file.
 For example :
-```java
+```javascript
 <script src="https://xyz.com/grandeur.apollo.js">
 // place this tag at the end of your body.
 </script>
 ```
 Now you can create a new **Apollo** project with a API-KEY which can be accessed after creating a new account at Grandeur Cloud Dashbaord.
 How to do that? Here is an example for you.
-```java
+```javascript
 var apolloProject = apollo.init("YOUR-APIKEY-HERE");
 // initalize's your project with your respected token.
 ```
@@ -54,7 +54,7 @@ Now you can access all the amazing features of Grandeur Cloud and can change the
 #### 
 Auth provides a basic functionality to authenticate a user to **Grandeur Cloud**(Grandeur Apollo).
 **Auth** can be used simply by calling `.auth()` of **apolloProject** created above.
-```java
+```javascript
 var auth = apolloProject.auth();
 // creates an auth object which can
 // be used further.
@@ -75,7 +75,7 @@ Here is a working example on how to use send code :
 <tr>
 <td>
 
-```java
+```javascript
 auth.sendCode(email,password,displayName,mobile).
 then(res=>{
     // response can be fetched here.
@@ -86,7 +86,7 @@ then(res=>{
 </td>
 <td>
 
-```java
+```javascript
 // sendCode() only accepts a valid email.
 // valid : abc@xyz.com
 // invalid : @.cij@aaa.c
@@ -136,7 +136,8 @@ Afterwards **register** can be called when you already have the token.
 <tr>
 <td>
 
-```java
+```javascript
+var auth = apolloProject.auth();
 auth.register(token,code).then(res=>{
     console.log(res);
     // response can be fetched here.
@@ -146,7 +147,7 @@ auth.register(token,code).then(res=>{
 </td>
 <td>
 
-```java
+```javascript
 // token must be valid (fetched previously by sendCode())
 // code was sent to the user and collected from the
 // user
@@ -179,13 +180,14 @@ auth.register(token,code).then(res=>{
 
 #### Login
 
-> login ( email: *string*, password: *string*): returns *Promise*
+> login ( email: *string*, password: *string*) : returns *Promise*
 
 Loging in the user is the basic functionality of authentication so we made
 it easier for you.
 In order to **login** you just have to pass email and password to the login() function. Here is a working example for you :
 
 ```javascript
+var auth = apolloProject.auth();
 auth.login(email,password).then(res=>{
     console.log(res);
     // response can be fetched here.
@@ -195,42 +197,54 @@ auth.login(email,password).then(res=>{
 **Parameters :**
 
 <table>
- <tr>
+  <tr>
     <th>Name</th>
     <th>Type</th>
     <th>Description</th>
- </tr>
- <tr>
+  </tr>
+  <tr>
     <td>email</td>
     <td><em>string</em></td>
     <td>a formatted email address</td>
- </tr>
- <tr>
+  </tr>
+  <tr>
     <td>password</td>
     <td><em>string</em></td>
     <td>minimum 6 characters long</td>
- </tr>
+  </tr>
 </table>
 
 **Response codes for `login`** :
+<table>
+  <tr>
+    <th>Code</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>AUTH-ACCOUNT-LOGGEDIN</>
+    <td>User is successfully logged into its account</td>
+  </tr>
+  <tr>
+    <td>AUTH-ACCOUNT-LOGIN-FAILED</td>
+    <td>User could not be logged into its account.</td>
+  </tr>
+  <tr>
+    <td>AUTH-ACCOUNT-INVALID-PASSWORD</td>
+    <td>Password entered by the user is incorrect.</td>
+  </tr>
+  <tr>
+    <td>DATA-INVALID</td>
+    <td>Both email and password need to have a valid format.</td>
+  </tr>
+</table>
 
-**AUTH-ACCOUNT-LOGGEDIN**
-> User is successfully logged into its account.
-**AUTH-ACCOUNT-LOGIN-FAILED**
-> User could not be logged into its account.
-**AUTH-ACCOUNT-INVALID-PASSWORD**
-> Password entered by the user is incorrect.
-**DATA-INVALID**
-> Both email and password need to have a valid format.
-
-
-#### isAuthenticated
-
-> login (): returns *Promise*
+##### Is Authenticated
+> isAuthenticated ( ) : returns *Promise*
 
 This function is used to check if a user is authorized or not. It returns a respose with user profile if user is authorized and if user is not authorized it returns a response with a code **user-unauthorized**
 How to do that? Here it is : 
 ```javascript
+var auth = apolloProject.auth();
 auth.isAuthenticated().then(res=>{
     console.log(res);
      // response can be fetched here.
@@ -238,18 +252,29 @@ auth.isAuthenticated().then(res=>{
 });
 ```
 **Response codes for `isAuthenticated`** :
-**AUTH-AUTHORIZED**
-> Here's the user's data: (Data can be fetched from here)
-**AUTH-UNAUTHORIZED**
->> You are not logged into your account.
+<table>
+ <tr>
+  <th>Code</th>
+  <th>Description</th>
+ </tr>
+ <tr>
+  <td>AUTH-AUTHORIZED</td>
+  <td>Here's the user's data: (Data can be fetched from here) </td>
+ </tr>
+ <tr>
+  <td>AUTH-UNAUTHORIZED</td>
+  <td>You are not logged into your account.</td>
+ </tr>
+</table>
 
 
+##### Logout
+> logout ( ) : returns *Promise*
 
-#### logout
-> logout () returns *Promise*
-This simple function is called whenever user need to be logged out.
+This simple function is called whenever user needed to be logged out.
 
-```java
+```javascript
+var auth = apolloProject.auth();
 auth.logout().then(res=>{
         // response can be fetched here.
         // response codes are given below 
@@ -257,15 +282,22 @@ auth.logout().then(res=>{
 ```
 
 **Response codes for `logout`** :
-
-**AUTH-ACCOUNT-LOGGEDOUT**
-> You are successfully Logged out of your account.
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>AUTH-ACCOUNT-LOGGEDOUT</td>
+<td>You are successfully Logged out of your account. </td>
+</tr>
+</table>
 
 #### Device
 Device module provides all of the device features i.e if you want to pair or unpair a device, you need to add device module to your application.
 **Device** can be used simply by calling **.device()** of **apolloProject** created above.
 
-```java
+```javascript
 var device = apolloProject.device();
 // creates a device object which can
 // be used further.
@@ -273,88 +305,82 @@ var device = apolloProject.device();
 
 We will see that in the examples below.
 
-##### pairDevice 
-This function is simply used to pair a device to **Grandeur Cloud (Grandeur Apollo)**. It asks for a **device ID** and send a request to the server to pair that specific device.  
-Here is a working example :
-<table>
-<tr>
-<th> Code </th>
-<th> Description </th>
-</tr>
-<tr>
-<td>
+#### Pair Device 
+> pairDevice ( deviceID: *string* ) : returns *Promise*
 
-```java
+This function is simply used to pair a device to **Grandeur Cloud**. It asks for a **device ID** and send a request to the server to pair that specific device.  
+Here is a working example :
+
+```javascript
+var device = apolloProject.device();
 device.pairDevice(deviceID).then(res => {
         // response can be fetched here.
         // response codes are given below 
 }); 
 ```
-
-</td>
-<td>
-
-```java
-// accepts only a valid DEVICE ID 
-// which was added by Grandeur Cloud
-```
-
-</td>
-</tr>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>deviceID</td>
+    <td><em>string</em></td>
+    <td>A device ID which you can get from dashboard </td>
+  </tr>
 </table>
 
 **Response codes for `pairDevice`** :
 <table>
-<tr>
-<th>Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-PAIRED</td>
-<td>Device is successfully paired with the user account. </td>
-</tr>
-<tr>
-<td>DEVICE-ALREADY-PAIRED</td>
-<td>Device is already paired. </td>
-</tr>
-<tr>
-<td>DEVICE-ID-INVALID</td>
-<td>Device ID is not registered with the project.</td>
-</tr>
-<tr>
-<td>DATA-INVALID</td>
-<td>Device ID is required for pairing it.</td>
-</tr>
+ <tr>
+  <th>Code</th>
+  <th>Description</th>
+ </tr>
+ <tr>
+  <td>DEVICE-PAIRED</td>
+  <td>Device is successfully paired with the user account. </td>
+ </tr>
+ <tr>
+  <td>DEVICE-ALREADY-PAIRED</td>
+  <td>Device is already paired. </td>
+ </tr>
+ <tr>
+  <td>DEVICE-ID-INVALID</td>
+  <td>Device ID is not registered with the project.</td>
+ </tr>
+ <tr>
+  <td>DATA-INVALID</td>
+  <td>Device ID is required for pairing it.</td>
+ </tr>
 </table>
 
-##### unpairDevice 
+#### UnpairDevice 
+> unpairDevice ( deviceID: *string* ) : returns *Promise*
+
 This function is simply used to unpair a device to **Grandeur Cloud (Grandeur Apollo)**. It asks for a **device ID** and send a request to the server to pair that specific device.  
 Here is a working example :
-<table>
-<tr>
-<th> Code </th>
-<th> Description </th>
-</tr>
-<tr>
-<td>
 
-```java
+
+```javascript
+var device = apolloProject.device();
 device.unpairDevice(deviceID).then(res => {
         // response can be fetched here.
         // response codes are given below.
 }); 
 ```
 
-</td>
-<td>
-
-```java
-// accepts only a valid DEVICE ID 
-// which is already paired.
-```
-
-</td>
-</tr>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>deviceID</td>
+    <td><em>string</em></td>
+    <td>A device ID which you can get from dashboard </td>
+  </tr>
 </table>
 
 **Response codes for `unpairDevice`** :
@@ -376,17 +402,20 @@ device.unpairDevice(deviceID).then(res => {
 </tr>
 </table>
 
-##### getUserDevices 
+#### GetUserDevices 
+> getUserDevices ( ) : returns *Promise*
+
 This function returns a **list of all the paired devices** with the current** authenticated ID**.   
 Here is a working example :
-```java
+```javascript
+var device = apolloProject.device();
 device.getUserDevices().then(res => {
         // response can be fetched here.
         // response codes are given below.
 });
 ```
 
-**Response codes for `unpairDevice`** :
+**Response codes for `getUserDevices`** :
 <table>
 <tr>
 <th>Code</th>
@@ -398,11 +427,14 @@ device.getUserDevices().then(res => {
 </tr>
 </table>
 
-##### getOnlineDevicesCount 
-This function returns a **list of all the online devices** with the current** authenticated ID**.   
+#### GetOnlineDevicesCount 
+> getOnlineDevicesCount ( ) : returns *Promise*
+
+This function returns a **list of all the online devices** with the current **authenticated ID**.   
 Here is a working example :
 
-```java
+```javascript
+var device = apolloProject.device();
 device.getOnlineDevicesCount().then(res => {
         // response can be fetched here.
         // response codes are given below.
@@ -421,28 +453,87 @@ device.getOnlineDevicesCount().then(res => {
 </tr>
 </table>
 
-##### getDeviceSummary 
+#### GetDeviceSummary 
+> getDeviceSummary( deviceID: *string* ) : returns *Promise*
+
 This function asks for a **device ID** and returns a payload which includes data summary of that specific device.
 Here is a working example :
-```java
-var device=apolloProject.device();
+```javascript
+var device = apolloProject.device();
 device.getDeviceSummary(deviceID).then(res => {
-           console.log(res);
+        console.log(res);
 });
 ```
-##### getDeviceParms 
+**Parameters :**
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>deviceID</td>
+    <td><em>string</em></td>
+    <td>A device ID which you can get from dashboard </td>
+  </tr>
+</table>
+
+**Response codes for `getDeviceSummary`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>DEVICE-SUMMARY-FETCHED</td>
+<td>Summary for the device is successfully fetched.</td>
+</tr>
+</table>
+
+#### GetDeviceParms 
+> getDeviceParms( deviceID: *string* ) : returns *Promise*
+
 This function asks for a **device ID** and returns the payload which includes all the parameters of that specific device.
 Here is a working example :
-```java
+```javascript
 var device=apolloProject.device();
 device.getDeviceParms(deviceID).then(res => {
            console.log(res);
 });
 ```
+**Parameters :**
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>deviceID</td>
+    <td><em>string</em></td>
+    <td>A device ID which you can get from dashboard </td>
+  </tr>
+</table>
+
+**Response codes for `getDeviceParms`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>DEVICE-PARMS-FETCHED</td>
+<td>Parms for the device are successfully fetched.</td>
+</tr>
+</table>
+
 ##### setDeviceSummary 
+setDeviceSummary (deviceID : *string*, summary : *JSON-Object*) : returns *Promise*
+
 This function asks for a **device ID** and a **JSON object** which includes summary parameters.
 Here is a working example :
-```java
+```javascript
 var device=apolloProject.device();
 var summary = {
           voltage: 1200,
@@ -452,10 +543,42 @@ device.setDeviceSummary(deviceID, summary).then(res => {
            console.log(res);
 });
 ```
+**Parameters :**
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>deviceID</td>
+    <td><em>string</em></td>
+    <td>A device ID which you can get from dashboard.</td>
+  </tr>
+  <tr>
+    <td>summary</td>
+    <td><em>JSON Object</em></td>
+    <td>A JSON object with all the summary parameters needed to set.</td>
+  </tr>
+</table>
+
+**Response codes for `setDeviceParms`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>DEVICE-SUMMARY-UPDATED</td>
+<td>Summary for the device is successfully updated.</td>
+</tr>
+</table>
+
 ##### setDeviceParms 
 This function asks for a **device ID** and a **JSON object** which includes device parameters.
 Here is a working example :
-```java
+```javascript
 var device = apolloProject.device();
 var params = {
           voltage: 1200,
@@ -468,7 +591,7 @@ device.setDeviceParms(deviceID, params).then(res => {
 ##### setDeviceName 
 This function asks for a **device ID** and **a new name** and then it sets a new name for that specific device.
 Here is a working example :
-```java
+```javascript
 var device = apolloProject.device();
 var newName = "newDeviceName";
 device.setDeviceName(deviceID, newName).then(res => {
@@ -478,7 +601,7 @@ device.setDeviceName(deviceID, newName).then(res => {
 ##### getDeviceStatus 
 This function asks for a **device ID** and it returns a payload which the current device status of that specific device.
 Here is a working example :
-```java
+```javascript
 var device = apolloProject.device();
 device.getDeviceStatus(deviceID).then(res => {
            console.log(res);
@@ -490,7 +613,7 @@ This module is used to access all the storage features of **Grandeur Cloud** i.e
 ##### uploadFile 
 This function asks for a **file** and **file name** and uploads that file to the server.
 Here is a working example :
-```java
+```javascript
 var files=apolloProject.storage();
 files.uploadFile(file, filename).then(res => {
            console.log(res);
@@ -499,7 +622,7 @@ files.uploadFile(file, filename).then(res => {
 ##### getFileUrl 
 This function asks for a **file name** and gets that file from the server if that file exists.
 Here is a working example :
-```java
+```javascript
 var files=apolloProject.storage();
 files.uploadFile(file, filename).then(res => {
            console.log(res);
