@@ -215,7 +215,7 @@ auth.login(email,password).then(res=>{
 **Response codes for `login`** :
 
 **AUTH-ACCOUNT-LOGGEDIN**
->>User is successfully logged into its account.
+&nbsp;&nbsp;&nbsp;&nbsp; User is successfully logged into its account.
 <table>
 <tr>
 <th>Code</th>
