@@ -1,11 +1,14 @@
 
 # Grandeur Cloud [![Version](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://cloud.grandeur.tech)
+
 We are making it easier for you to build internet of things based smart products with our cloud platform and software development kit. [Let`s Sign Up] and create something amazing rightnow!
-### API DOCUMENTATION
-####  1. JavaScript SDK
+
+### JavaScript SDK
+
 JavaScript SDK provides functions which will be used to communicate with **Grandeur Cloud** from the front-end of your application.
 JavaScript SDK currently supports 3 modules.
-1. ##### Auth
+
+1. #### Auth
 Auth module provides major authentication functionalities.
  -  `register` (This function sends verify code and register request with registration data to the server.
  -  `sendCode` (This function sends send code request with provided data to the server).
@@ -13,7 +16,7 @@ Auth module provides major authentication functionalities.
  -  `isAuthenticated` (This function sends check if a user`s logged in request with required data to the server).
  -  `logout` (This function sends logout the user request to the server).
 
-2. ##### Device
+2. #### Device
 Device module provides all the device functionalities.
 
  -  `pairDevice` (Method to send request for pairing a device with this User ID).
@@ -28,7 +31,7 @@ Device module provides all the device functionalities.
  -  `setDeviceName` (Method to update a particular device`s name).
  -  `getDeviceStatus` (Method to request a particular device`s online status).
 
-3. ###### Storage
+3. ##### Storage
 Storage module provides basic storage functionalities.
 
  -  `pairDevice` (Method to upload a file to the server`s file system).
@@ -38,6 +41,7 @@ Storage module provides basic storage functionalities.
 ### Get Started
 To get started with **Apollo JavaScript SDK**, you first need to add add a reference link to CDN file.
 For example :
+
 ```javascript
 <script src="https://xyz.com/grandeur.apollo.js">
 // place this tag at the end of your body.
@@ -45,117 +49,76 @@ For example :
 ```
 Now you can create a new **Apollo** project with a API-KEY which can be accessed after creating a new account at Grandeur Cloud Dashbaord.
 How to do that? Here is an example for you.
+
 ```javascript
 var apolloProject = apollo.init("YOUR-APIKEY-HERE");
 // initalize's your project with your respected token.
 ```
+
 Now you can access all the amazing features of Grandeur Cloud and can change the world!
 
-#### 
-Auth provides a basic functionality to authenticate a user to **Grandeur Cloud**(Grandeur Apollo).
+#### Auth
+Auth provides a basic functionality for admin to authenticate a user to **Grandeur Cloud**.
 **Auth** can be used simply by calling `.auth()` of **apolloProject** created above.
+
 ```javascript
 var auth = apolloProject.auth();
 // creates an auth object which can
 // be used further.
 ```
+
 We will see more in the examples below.
-##### register
+#### Register
+> register( email : *string*, password : *string*, displayName : *string*, phone : *string*) : returns *Promise*
+
 Register a new user in a single step with this function.
-In order to **register** you first have to use sendCode function. 
-###### sendCode
-`sendCode` authenticates a user with **one time code**, whenever this function is called a code has been sent to the specific user in order to **register** a new account. it returns a **token** will later on can be used to match with code sent to the user.
-`sendCode` function requires email, password, display name and mobile number in order to work.
-Here is a working example on how to use send code :
-<table>
-<tr>
-<th> Code </th>
-<th> Description </th>
-</tr>
-<tr>
-<td>
-
-```javascript
-auth.sendCode(email,password,displayName,mobile).
-then(res=>{
-    // response can be fetched here.
-    // response codes are given below.
-});
-```
-
-</td>
-<td>
-
-```javascript
-// sendCode() only accepts a valid email.
-// valid : abc@xyz.com
-// invalid : @.cij@aaa.c
-// password have minumum 6 characters long.
-// displayName can only have characters.
-// mobile number must start with country code
-// i.e +923331234567
-// res.token contains token you need to verify
-```
-
-</td>
-</tr>
-</table>
-
-**Response codes for `sendCode`** :
-<table>
-<tr>
-<th>Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>PHONE-CODE-SENT</td>
-<td>Verification code is successfully sent to the phone number.</td>
-</tr>
-<tr>
-<td>PHONE-CODE-SENDING-FAILED</td>
-<td>Verification code could not be sent to the phone number.</td>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-DUPLICATE</td>
-<td>Email is already registered with our server.</td>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-DUPLICATE</td>
-<td>A profile already exists with this email.</td>
-</tr>
-</table>
-
-Afterwards **register** can be called when you already have the token.
-
-**Register** function needs a token which was returned by **sendCode**() and a code which is give by the user.
-<table>
-<tr>
-<th> Code </th>
-<th> Description </th>
-</tr>
-<tr>
-<td>
-
 ```javascript
 var auth = apolloProject.auth();
-auth.register(token,code).then(res=>{
+
+// confrim registratin module will 
+// be saved in this object.
+var confirmRegistration = null;
+
+auth.register(email, password, displayName, phone).then(res=>{
     console.log(res);
     // response can be fetched here.
     // response codes are given below
-   });
+    if(res.code=="PHONE-CODE-SENT") {
+        // one time authorization code has been sent
+
+        // confirm object can be fetched here
+        confirmRegistration = res.confirm ;
+    }
+});
 ```
-</td>
-<td>
+**Parameters :**
 
-```javascript
-// token must be valid (fetched previously by sendCode())
-// code was sent to the user and collected from the
-// user
-
-```
-
-</td>
-</tr>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>email</td>
+    <td><em>string</em></td>
+    <td>a formatted email address</td>
+  </tr>
+  <tr>
+    <td>password</td>
+    <td><em>string</em></td>
+    <td>minimum 6 characters long</td>
+  </tr>
+  <tr>
+    <td>displayName</td>
+    <td><em>string</em></td>
+    <td>accepts only string</td>
+  </tr>
+  <tr>
+    <td>phone</td>
+    <td><em>string</em></td>
+    <td>phone number must starts with country code i.e +923331234567</td>
+  </tr>
 </table>
 
 **Response codes for `register`** :
@@ -165,16 +128,61 @@ auth.register(token,code).then(res=>{
 <th>Description</th>
 </tr>
 <tr>
-<td>AUTH-ACCOUNT-REGISTERED</td>
-<td>User Account is successfully created.</td>
+<td>PHONE-CODE-SENT</td>
+<td>Verification code is sent to the phone number.</td>
 </tr>
 <tr>
-<td>AUTH-ACCOUNT-REGISTRATION-FAILED</td>
-<td>User's new account could not be created.</td>
+<td>PHONE-NUMBER-INVALID</td>
+<td>Phone number entered is invalid.</td>
+</tr>
+<tr>
+<td>AUTH-ACCOUNT-DUPLICATE</td>
+<td>A profile already exists with this email.</td>
 </tr>
 <tr>
 <td>DATA-INVALID</td>
 <td>Both email and password need to have a valid format.</td>
+</tr>
+</table>
+
+Now after fetching code from the user, *confirmRegistration* can be called.
+> confirmRegistration (code : *string*) : returns *Promise*
+ 
+ ```javascript 
+confirmRegistration(code).then(res=>{
+    console.log(res);
+    // response can be fetched here.
+    // response codes are given below
+});
+ ```
+ **Parameters :**
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>code</td>
+    <td><em>string</em></td>
+    <td>code fetched from the user</td>
+  </tr>
+</table>
+
+**Response codes for `confirmRegistration`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>AUTH-ACCOUNT-REGISTERED</td>
+<td>User's profile is successfully created.</td>
+</tr>
+<tr>
+<td>PHONE-CODE-VERIFICATION-FAILED</td>
+<td>An unknown error occurred at the server while verifying user's code.</td>
 </tr>
 </table>
 
@@ -761,25 +769,96 @@ device.getDeviceStatus(deviceID).then(res => {
 #### Storage
 This module is used to access all the storage features of **Grandeur Cloud** i.e to upload or download a file.
 
-##### uploadFile 
+#### Upload File 
+uploadFile (file : *JSON-Object*, fileName : *string*) : returns *void*
+
 This function asks for a **file** and **file name** and uploads that file to the server.
+To upload to a file, first fetch the file with html `input` tag.
+
+```html
+<input type="file" id="file">
+```
+Now you can access the file and upload that easily.
 Here is a working example :
 ```javascript
 var files=apolloProject.storage();
-files.uploadFile(file, filename).then(res => {
-           console.log(res);
-});
+
+// Fetch file data from input tag.
+var file = document.getElementById("file").files[0];
+var fileName = "displayPicture.jpg";
+
+files.uploadFile(file, fileName);
 ```
-##### getFileUrl 
+**Parameters :**
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>file</td>
+    <td><em>JSON-Object</em></td>
+    <td>A default JSON-Object with all the file details.</td>
+  </tr>
+  <tr>
+    <td>fileName</td>
+    <td><em>string</em></td>
+    <td>File name you want to save.</td>
+  </tr>
+</table>
+
+**Response codes for `uploadFile`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>STORAGE-FILE-UPLOADED</td>
+<td>File is successfully uploaded to the project.</td>
+</tr>
+</table>
+
+#### Get File Url 
+getFileUrl (fileName : *string*) : returns *void*
+
 This function asks for a **file name** and gets that file from the server if that file exists.
 Here is a working example :
 ```javascript
 var files=apolloProject.storage();
-files.uploadFile(file, filename).then(res => {
-           console.log(res);
-});
+// File name you want to fetch.
+var fileName = "displayPicture.jpg";
+
+files.getFileUrl(filename);
 ```
 
+**Parameters :**
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>fileName</td>
+    <td><em>string</em></td>
+    <td>File name you want to save.</td>
+  </tr>
+</table>
+
+**Response codes for `getFileUrl`** :
+<table>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>STORAGE-FILE-URL-FETCHED</td>
+<td>Here is the URL to access the file.</td>
+</tr>
+</table>
 
 [Let`s Sign Up]: https://cloud.grandeur.tech
 
