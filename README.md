@@ -3,6 +3,32 @@
 
 We are making it easier for you to build internet of things based smart products with our cloud platform and software development kit. [Let`s Sign Up] and create something amazing rightnow!
 
+# Table of Contents
+## 1. [Get Started](#introduction)
+## 2. [Documentation](#paragraph1)
+  ### 2.1. [Init](#subparagraph1)
+  ### 2.2 [Auth](#subparagraph1)
+  #### 2.2.1 [Register](#subparagraph1)
+  #### 2.2.2 [Login](#subparagraph1)
+  #### 2.2.3 [isAuthenticated](#subparagraph1)
+  #### 2.2.4 [logout](#subparagraph1)
+  ### 2.3 [Device](#subparagraph1)
+  #### 2.3.1 [pairDevice](#subparagraph1)
+  #### 2.3.2 [unpairDevice](#subparagraph1)
+  #### 2.3.3 [getUserDevices](#subparagraph1)
+  #### 2.3.4 [getOnlineDevicesCount](#subparagraph1)
+  #### 2.3.5 [getDeviceSummary](#subparagraph1)
+  #### 2.3.6 [getDeviceParms](#subparagraph1)
+  #### 2.3.7 [setDeviceSummary](#subparagraph1)
+  #### 2.3.8 [setDeviceParms](#subparagraph1)
+  #### 2.3.8 [getDeviceDetails](#subparagraph1)
+  #### 2.3.8 [setDeviceName](#subparagraph1)
+  #### 2.3.8 [getDeviceStatus](#subparagraph1)
+  ### 2.2 [Storage](#subparagraph1)
+  #### 2.2.1 [uploadFile](#subparagraph1)
+  #### 2.2.2 [getFileUrl](#subparagraph1)
+
+
 ### JavaScript SDK
 
 JavaScript SDK provides functions which will be used to communicate with **Grandeur Cloud** from the front-end of your application.
