@@ -14,7 +14,7 @@
           <div class="alert alert-success" id="result">
             
           </div>
-          <input value="ck5az2nh900032ktkg6ar9i8z" type="text" class="form-control" id="deviceId" placeholder="Device Id Here">
+          <input value="ck73ngond000338tkbzhlfx4r" type="text" class="form-control" id="deviceId" placeholder="Device Id Here">
           <button onclick="pair()" class="btn btn-primary btn-sm">Pair Device</button>
           <button onclick="unPair()" class="btn btn-warning btn-sm">Unpair Device</button>
           <br><br>
@@ -101,7 +101,7 @@
        }
        setDeviceName = () => {
         var deviceID = document.getElementById("deviceId").value;
-        device.setDeviceName(deviceID, "CutiPie").then(res => {
+        device.setDeviceName(deviceID, "A new name").then(res => {
            console.log(res);
          });
        }
