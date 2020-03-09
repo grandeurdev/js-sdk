@@ -8,7 +8,7 @@ We are making it easier for you to build internet of things based smart products
 JavaScript SDK provides functions which will be used to communicate with **Grandeur Cloud** from the front-end of your application.
 JavaScript SDK currently supports 3 modules.
 
-1. #### Auth
+#### Auth
 Auth module provides major authentication functionalities.
  -  `register` (This function sends verify code and register request with registration data to the server.
  -  `sendCode` (This function sends send code request with provided data to the server).
@@ -16,7 +16,7 @@ Auth module provides major authentication functionalities.
  -  `isAuthenticated` (This function sends check if a user`s logged in request with required data to the server).
  -  `logout` (This function sends logout the user request to the server).
 
-2. #### Device
+#### Device
 Device module provides all the device functionalities.
 
  -  `pairDevice` (Method to send request for pairing a device with this User ID).
@@ -31,7 +31,7 @@ Device module provides all the device functionalities.
  -  `setDeviceName` (Method to update a particular device`s name).
  -  `getDeviceStatus` (Method to request a particular device`s online status).
 
-3. ##### Storage
+#### Storage
 Storage module provides basic storage functionalities.
 
  -  `pairDevice` (Method to upload a file to the server`s file system).
