@@ -1,66 +1,59 @@
 
 # Grandeur Cloud [![Version](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://cloud.grandeur.tech)
 
-Building a smart (IoT) product is an art, because it is about unifying the physical world with the digital one. When you connect a hardware to the web, magic happens. But it involves development operations to be carried out over a huge technology stack (you need your own hardware, your own apps and even your own backend) in order to make such products work over production. Then if you are (somehow) done with the development operations, there comes the hardest part; you are going to have to scale it all as your user base grows.
-
-We can understand this, because we have been there. Introducing Grandeur Cloud; a backend as a service for IoT. We have designed this platform so that you do not have to worry about backend of your next big thing, so could focus on what matters the most; your hardware and apps. 
+We are making it easier for you to build internet of things based smart products with our cloud platform and software development kit. [Let`s Sign Up] and create something amazing rightnow!
 
 # JavaScript SDK
-Grandeur Cloud can resolve all the problems that you could face in building a smart (IoT) product. Like you can authenticate users, can store files in storage, can save data in database, host static website with builtin hosting and can subscribe to events from hardware and app to do realtime communication with the cloud platform. All it requires the integration of our platform in your technology stack.
 
-By this time you would be like okay, we got it why Grandeur is building this platform and yeah it is super great and super useful. But how we can integrate it in our apps? So here is the answer. We have built this amazing JavaScript SDK to make the integration process of Grandeur Cloud in web apps a lot more simpler. So now all you have to do is to follow the [get started](#get-started) gudelines to quickly start building your solution. 
+JavaScript SDK provides functions which will be used to communicate with **Grandeur Cloud** from the front-end of your application.
+JavaScript SDK currently supports 3 modules.
 
-Now in order to get deep insight into our SDK and platform you can follow the following table of content.
+
+# Table of Contents
 
 - [Get Started](#get-started)
-- [Grandeur Ecosystem](#grandeur-ecosystem)
 - [Documentation](#documentation)
-    * [init](#init)
-    * [auth](#auth)
-        + [register](#register)
-        + [login](#login)
-        + [isAuthenticated](#is-authenticated)
-        + [logout](#logout)
-    * [device](#device)
-        + [pairDevice](#pair-device)
-        + [unpairDevice](#unpair-device)
-        + [getUserDevices](#get-user-devices)
-        + [getOnlineDevicesCount](#get-online-devices-count)
-        + [getDeviceSummary](#get-device-summary)
-        + [getDeviceParms](#get-device-parms)
-        + [setDeviceSummary](#set-device-summary)
-        + [setDeviceParms](#set-device-parms)
-        + [getDeviceDetails](#get-device-details)
-        + [setDeviceName](#set-device-name)
-        + [getDeviceStatus](#get-device-status)
-    * [storage](#storage)
-        + [uploadFile](#upload-file)
-        + [getFileUrl](#get-file-url)
+    * [Init](#init)
+    * [Auth](#auth)
+        + [Register](#register)
+        + [Login](#login)
+        + [Is Authenticated](#is-authenticated)
+        + [Logout](#logout)
+    * [Device](#device)
+        + [Pair Device](#pair-device)
+        + [Unpair Device](#unpair-device)
+        + [Get User Devices](#get-user-devices)
+        + [Get Online Devices Count](#get-online-devices-count)
+        + [Get Device Summary](#get-device-summary)
+        + [Get Device Parms](#get-device-parms)
+        + [Set Device Summary](#set-device-summary)
+        + [Set Device Parms](#set-device-parms)
+        + [Get Device Details](#get-device-details)
+        + [Set Device Name](#set-device-name)
+        + [Get Device Status](#get-device-status)
+    * [Storage](#storage)
+        + [Upload File](#upload-file)
+        + [Get File Url](#get-file-url)
 
 
 # Get Started
-Let us get to the point straight. You are all motivated and ready to dive in. So quickly go to [Grandeur Cloud](https://cloud.grandeur.tech/), create a new project or select a project to get the API key.
-
-![Select a project at Grandeur Cloud Dashboard](/images/select-project.jpg)
-
-Then just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://cloud.grandeur.tech/cdn/apollo.js). 
+To get started with **Apollo JavaScript SDK**, you first need to add a reference link to CDN file.
+For example :
 
 ```javascript
-// Drop this link in your web app
-// and ta-da, you can now make magic happen
-<script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+<script src="https://xyz.com/grandeur.apollo.js">
+// place this tag at the end of your body.
+</script>
 ```
-This will give you access to the global ` Apollo ` object, through which you can intialize the SDK and get a reference to your project as shown below 
+Now you can create a new **Apollo** project with a API-KEY which can be accessed after creating a new account at Grandeur Cloud Dashbaord.
+How to do that? Here is an example for you.
 
 ```javascript
-// With global Apollo object, you can simply intialize the SDK with your API key and get reference to your project
-var apolloProject = apollo.init("YOUR-APIKEY");
+var apolloProject = apollo.init("YOUR-APIKEY-HERE");
+// initalize's your project with your API key.
 ```
 
-Go change the world. You can now access all the amazing features of Grandeur Cloud with the reference object of your project that you just got.
-
-# Grandeur Ecosystem
-
+Now you can access all the amazing features of Grandeur Cloud and can change the world!
 
 # Documentation
 
