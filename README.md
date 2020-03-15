@@ -13,6 +13,7 @@ By this time you would be like okay, we got it why Grandeur is building this pla
 Now in order to get deep insight into our SDK and platform capabilities you can follow the [documentation](#documentation) or to get to understand the core concepts simply dive into [ecosystem](#grandeur-ecosystem) section.
 
 - [Get Started](#get-started)
+- [Example](#example)
 - [Grandeur Ecosystem](#grandeur-ecosystem)
 - [Documentation](#documentation)
     * [init](#init)
@@ -60,8 +61,184 @@ This will give you access to the global ` Apollo ` object, through which you can
 var apolloProject = apollo.init("YOUR-APIKEY");
 ```
 
-Go change the world. You can now access all the amazing features of Grandeur Cloud with the reference object of your project that you just got. For example this is how you can login a user and get list of devices paired to the account
+Go change the world. You can now access all the amazing features of Grandeur Cloud with the reference object of your project that you just got.  Take a look at the [example](#example) to learn how to quickly build an app to get list of devices paired to user account.
 
+In the end it is important to note it comes with CORS protection in it by default. So in order to start communicating with cloud platform, simply visit [settings](https://cloud.grandeur.tech/settings) page at cloud dashboard and whitelist the domain that your web app is using (if you are testing it locally and haven't deployed it to a domain yet, just add localhost:[port] to the allowed domains list but don't forget to remove it from list before shipping you app in production).
+
+# Example
+Now when you know how to get started with Grandeur Cloud, it is time to dive into bit depth. In this example, we will be building a web app to get list of devices paired to a user account. So start building and follow the steps
+
+1. Start a new Project
+  
+    To take a start first create a new project by visiting cloud dashboard. Note the API key and create a new directory (we will call it `workspace` from now own) in your local system.
+
+2. Create index page of the app
+
+    Now once you are done with creating your workspace, create a new file in it and name it to `index.html` and open it in any editor of your choice. Add the following code to it and save it.
+
+    ```html
+    <!-- Index.html -->
+    <!DOCTYPE html>
+    <html>
+      <!-- Head -->
+      <head>
+        <!-- Title -->
+        <title>First Grandeur App</title>
+      </head>
+      
+      <!-- Body -->
+      <body>
+        <!-- Heading -->
+        <h1>First Grandeur App</h1>
+      </body>
+    </html>  
+    ```
+
+    This is quite basic HTML page. We have just added a heading to body and custom title of the page. So now in order to open the page in the browser we will have to run a local server. We can do this easily with `Node.js` by installing a package called `http-server` (to learn more about it checkout this [tutorial](https://jasonwatmore.com/post/2016/06/22/nodejs-setup-simple-http-server-local-web-server)). So now simply open command prompt in your workspace and run the command as shown below
+
+    ```
+    $ http-server
+
+    Starting up http-server, serving ./
+    Available on:
+      http://192.168.0.5:8080
+      http://127.0.0.1:8080
+    Hit CTRL-C to stop the server
+    ```
+
+    and now you can navigate to `localhost:8080` in your browser to access the page that you just created.
+
+3. Get reference to the project in app
+    
+    After creating the file just drop in the link to of the CDN in the app header. Then create a new file `main.js` and open it in any editor of your choice. Finally include the `main.js` file in `index.html` and get a reference to project by initializing the SDK inside the js file that we just added to the workspace. So the updated code is as below
+
+    ```html
+    <!-- index.html -->
+
+    <!DOCTYPE html>
+    <html>
+      <!-- Head -->
+      <head>
+        <!-- Title -->
+        <title>First Grandeur App</title>
+
+        <!-- Link SDK with CDN -->
+        <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+      </head>
+      
+      <!-- Body -->
+      <body>
+        <!-- Heading -->
+        <h1>First Grandeur App</h1>
+
+        <!-- Script -->
+        <script src="./main.js"></script>
+      </body>
+    </html>  
+    ```
+
+    ```javascript
+    // main.js
+
+    // Initialize the SDK and get
+    // a reference to the project
+    var apolloProject = apollo.init("YOUR-APIKEY");
+    ```
+4. Authenticate a user
+
+    Now is the time to add magic into the app. First step is to authenticate a user. For this purpose we will have to add a form and on form submit we will call a JS function where we will send a request to the cloud platform. The updated code is as below
+
+    ```html
+    <!-- index.html -->
+
+    <!DOCTYPE html>
+    <html>
+      <!-- Head -->
+      <head>
+        <!-- Title -->
+        <title>First Grandeur App</title>
+
+        <!-- Link SDK with CDN -->
+        <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+      </head>
+      
+      <!-- Body -->
+      <body>
+        <!-- Heading -->
+        <h1>First Grandeur App</h1>
+
+        <!-- Description -->
+        <p>Login with the form below and then you can list the devices paired to your account.</p>
+
+        <!-- Login Form -->
+        <form onSubmit="loginUser(); return false;">
+          <!-- Email -->
+          <input type="email" name="email" id="email" placeholder="Email" required/>
+
+          <!-- Password -->
+          <input type="password" name="password" id="password" placeholder="Password" required/>
+
+          <!-- Submit -->
+          <input type="submit" value="Login" />
+        </form>
+
+        <!-- Script -->
+        <script src="./main.js"></script>
+      </body>
+    </html>  
+    ```
+    ```javascript
+    // main.js
+    
+    // Initialize the SDK and get
+    // a reference to the project
+    var apolloProject = apollo.init("YOUR-APIKEY");
+
+    // Function to login user
+    loginUser = async () => {
+      // Get email and password
+      // from the form
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      
+      // Get reference to the auth class
+      var auth = apolloProject.auth();
+
+      // Use try and catch block in order to 
+      // use async await otherwise promises are also supported
+      try {
+        // Submit request
+        var res = await auth.login(email, password);
+
+        // Got the response to login request
+        // so log it in console
+        console.log(res);
+
+        // Generate an alert
+        switch(res.code) {
+          case "AUTH-ACCOUNT-LOGGEDIN": 
+            // User Authenticated
+            alert("Success: User Authenticated");
+            break;
+
+          case "DATA-INVALID": 
+            // Logging failed due
+            // to invalid data
+            alert("Error: Email or Password is invalid");
+        }
+      }
+      catch(err) {
+        // Error usually got generated when
+        // we are not connected to the internet
+        // Log the error to the console
+        console.log(err);
+
+        // Generate an alert
+        alert("Error: Failed to authenticate the user");
+      }
+    }
+    ```
+5. List device pair
 ```javascript
 // With the apolloProject object get a reference
 // to the auth class and device class
