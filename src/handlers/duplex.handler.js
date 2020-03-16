@@ -22,9 +22,36 @@ class duplex {
     }
 
     // To initilize the connection
-    init() {
+    async init(auth) {
+        // Before starting the connection
+        // verify that either the user is authenticated
+        // or not using the auth object provided in args
         // Start the Connection
-        this.ws  = new WebSocket(this.node , "node");
+
+        try {
+            var res = await auth.isAuthenticated();
+
+            // Got the response
+            switch(res.code) {
+                case "AUTH-AUTHORIZED": 
+                    // User is authenticated
+                    // so try to connect to the duplex
+                    this.ws  = new WebSocket(this.node , "node");
+                    break;
+
+                case "AUTH-UNAUTHORIZED": 
+                    // User is not Authenticated
+                    // try to reconnect after some time
+                    this.reconnect(auth);      
+                    return; 
+            }
+        }
+        catch(err) {
+            // Internet connectivity issue
+            // so try to reconnect in a while
+            this.reconnect(auth);
+            return;
+        }
         
         // When conenction opened with the server
         this.ws.onopen = () => {
@@ -48,10 +75,7 @@ class duplex {
             clearInterval(this.ping);
 
             // Retry connection after a while
-            setTimeout(() => {
-                // Reconnect
-                this.init();
-            }, 5000);
+            this.reconnect(auth)
         }
 
         this.ws.onmessage = (message) => {
@@ -61,12 +85,23 @@ class duplex {
             // Raise user event
             if(this.eventQueue[data.header.id]){
                 // All messages other than subscription are passed to the event queue
-                this.eventQueue[data.header.id].resolve(data);
+                this.eventQueue[data.header.id].resolve(data.payload);
 
                 // Deleting the callbacked function from event queue
                 delete this.eventQueue[data.header.id];
             }
         }
+    }
+
+    reconnect(auth) {
+        // This function will call the
+        // init event again with the auth
+        // object after certain time
+
+        setTimeout(() => {
+            // Call init again
+            this.init(auth);
+        }, 5000);
     }
 
     send(packet) {

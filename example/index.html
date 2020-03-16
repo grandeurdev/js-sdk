@@ -1,0 +1,111 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html>
+  <!-- Head -->
+  <head>
+    <!-- Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title -->
+    <title>First Grandeur App</title>
+
+    <!-- Link SDK with CDN -->
+    <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+
+    <!-- Ionic Module -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+
+    <!-- Ionic CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"/>
+
+  </head>
+  
+  <!-- Body -->
+  <body>
+    <ion-app>
+        <!-- Page Header -->
+        <ion-header>
+          <ion-toolbar color="primary">
+            <ion-title>First Grandeur App</ion-title>
+            
+            <ion-buttons slot="end">
+              <ion-button onclick="logout();">
+                <ion-icon slot="icon-only" ios="close" md="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        
+        <!-- Content -->
+        <ion-content class="ion-padding">
+
+          <!-- Login Card -->
+          <ion-card>
+            <!-- Header -->
+            <ion-card-header>
+              <!-- Title of Card -->
+              <ion-card-title>Login</ion-card-title>
+
+              <!-- Description of Card -->
+              <ion-card-subtitle>Please provide your credentials in the form below to login to the application.</ion-card-title>
+            </ion-card-header>
+
+            <!-- Content -->
+            <ion-card-content>
+              <form id="login-form" onsubmit="loginUser(); return false;"> 
+                <!-- Email Input -->
+                <ion-item>
+                  <ion-label position="floating">Email</ion-label>
+                  <ion-input type="email" required name="email" id="email"></ion-input>
+                </ion-item>
+
+                <!-- Password -->
+                <ion-item>
+                  <ion-label position="floating">Password</ion-label>
+                  <ion-input type="password" required name="password" id="password"></ion-input>
+                </ion-item>
+
+                <!-- Submit -->
+                <ion-button expand="block" type="submit">Submit</ion-button>
+              </form>
+            </ion-card-content>
+
+          </ion-card>
+
+          <!-- List Card -->
+          <ion-card>
+            <!-- Header -->
+            <ion-card-header>
+              <!-- Title of Card -->
+              <ion-card-title>Devices List</ion-card-title>
+
+              <!-- Description of Card -->
+              <ion-card-subtitle>Click the button below to get the list of all the devices paired to the user account.</ion-card-title>
+            </ion-card-header>
+
+            <!-- Content -->
+            <ion-card-content>
+                <!-- Buttons -->
+                <ion-button onclick="listPairedDevices()" size="small">List</ion-button>
+                <ion-button onclick="clearListPairedDevices()" size="small">Clear</ion-button>
+
+                <!-- List -->
+                <ion-list id="devices-list">
+                  
+                </ion-list>
+
+            </ion-card-content>
+
+          </ion-card>
+  
+
+        </ion-content>
+
+    </ion-app>
+
+    <!-- Script -->
+    <script src="./main.js"></script>
+  </body>
+</html>  

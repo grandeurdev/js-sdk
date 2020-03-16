@@ -187,6 +187,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
       </body>
     </html>  
     ```
+
     ```javascript
     // main.js
     
@@ -238,60 +239,187 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
       }
     }
     ```
-5. List device pair
-```javascript
-// With the apolloProject object get a reference
-// to the auth class and device class
-var auth = apolloProject.auth();
-var device = apolloProject.device();
-
-// Credentials
-var email = "user@domain.com";
-var password = "12345678";
-
-// Use Login function and provide credentials
-auth.login(email, password).then((res) => {
+5. Add list all paired devices and logout button
+    Now when we are done with implmenting authentication feature into our app, it is time to implement list all the paired devices and logout feature. So where the former feature will allow a user to list all the devices paired to his account, the later feature will utimately allow him to logout of his account. For this purpose, we will first add two buttons to the index page and then we will link them to a JS functions. The updated code is as below
     
-    // Got the response to login
-    // request
-    switch(res.code) {
-      case "AUTH-ACCOUNT-LOGGEDIN": 
-        // User Authenticated
-        // Now submit the request to get
-        // list of devices paired to the account
-        return device.getUserDevices();
-        break;
+    ```html
+    <!-- index.html -->
 
-      default: 
-        // Logging failed due
-        // to invalid data
-        console.log(`Auhtentication Failed: ${res.code}`);
+    <!DOCTYPE html>
+    <html>
+      <!-- Head -->
+      <head>
+        <!-- Title -->
+        <title>First Grandeur App</title>
+
+        <!-- Link SDK with CDN -->
+        <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+      </head>
+      
+      <!-- Body -->
+      <body>
+        <!-- Heading -->
+        <h1>First Grandeur App</h1>
+
+        <!-- Description -->
+        <p>Login with the form below and then you can list the devices paired to your account.</p>
+
+        <!-- Login Form -->
+        <form onsubmit="loginUser(); return false;">
+          <!-- Email -->
+          <input type="email" name="email" id="email" placeholder="Email" required/>
+
+          <!-- Password -->
+          <input type="password" name="password" id="password" placeholder="Password" required/>
+
+          <!-- Submit -->
+          <input type="submit" value="Login" />
+        </form>
+
+        <!-- List Button -->
+        <button onclick="listPairedDevices();">List Paired Devices</button>
+
+        <!-- Logout Button -->
+        <button onclick="logout();">Logout</button>
+
+        <!-- Script -->
+        <script src="./main.js"></script>
+      </body>
+    </html>  
+    ```
+
+    ```javascript
+    // main.js
+    
+    // Initialize the SDK and get
+    // a reference to the project
+    var apolloProject = apollo.init("YOUR-APIKEY");
+    
+    // Function to login user
+    loginUser = async () => {
+      // Get email and password
+      // from the form
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      
+      // Get reference to the auth class
+      var auth = apolloProject.auth();
+
+      // Use try and catch block in order to 
+      // use async await otherwise promises are also supported
+      try {
+        // Submit request
+        var res = await auth.login(email, password);
+
+        // Got the response to login request
+        // so log it in console
+        console.log(res);
+
+        // Generate an alert
+        switch(res.code) {
+          case "AUTH-ACCOUNT-LOGGEDIN": 
+            // User Authenticated
+            alert("Success: User Authenticated");
+            break;
+
+          case "DATA-INVALID": 
+            // Logging failed due
+            // to invalid data
+            alert("Error: Email or Password is invalid");
+        }
+      }
+      catch(err) {
+        // Error usually got generated when
+        // we are not connected to the internet
+        // Log the error to the console
+        console.log(err);
+
+        // Generate an alert
+        alert("Error: Failed to authenticate the user");
+      }
     }
-})
-.then((res) => {
-  
-  // Got the response to list devices
-  // request so log the response
-  console.log(res);
-  
-  // Logout of user account
-  return auth.logout();
-})
-.then((res) => {
-  
-  // Got the response to logout
-  // request so log the response
-  console.log(res);
-})
-.catch((err) => {
 
-  // Error generated
-  // while handling the request
-  // log out the err
-  console.log(err);
-});
-```
+    // Function to list devices paired to a
+    // user account
+    listPairedDevices = async () => {
+      // Get reference to the auth class
+      var device = apolloProject.device();
 
+      // Use try and catch block in order to 
+      // use async await otherwise promises are also supported
+      try {
+        // Submit request
+        var res = await device.getUserDevices();
+
+        // Got the response to login request
+        // so log it in console
+        console.log(res);
+
+        // Generate an alert
+        switch(res.code) {
+          case "DEVICES-LIST-FETCHED":  
+            // List has been fetched
+            // generate an alert
+            alert("Success: Devices list has been fetched");
+            break;
+
+          default: 
+            // Fetch failed
+            alert("Error: Failed to get devices list");
+        }
+      }
+      catch(err) {
+        // Error usually got generated when
+        // we are not connected to the internet
+        // Log the error to the console
+        console.log(err);
+
+        // Generate an alert
+        alert("Error: Failed to get devices list");
+      }
+    }
+
+    // Function to logout user
+    logout = async () => {
+      // Get reference to the auth class
+      var auth = apolloProject.auth();
+
+      // Use try and catch block in order to 
+      // use async await otherwise promises are also supported
+      try {
+        // Submit request
+        var res = await auth.logout();
+
+        // Got the response to login request
+        // so log it in console
+        console.log(res);
+
+        // Generate an alert
+        switch(res.code) {
+          case "AUTH-ACCOUNT-LOGGEDOUT": 
+            // User Authenticated
+            alert("Success: User Logged out");
+            break;
+
+          case "AUTH-UNAUTHORIZED": 
+            // User is not authenticated
+            alert("Error: User is not authenticated.");
+        }
+      }
+      catch(err) {
+        // Error usually got generated when
+        // we are not connected to the internet
+        // Log the error to the console
+        console.log(err);
+
+        // Generate an alert
+        alert("Error: Failed to logout the user");
+      }
+    }
+    ```
+6. Supercharge your app with CSS
+    A good app is one which provides rich expereince to the users. So in the end we can add some colors to our app with open source frameworks like `Bootstrap`. We are using `Ionic` here which is another famous UI framework (and is kind of cool). So here is how the final UI now looks like
+    
 # Grandeur Ecosystem
 
 

@@ -26,13 +26,16 @@ function init(apiKey) {
 
     // Duplex Handler
     const duplexHandler = new duplex(apolloConfig);
-    duplexHandler.init();
     
     // Handlers
     const handlers = {
         post: postHandler,
         duplex: duplexHandler
     };
+
+    // Initialize the Connection
+    // to the Server
+    duplexHandler.init(new auth(handlers));
 
     // Return reference to the classes
     return {
@@ -41,4 +44,5 @@ function init(apiKey) {
         device: () => new device(handlers)
     }
 }
+
 export {init};
