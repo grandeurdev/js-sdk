@@ -15,6 +15,17 @@ Now in order to get deep insight into our SDK and platform capabilities you can 
 - [Get Started](#get-started)
 - [Example](#example)
 - [Grandeur Ecosystem](#grandeur-ecosystem)
+    * [Why use Grandeur Cloud as a developer?](#why-use-grandeur-cloud-as-a-developer)
+    * [A breif case study](#a-breif-case-study)
+    * [Concepts](#concepts)
+        + [Projects](#projects)
+        + [SDK](#sdk)
+        + [Users and Administrator](#users-and-authentication)
+        + [Devices Registary]()
+        + [Authentication and Access]()
+        + [Hosting]()
+        + [Networking]()
+        + [Allowed Origins]()
 - [Documentation](#documentation)
     * [init](#init)
     * [auth](#auth)
@@ -144,6 +155,9 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     // a reference to the project
     var apolloProject = apollo.init("YOUR-APIKEY");
     ```
+
+    At this step, you will probably also have to allow the domain `localhost:8080` in cross origin access policy. You can do this by visting [settings](https://cloud.grandeur.tech/settings) page at cloud dashboard. Without following this step, your application will not be allowed to communicate to the cloud.
+
 4. Authenticate a user
 
     Now is the time to add magic into the app. First step is to authenticate a user. For this purpose we will have to add a form and on form submit we will call a JS function where we will send a request to the cloud platform. The updated code is as below
@@ -418,9 +432,52 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     }
     ```
 6. Supercharge your app with CSS
+
     A good app is one which provides rich expereince to the users. So in the end we can add some colors to our app with open source frameworks like `Bootstrap`. We are using `Ionic` here which is another famous UI framework (and is kind of cool). So here is how the final UI now looks like
     
+    ![First Grandeur App](/images/demo.png)
+
+7. Make it live and rock the world
+
+    Time has come to make our creation available live. Tradionally, to do this you will have to pay for hosting services separately. We have resolved this problem as well for you. So push your app to a code collaboration platform like `github`. Then visit [hosting](https://cloud.grandeur.tech/hosting) page at cloud dashboard. Finally enable the hosting by providing in the link of your repo and done. We will automatically fetch your app from the source and will make it live on domain `YOUR-PROJECT-NAME.hosting.cloud.grandeur.tech`.
+    
 # Grandeur Ecosystem
+The purpose behind writing is to tell you what is the thought process and psychology behind Grandeur Cloud Platform. We believe that the first important step toward chosing a platform for you product and company is to understand that how the developer designed the system. So we wanted to write about it in detail. We wanted to document that how can use this platform effectively to make your life as a developer or founder a bit simpler. So in this section, we will first illustrate that why to use Grandeur Cloud as a developer, then we will present a breif case study and finally we will write about the concepts.
+
+## Why use Grandeur Cloud as a developer?
+* It is simple to [get started](#get-started). Just create a project at cloud dashboard and simply get a reference to your project using our SDK.
+* No need to mix and match various services because it is single spot solution for all of your needs. It has built in support for authenticating users and device registration. You can access all the features like authentication, file storage, database and device registry from a single SDK.
+* Simple pricing. [Start free](https://cloud.granduer.tech/register) and then pay as you go based on resoruce consumption. Checkout [pricing](https://grandeur.tech/pricing) to get more details.
+
+## A breif case study
+Suppose you are a clean tech startup and want to radicalize home appliances market to make them more eco and user friendly. You analyzed the market, did user interviews and realized that the real problem is in air conditoner market. Every year we produce millions of new air conditoners but the problem is that there are so many old and in efficeint are already there in the market installed in our homes and offices. Which is creating a big mess because firstly such old air conditoners consume a huge chunk of power and major cause of emissions. Nothing can be done because upgrading each single one of them is not just feasible at all economically, but in the end it is impacting both the users and ecosystem.
+
+In order to resolve this issue, you decided to build an electornic solution which could be used as an extension with the old air conditoners installed in our homes. So that we could control the power consumption without upgradation. Then you realized that you will to provide your users some form of interface, through which the interaction could be made. You decided to make it smart. You wanted your users to see how this new extension has saved them a lot of money by cutting down the power consumption. You also wanted your users to manually control this new extension like they should have control over how much they wanted to save. This all could be achived by IoT. You decided to build a companion app for your device.
+
+That is where the problem started. You are a hardware startup in the end and your expertise is in building amazing electronics technology. Now you gotta deal with few more things as well. You will have to build your app and figure out how to establish the communication between hardware and app (backend of your system). You decided to hire more engineers, but you know how much of them you will have to hire? To give you an idea, you need 8+ engineers just to do server side part like one for database, one for networking, one for API development, one for dev ops and about four for building SDK (one for each platform android, ios, web and hardware). Which makes it a package of $8000+ just to figure out the backend of your system and you haven't yet validated your product. That is bad and now you don't know what to do about it.
+
+Then one day the sun of fate shown. You discovered a platform termed as `Grandeur Cloud`, which could just solve all of your problems. You wanted to authenticate your users, it had the auth feature in it. You needed a online storage space to store your users profile picture, it came with built in support for storage. You needed a database to store power consumption logs so that your users could see how much they have saved, it provided a cloud datastore service. You wanted to build a communication bridge between the hardware and the software, thank god, it's SDK was available for all the stacks like arduino, web and mobile.
+
+So you simply registered for the platform, created a project and started integrating your apps and hardware with the SDK. Then finally you registered your products to the platform before making them available for sale (because the platform comes with built in security features and only allows only registered products to communicate). Your apps are now live on store. People loved you built. You made an early entry into the market and now adding a dent to the universe.
+
+That is the story of team `SolDrive`. Checkout their [website](https://sol-drive.com) right now and explore how are they transforming the world with Grandeur Cloud.
+ 
+## Concepts
+In this sub section we will explore the Grandeur Cloud Platform in detail. We will see how it all works in depth. So let's get started
+
+### Projects
+To start working with Grandeur Cloud, the first thing that you will have to do is to create a new project. Now what is a project? Project is like a workspace and we store, communicate and display data with respect to your project. While you can technically create unlimited number of projects, but you cannot share data or resources of any sort between two projects. `Your project works like a namespace`. Like users registered to one project, cannot login to applications based on other projects. Similarly devices regsitered to one project, cannot be shared to another project. 
+
+When you create a project, we give you a project API key. An API key is a digital signature that identifies a project in our system, just like your identification card or your social security number identifies you as a citizen. In order to connect your apps or hardware to our network, that is what you should provide to our SDK. Our SDK sends us your API key with every request and that is what we utilize to understand what data are we supposed to update or return or in which namespace we are supposed to execute your request. Checkout [sdk](#sdk) section in concepts to read more about it.
+
+In the end, it is important to note that our pricing applies separately to each project. So you will get free tier on every project and then you will pay for each project separately with respect to what you consume in each namespace.
+
+### SDK
+You use our SDKs to communicate to our cloud platform. We call our SDK `Apollo` and it acts like an interface that gives you easy access to integrate our platform in your stack. Like in case of web apps, simply drop in the link of JS SDK CDN in your code base and done. We have tried our best to make it coherent in between the platforms. So that you could work and collaborate seemlessly.
+
+So that is how it works. You can the SDK global object by name and intialize it with API key (plus couple of more stuff in case of hardware SDK). As a result of initialization, you will get the refernece to either your project (in case of app) or your device (in case of hardware), with which you can access all the features of Grandeur Cloud depending upon the scope. Like in case of device reference you can access features limited to device only, while with project reference, you can access all the possible features after user authentication. Checkout [authentication and access](#authentication-and-access) section to get more insight into scope.
+
+### Users and Administrator
 
 
 # Documentation
