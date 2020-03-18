@@ -27,6 +27,7 @@ Now in order to get deep insight into our SDK and platform capabilities you can 
         + [Allowed Origins](#allowed-origins)
 - [Documentation](#documentation)
     * [init](#init)
+    * [isConnected](#isConnected)
     * [auth](#auth)
         + [register](#register)
         + [login](#login)
@@ -573,7 +574,7 @@ else {
 }
 ```
 
-## Auth
+## auth
 This class provides access to the auth feature of Grandeur Cloud. To do this, simply get a reference to the auth class by calling `auth()` method with the project object. This is illustrated as below
 
 ```javascript
@@ -584,153 +585,125 @@ var auth = apolloProject.auth();
 
 Now once you got the reference to the auth class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
 
-### Register
-`register( email: *string*, password: *string*, displayName: *string*, phone: *string*): returns *Promise*`
+### register
+This method allows you to add new users to your project through SDK. To create a new user account, simply provide the user email, password, display name and phone number as an argument to this function. Unlike dashboard, where you can create a user account without validation by just filling user details in a form, registering a new user account with SDK is little bit different. Because instead of directly registering the new user, we first verify that either the user is genuine to protect you from bogus users. So when you execute this funtion, we automatically send a verification code to the phone number provided in the argument and returns you a promise.
 
-Register a new user in a single step with this function. You just need to pass user's credentials and you are good to go.
+With this promise, you can access the confirmation method. So you can get the verification code from user through an input tag in html and validate the user by providing it to the confirmation method. On successful validation, we return you a success message and register the user automatically.
 
-Parameters :
+Register function accepts the following arguments
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>email</td>
-    <td><em>string</em></td>
-    <td>a formatted email address</td>
-  </tr>
-  <tr>
-    <td>password</td>
-    <td><em>string</em></td>
-    <td>minimum 6 characters long</td>
-  </tr>
-  <tr>
-    <td>displayName</td>
-    <td><em>string</em></td>
-    <td>accepts only string</td>
-  </tr>
-  <tr>
-    <td>phone</td>
-    <td><em>string</em></td>
-    <td>phone number must starts with country code i.e +923331234567</td>
-  </tr>
-</table>
+| Name        | Type        | Description |
+| ----------- | ----------- | --------------------- |
+| email       | string      | a valid email address       |
+| password    | string      | should be minimum six character long |
+| displayName | string      | cannot include digits or special characters |
+| phone       | string      | should start with country code and <br>cannot include spaces e.g. +923336335233 |
+
+Register method returns the following code in form of promise
+
+* PHONE-CODE-SENT
+
+  verification code sent to phone number <br>and you use the confirmation method returned <br>in the response of promise to verify the user.
+
+* PHONE-NUMBER-INVALID 
+
+  provided phone number format is invalid
+
+* DATA-INVALID 
+
+  data format is invalid
+
+* AUTH-ACCOUNT-DUPLICATE 
+
+  email is associated to another account
+
+* PHONE-CODE-SENDING-FAILED
+
+  failed to send the verification code
+
+
+#### confirmRegistration
+Once you submit the register request, we validate the data and send a code to the provided phone number. We do this to validate the user as a built in security mechanism. This is where we also return you a callback so that you could send us a confirmation request after promoting user about the code.
+
+This function receives a single argument as illustrated below
+
+| Name        | Type        | Description |
+| ----------- | ----------- | --------------------- |
+| code        | string      | six digit long numeric code |
+
+Upon execution, this method returns the following code in form of promise
+
+| Code                   | Description |
+| -----------------------| ----------- |
+| AUTH-ACCOUNT-REGISTERED          | user account has been created successfully |
+| PHONE-CODE-INVALID               | verificaiton code is invalid |
+| PHONE-CODE-VERIFICATION-FAILED   | failed to verify the verification code |
+| AUTH-ACCOUNT-REGISTRATION-FAILED | failed to register the account |
+
+Account registration has been illustrated in the example below
 
 ```javascript
+// Get reference to the auth class
 var auth = apolloProject.auth();
 
-// confrim registratin module will 
-// be saved in this object.
+// Variable to hold the confirm registration
+// method so that it could be used afterwards
 var confirmRegistration = null;
 
-auth.register(email, password, displayName, phone).then((res) => {
-    console.log(res);
-    // response can be fetched here.
-    // response codes are given below
-    if(res.code=="PHONE-CODE-SENT") {
-        // one time authorization code has been sent
-
-        // confirm object can be fetched here
-        confirmRegistration = res.confirm ;
+// Function to submit a user 
+// registration request
+var register = () => {
+  // Get user data from the inputs and
+  // Submit request to the server
+  auth.register(email, password, displayName, phone).then((res) => {
+    // Got the response
+    // So checkout the response code
+    switch(res.code) {
+      case "PHONE-CODE-SENT": 
+        // Verification code has been sent
+        confirmRegistration = res.confirm;
     }
-});
+  });
+}
+
+// Function to validate the user
+var verify = () => {
+  // Prompt the user about the code
+  // and submit it to server with the confirm 
+  // method
+  confirmRegistration(code).then((res) => {
+    // Got the response
+    // Checkout the response code
+    switch(res.code) {
+      case "AUTH-ACCOUNT-REGISTRATION":
+          // Account has been created successfully
+    }
+  });
+}
 ```
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>PHONE-CODE-SENT</td>
-<td>Verification code is sent to the phone number.</td>
-</tr>
-<tr>
-<td>PHONE-NUMBER-INVALID</td>
-<td>Phone number entered is invalid.</td>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-DUPLICATE</td>
-<td>A profile already exists with this email.</td>
-</tr>
-<tr>
-<td>DATA-INVALID</td>
-<td>Both email and password need to have a valid format.</td>
-</tr>
-</table>
 
-Now after fetching code from the user, *confirmRegistration* can be called.
-#### Confirm Registration
-> confirmRegistration (code : *string*) : returns *Promise*
- 
- Parameters :
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>code</td>
-    <td><em>string</em></td>
-    <td>code fetched from the user</td>
-  </tr>
-</table>
-
- ```javascript 
-confirmRegistration(code).then((res) => {
-    console.log(res);
-    // response can be fetched here.
-    // response codes are given below
-});
- ```
-
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-REGISTERED</td>
-<td>User's profile is successfully created.</td>
-</tr>
-<tr>
-<td>PHONE-CODE-VERIFICATION-FAILED</td>
-<td>An unknown error occurred at the server while verifying user's code.</td>
-</tr>
-</table>
-
-### Login
-
-> login ( email: *string*, password: *string*) : returns *Promise*
-
-Loging in the user is the basic functionality of authentication so we made
-it easier for you.
-In order to **login** you just have to pass email and password to the login() function.  
+### login
+This method allows you to login a user into his account. Simply provide the user email and password in the argument and execute method. The SDK will automatically obtain the auth token from the server. It is important to note that nearly all the methods of this SDK requires a user to be authenitcated first. 
 
 
-Parameters :
+Login function accepts the following arguments
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>email</td>
-    <td><em>string</em></td>
-    <td>a formatted email address</td>
-  </tr>
-  <tr>
-    <td>password</td>
-    <td><em>string</em></td>
-    <td>minimum 6 characters long</td>
-  </tr>
-</table>
+| Name        | Type        | Description |
+| ----------- | ----------- | --------------------- |
+| email       | string      | a valid email address       |
+| password    | string      | should be minimum six character long |
+
+Upon execution, this method returns the following code in form of promise
+
+| Code                   | Description |
+| -----------------------| ----------- |
+| AUTH-ACCOUNT-LOGGEDIN         | user account has been authenticated successfully |
+| DATA-INVALID                  | data format is invalild |
+| AUTH-ACCOUNT-INVALID-PASSWORD | password is invalid |
+| AUTH-ACCOUNT-INVALID-EMAIL    | email is not associated with any account |
+| AUTH-ACCOUNT-ALREADY-LOGGEDIN | an account is already logged |
+| AUTH-ACCOUNT-LOGIN-FAILED     | failed to login the account |
+
 
 ```javascript
 var auth = apolloProject.auth();
