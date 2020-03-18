@@ -593,7 +593,7 @@ With this promise, you can access the confirmation method. So you can get the ve
 Register function accepts the following arguments
 
 | Name        | Type        | Description |
-| ----------- | ----------- | --------------------- |
+| :---------- | :---------- | :--------------------- |
 | email       | string      | a valid email address       |
 | password    | string      | should be minimum six character long |
 | displayName | string      | cannot include digits or special characters |
@@ -628,58 +628,58 @@ Once you submit the register request, we validate the data and send a code to th
 This function receives a single argument as illustrated below
 
 | Name        | Type        | Description |
-| ----------- | ----------- | --------------------- |
+| :---------- | :---------- | :--------------------- |
 | code        | string      | six digit long numeric code |
 
 Upon execution, this method returns the following code in form of promise
 
-| Code                   | Description |
-| -----------------------| ----------- |
-| AUTH-ACCOUNT-REGISTERED          | user account has been created successfully |
-| PHONE-CODE-INVALID               | verificaiton code is invalid |
-| PHONE-CODE-VERIFICATION-FAILED   | failed to verify the verification code |
-| AUTH-ACCOUNT-REGISTRATION-FAILED | failed to register the account |
+* AUTH-ACCOUNT-REGISTERED  
+
+  user account has been created successfully 
+
+* PHONE-CODE-INVALID 
+
+  verificaiton code is invalid
+
+* PHONE-CODE-VERIFICATION-FAILED 
+
+  failed to verify the verification code
+
+* AUTH-ACCOUNT-REGISTRATION-FAILED
+
+  failed to register the account
 
 Account registration has been illustrated in the example below
 
 ```javascript
-// Get reference to the auth class
-var auth = apolloProject.auth();
-
-// Variable to hold the confirm registration
+// Variable to hold the confirmRegistration
 // method so that it could be used afterwards
 var confirmRegistration = null;
 
-// Function to submit a user 
-// registration request
-var register = () => {
-  // Get user data from the inputs and
-  // Submit request to the server
-  auth.register(email, password, displayName, phone).then((res) => {
-    // Got the response
-    // So checkout the response code
-    switch(res.code) {
-      case "PHONE-CODE-SENT": 
-        // Verification code has been sent
-        confirmRegistration = res.confirm;
-    }
-  });
-}
+// Get user data from the inputs and
+// Submit request to the server
+auth.register(email, password, displayName, phone).then((res) => {
+  // Got the response
+  // So checkout the response code
+  switch(res.code) {
+    case "PHONE-CODE-SENT": 
+      // Verification code has been sent
+      confirmRegistration = res.confirm;
+  }
+})
 
-// Function to validate the user
-var verify = () => {
-  // Prompt the user about the code
-  // and submit it to server with the confirm 
-  // method
-  confirmRegistration(code).then((res) => {
-    // Got the response
-    // Checkout the response code
-    switch(res.code) {
-      case "AUTH-ACCOUNT-REGISTRATION":
-          // Account has been created successfully
-    }
-  });
-}
+// After getting response from registration request
+// Prompt the user about the verification code
+// and submit it to server with the confirm 
+// method
+confirmRegistration(code).then((res) => {
+  // Got the response
+  // Checkout the response code
+  switch(res.code) {
+    case "AUTH-ACCOUNT-REGISTRATION":
+        // Account has been created successfully
+  }
+});
 ```
 
 ### login
@@ -689,106 +689,376 @@ This method allows you to login a user into his account. Simply provide the user
 Login function accepts the following arguments
 
 | Name        | Type        | Description |
-| ----------- | ----------- | --------------------- |
+| :---------- | :---------- | :--------------------- |
 | email       | string      | a valid email address       |
 | password    | string      | should be minimum six character long |
 
 Upon execution, this method returns the following code in form of promise
 
-| Code                   | Description |
-| -----------------------| ----------- |
-| AUTH-ACCOUNT-LOGGEDIN         | user account has been authenticated successfully |
-| DATA-INVALID                  | data format is invalild |
-| AUTH-ACCOUNT-INVALID-PASSWORD | password is invalid |
-| AUTH-ACCOUNT-INVALID-EMAIL    | email is not associated with any account |
-| AUTH-ACCOUNT-ALREADY-LOGGEDIN | an account is already logged |
-| AUTH-ACCOUNT-LOGIN-FAILED     | failed to login the account |
+* AUTH-ACCOUNT-LOGGEDIN  
 
+  user account has been authenticated successfully
+
+* DATA-INVALID 
+
+  data format is invalild
+
+* AUTH-ACCOUNT-INVALID-EMAIL
+
+  email is not associated with any account
+
+* AUTH-ACCOUNT-INVALID-PASSWORD 
+
+  password is invalid
+
+* AUTH-ACCOUNT-ALREADY-LOGGEDIN 
+
+  an account is already logged in 
+
+* AUTH-ACCOUNT-LOGIN-FAILED  
+
+  failed to log the user into the account
+
+Login feature application has been illustrated in the example below
 
 ```javascript
-var auth = apolloProject.auth();
+// Get email and password from inputs
+// and submit the request to the server
 auth.login(email,password).then((res) => {
-    console.log(res);
-    // response can be fetched here.
-    // response codes are given below
+    // Handle response
 });
 ```
 
-<table>
-  <tr>
-    <th>Response Code</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>AUTH-ACCOUNT-LOGGEDIN</>
-    <td>User is successfully logged into its account</td>
-  </tr>
-  <tr>
-    <td>AUTH-ACCOUNT-LOGIN-FAILED</td>
-    <td>User could not be logged into its account.</td>
-  </tr>
-  <tr>
-    <td>AUTH-ACCOUNT-INVALID-PASSWORD</td>
-    <td>Password entered by the user is incorrect.</td>
-  </tr>
-  <tr>
-    <td>DATA-INVALID</td>
-    <td>Both email and password need to have a valid format.</td>
-  </tr>
-</table>
+### isAuthenticated
+Often times, it is required to verify that a user account is authenticated into the application or not. This functionality can be achieved through this method. It returns a respose with user profile details if user is authorized. 
 
-### Is Authenticated
-> isAuthenticated ( ) : returns *Promise*
+The response codes are as below
 
-This function is used to check if a user is authorized or not. It returns a respose with user profile if user is authorized and if user is not authorized it returns a response with a code **user-unauthorized**
-How to do that? Here it is : 
+* AUTH-AUTHORIZED
+
+  user is authenticated
+
+* DATA-UNAUTHORIZED 
+
+  user is not not authenticated
+
+This is how you can use it in your application
+
 ```javascript
-var auth = apolloProject.auth();
+// Send request to the to server to check
+// if user is authenticated or not
 auth.isAuthenticated().then((res) => {
-    console.log(res);
-     // response can be fetched here.
-    // response codes are given below
+    // Handle the response
 });
 ```
-<table>
- <tr>
-  <th>Response Code</th>
-  <th>Description</th>
- </tr>
- <tr>
-  <td>AUTH-AUTHORIZED</td>
-  <td>Here's the user's data: (Data can be fetched from here) </td>
- </tr>
- <tr>
-  <td>AUTH-UNAUTHORIZED</td>
-  <td>You are not logged into your account.</td>
- </tr>
-</table>
 
+### logout
+This method comes handy because along with loggin the user, it is also required to logout a user when required. It serves as the most basic and important feature. 
 
-### Logout
-> logout ( ) : returns *Promise*
+This method returns the following codes upon execution
 
-This simple function is called whenever user needed to be logged out.
+* AUTH-ACCOUNT-LOGGEDOUT
+
+  user has been logged out of his account
+
+* AUTH-UNAUTHORIZED
+  
+  user is not authenticated
+
+* AUTH-ACCOUNT-LOGOUT-FAILED
+
+  logout operation failed
+
+This is how you can use this method in your application
 
 ```javascript
-var auth = apolloProject.auth();
+// Send the request to server to logout
+// the authenticated user
 auth.logout().then((res) => {
-        // response can be fetched here.
-        // response codes are given below 
+    // Handle response
 });
 ```
 
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>AUTH-ACCOUNT-LOGGEDOUT</td>
-<td>You are successfully Logged out of your account. </td>
-</tr>
-</table>
+### updateProfile
+A user profile gets automatically created whenever you register a new user account. This makes it really easy for you as a developer to handle data specific to user. Like you can setup display picture of a user. Which allows you present a unique experience to each user. This is why we have added this method with which you can update the profile of a authenticated user. 
+
+Update profile function accepts the following arguments
+
+| Name           | Type        | Description |
+| :------------- | :---------- | :--------------------- |
+| displayName    | string      | can only contains alphabets      |
+| displayPicture | string      | should be a valid url |
+| phone          | string      | should start with country code and <br>cannot include spaces e.g. +923336335233 |
+
+All the arguments are required. It is important to note that if you execute this method with an updated phone number or in other words if a user tried to update the phone number associated with the account, then we validate the new number first by automatically sending a verfication code and will return you a confirmation method in response.
+
+Update profile method returns the following code in form of promise
+
+* PHONE-CODE-SENT
+
+  verification code sent to phone number <br>and you use the confirmation method returned <br>in the response of promise to verify the user.
+
+* PHONE-NUMBER-INVALID 
+
+  provided phone number format is invalid
+
+* DATA-INVALID 
+
+  data format is invalid
+
+* AUTH-PROFILE-UPDATED
+
+  profile has been updated
+
+* AUTH-PROFILE-UPTODATE
+
+  data isn't modified
+
+* AUTH-PROFILE-UPDATE-FAILED
+
+  failed to update the profile
+
+
+#### confirmProfileUpdate
+We are very particular about the phone number associated with the profile. This is why we validate the phone number whenever a user try to update it. As a result, we return you a confirm function so that you could procee with the update profile operation after prompting the user about the verificaiton code.
+
+This function receives a single argument as illustrated below
+
+| Name        | Type        | Description |
+| :---------- | :---------- | :--------------------- |
+| code        | string      | six digit long numeric code |
+
+Upon execution, this method returns the following code in form of promise
+
+* AUTH-PROFILE-UPDATED
+
+  profile has been updated
+
+* PHONE-CODE-INVALID 
+
+  verificaiton code is invalid
+
+* PHONE-CODE-VERIFICATION-FAILED 
+
+  failed to verify the verification code
+
+* AUTH-PROFILE-UPDATE-FAILED
+
+  failed to update the profile
+
+Use of updateProfile method has been illustrated in the example below
+
+```javascript
+// Variable to hold the confirmProfileUpdate
+// method so that it could be used afterwards
+var confirmProfileUpdate = null;
+
+// Get user data from the inputs and
+// Submit request to the server
+auth.updateProfile(displayName, displayPicture, phone).then((res) => {
+  // Got the response
+  // So checkout the response code
+  switch(res.code) {
+    case "PHONE-CODE-SENT": 
+      // Verification code has been sent
+      confirmProfileUpdate = res.confirm;
+      break;
+    case "AUTH-PROFILE-UPDATED":
+      // Profile has been updated
+  }
+})
+
+// After getting response from update profile request
+// Prompt the user about the verification code
+// and submit it to server with the confirm 
+// method
+confirmProfileUpdate(code).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "AUTH-PROFILE-UPDATED":
+        // Profile has been updated
+  }
+});
+```
+
+### forgotPassword
+A rather very important feature is to add forgot password option into your app. This method allows you to update the password of a user account if the user is not authenticated. We validate a user with phone authentication in this case. So just prompt user about the email account associated with the account, we will automatically send the verification code the phone number associated with the profile and after which you can submit a confirmation request.
+
+Forgot password function accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| email | string      | a valid email address associated with profile of the user|
+
+This method returns the following code in form of promise
+
+* PHONE-CODE-SENT
+
+  verification code sent to phone number <br>and you use the confirmation method returned <br>in the response of promise to verify the user.
+
+* DATA-INVALID 
+
+  data format is invalid
+
+* AUTH-ACCOUNT-ALREADY-LOGGEDIN
+
+  a user is already logged in
+
+* PHONE-CODE-SENDING-FAILED
+
+  failed to send code to phone number
+
+
+#### confirmForgotPassword
+After submitting forgot password request, we send a verificaiton code to the phone number associated with user's accounts. As a result, we also return you a confirm function, so that you could proceed with the forgot password operation after prompting the user about the verfication code and a new password.
+
+This function receives a single argument as illustrated below
+
+| Name        | Type        | Description |
+| :---------- | :---------- | :--------------------- |
+| code        | string      | six digit long numeric code |
+| password    | string      | should be atleast six character long |
+
+Upon execution, this method returns the following code in form of promise
+
+* AUTH-PROFILE-UPDATED
+
+  password has been updated
+
+* PHONE-CODE-INVALID 
+
+  verificaiton code is invalid
+
+* PHONE-CODE-VERIFICATION-FAILED 
+
+  failed to verify the verification code
+
+* DATA-INVALID 
+
+  data format is invalid
+
+* AUTH-PROFILE-UPDATE-FAILED
+
+  failed to update the profile
+
+Use of forgotPassword method has been illustrated in the example below
+
+```javascript
+// Variable to hold the confirmForgotPassword
+// method so that it could be used afterwards
+var confirmForgotPassword = null;
+
+// Get user data from the inputs and
+// Submit request to the server
+auth.forgotPassword(email).then((res) => {
+  // Got the response
+  // So checkout the response code
+  switch(res.code) {
+    case "PHONE-CODE-SENT": 
+      // Verification code has been sent
+      confirmForgotPassword = res.confirm;
+  }
+})
+
+// After getting response from forgot password request
+// Prompt the user about the verification code
+// and submit it to server with the confirm 
+// method
+confirmForgotPassword(code).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "AUTH-PROFILE-UPDATED":
+        // Password has been updated
+  }
+});
+```
+
+### changePassword
+This method is very similar to the forgot password feature. But unlike forgot password, here it is important for a user to be logged into his account first. To ensure the security of a user account, we send a verification code to the phone number associated with user account and return you a confirmation method.
+
+Change password function accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| password | string      | required to be minimum six character long |
+
+This method returns the following code in form of promise
+
+* PHONE-CODE-SENT
+
+  verification code sent to phone number <br>and you use the confirmation method returned <br>in the response of promise to verify the user.
+
+* DATA-INVALID 
+
+  data format is invalid
+
+* AUTH-UNAUTHORIZED
+
+  user is required to be logged in
+
+* PHONE-CODE-SENDING-FAILED
+
+  failed to send code to phone number
+
+
+#### confirmChangePassword
+After submitting change password request, we send a verificaiton code to the phone number associated with user's accounts. As a result, we also return you a confirmation function, so that you could proceed with the change password operation after prompting the user about the verfication code.
+
+This function receives a single argument as illustrated below
+
+| Name        | Type        | Description |
+| :---------- | :---------- | :--------------------- |
+| code        | string      | six digit long numeric code |
+
+Upon execution, this method returns the following code in form of promise
+
+* AUTH-PROFILE-UPDATED
+
+  password has been updated
+
+* PHONE-CODE-INVALID 
+
+  verificaiton code is invalid
+
+* PHONE-CODE-VERIFICATION-FAILED 
+
+  failed to verify the verification code
+
+* AUTH-PROFILE-UPDATE-FAILED
+
+  failed to update the profile
+
+Use of changePassword method has been illustrated in the example below
+
+```javascript
+// Variable to hold the confirmChangePassword
+// method so that it could be used afterwards
+var confirmChangePassword = null;
+
+// Get user data from the inputs and
+// Submit request to the server
+auth.changePassword(password).then((res) => {
+  // Got the response
+  // So checkout the response code
+  switch(res.code) {
+    case "PHONE-CODE-SENT": 
+      // Verification code has been sent
+      confirmChangePassword = res.confirm;
+  }
+})
+
+// After getting response from change password request
+// Prompt the user about the verification code
+// and submit it to server with the confirm 
+// method
+confirmChangePassword(code).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "AUTH-PROFILE-UPDATED":
+        // Password has been updated
+  }
+});
+```
 
 ## Device
 Device module provides all of the device features i.e if you want to pair or unpair a device, you need to add device module to your application.
