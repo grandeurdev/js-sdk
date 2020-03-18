@@ -16,7 +16,7 @@ Now in order to get deep insight into our SDK and platform capabilities you can 
 - [Example](#example)
 - [Grandeur Ecosystem](#grandeur-ecosystem)
     * [Why use Grandeur Cloud as a developer?](#why-use-grandeur-cloud-as-a-developer)
-    * [A breif case study](#a-breif-case-study)
+    * [A brief case study](#a-brief-case-study)
     * [Concepts](#concepts)
         + [Projects](#projects)
         + [SDK](#sdk)
@@ -473,14 +473,14 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     Time has come to make our creation available live. Tradionally, to do this you will have to pay for hosting services separately. We have resolved this problem as well for you. So push your app to a code collaboration platform like `github`. Then visit [hosting](https://cloud.grandeur.tech/hosting) page at cloud dashboard. Finally enable the hosting by providing in the link of your repo and done. We will automatically fetch your app from the source and will make it live on domain `YOUR-PROJECT-NAME.hosting.cloud.grandeur.tech`.
     
 # Grandeur Ecosystem
-The purpose behind writing is to tell you what is the thought process and psychology behind Grandeur Cloud Platform. We believe that the first important step toward chosing a platform for you product and company is to understand that how the developer designed the system. So we wanted to write about it in detail. We wanted to document that how can use this platform effectively to make your life as a developer or founder a bit simpler. So in this section, we will first illustrate that why to use Grandeur Cloud as a developer, then we will present a breif case study and finally we will write about the concepts.
+The purpose behind writing is to tell you what is the thought process and psychology behind Grandeur Cloud Platform. We believe that the first important step toward chosing a platform for you product and company is to understand that how the developer designed the system. So we wanted to write about it in detail. We wanted to document that how can use this platform effectively to make your life as a developer or founder a bit simpler. So in this section, we will first illustrate that why to use Grandeur Cloud as a developer, then we will present a brief case study and finally we will write about the concepts.
 
 ## Why use Grandeur Cloud as a developer?
 * It is simple to [get started](#get-started). Just create a project at cloud dashboard and simply get a reference to your project using our SDK.
 * No need to mix and match various services because it is single spot solution for all of your needs. It has built in support for authenticating users and device registration. You can access all the features like authentication, file storage, database and device registry from a single SDK.
 * Simple pricing. [Start free](https://cloud.granduer.tech/register) and then pay as you go based on resoruce consumption. Checkout [pricing](https://grandeur.tech/pricing) to get more details.
 
-## A breif case study
+## A brief case study
 Suppose you are a clean tech startup and want to radicalize home appliances market to make them more eco and user friendly. You analyzed the market, did user interviews and realized that the real problem is in air conditoner market. Every year we produce millions of new air conditoners but the problem is that there are so many old and in efficeint are already there in the market installed in our homes and offices. Which is creating a big mess because firstly such old air conditoners consume a huge chunk of power and major cause of emissions. Nothing can be done because upgrading each single one of them is not just feasible at all economically, but in the end it is impacting both the users and ecosystem.
 
 In order to resolve this issue, you decided to build an electornic solution which could be used as an extension with the old air conditoners installed in our homes. So that we could control the power consumption without upgradation. Then you realized that you will to provide your users some form of interface, through which the interaction could be made. You decided to make it smart. You wanted your users to see how this new extension has saved them a lot of money by cutting down the power consumption. You also wanted your users to manually control this new extension like they should have control over how much they wanted to save. This all could be achived by IoT. You decided to build a companion app for your device.
@@ -544,30 +544,48 @@ This is another amazing topic and somehow related to access delegation in the en
 So in order to establish communication from a website using the web SDK, you will have to first whitelist the domain name via [settings](https://cloud.grandeur.tech/settings) page in the dashbaord application. You cannot even send a request from your localhost without first whitelisting it. Now at this point, it is important to note that whitelisting localhost in production application is not a good paractice and should be avoided in order to protect your users.
 
 # Documentation
+In this section, we will present references to each and every feature that our SDK supports. We have divided our SDK in group of functions called classes. Each class represents a feature of Grandeur Cloud. So in this section, we will also document that how can you use each and every function of Grandeur Cloud SDK.
 
-## Init
-In order to initalize your project and get your first device online you first need to have your API key which you can fetch from **Grandeur Cloud Dashboard**.  
+## init
+First and foremost thing that you are required to do in order to access our platform is initialization. When you drop in the link of the CDN in your app, we create a global object accessible through JS. This object can be then utilized to init the SDK with your API key. Upon init, the SDK returns you a reference to your project, through which you can access all the features of Grandeur Cloud. To understand it in depth please refer to [Projects](#projects) topic in the concepts section.   
 
-Now you can create a new project my simply writing a single line of code. Here it is :
+This is how you can init the SDK and can get a reference to your project
 
 ```javascript
-var apolloProject = apollo.init("YOUR-APIKEY-HERE");
-// initalize's your project with your API key.
+// Get reference to the project by initializing the SDK
+// with your API key
+var apolloProject = apollo.init("YOUR-APIKEY");
+```
+
+## isConnected
+Once you init the SDK and get reference to the project, the SDK tries to establish a persistent connection to the cloud platform. Establishing this persistent connection is the key because this allows us to do realtime communication with the server. Almost all of the SDK features are based on this realtime channel. This is why we have added this function, which can be utilized to verify either we are connected to the server or not. 
+
+You can use this function as illustrated below
+
+```javascript
+// If the SDK is connected
+if (apolloProject.isConnected()) {
+  // Do something here 
+}
+else {
+  // SDK is not connected
+  // generate an alert here 
+}
 ```
 
 ## Auth
-Auth provides a basic functionality for admin to authenticate a user to **Grandeur Cloud**.
-**Auth** can be used simply by calling `.auth()` of **apolloProject** created above.
+This class provides access to the auth feature of Grandeur Cloud. To do this, simply get a reference to the auth class by calling `auth()` method with the project object. This is illustrated as below
 
 ```javascript
+// Get reference to the auth class
+// by calling the auth method
 var auth = apolloProject.auth();
-// creates an auth object which can
-// be used further.
 ```
 
-We will see more in the examples below.
+Now once you got the reference to the auth class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
+
 ### Register
-> register( email : *string*, password : *string*, displayName : *string*, phone : *string*) : returns *Promise*
+`register( email: *string*, password: *string*, displayName: *string*, phone: *string*): returns *Promise*`
 
 Register a new user in a single step with this function. You just need to pass user's credentials and you are good to go.
 
