@@ -4,8 +4,12 @@
 // a reference to the project
 var apolloProject = apollo.init("ck412ssij0007xr239uos8jfk");
 
+// Variable to store state and deviseID
+var deviceState = 0;
+var deviceID = "ck73ngond000338tkbzhlfx4r";
+
 // Function to login user
-loginUser = async () => {
+var loginUser = async () => {
   // Create Loader
   var loading = await startLoading("Submitting Request");
 
@@ -57,51 +61,47 @@ loginUser = async () => {
   }
 }
 
-// Function to list devices paired to a
+// Function to toggle state of a device paired to a
 // user account
-listPairedDevices = async () => {
+var toggleDeviceState = async () => {
   // Get reference to the auth class
   var device = apolloProject.device();
 
   // Use try and catch block in order to 
   // use async await otherwise promises are also supported
   try {
-    // Submit request
-    var res = await device.getUserDevices();
+    // Update device state
+    deviceState = deviceState == 1? 0: 1;
+
+    // Set parameters
+    var res = await device.setDeviceParms(deviceID, {state: deviceState});
 
     // Generate an alert
     switch(res.code) {
-      case "DEVICES-LIST-FETCHED":  
-        // List has been fetched
-        // update UI
-        var list = "";
-
-        // Loop over devices
-        for (device of res.devices) {
-          // Add element
-          list += `<ion-item><ion-label>${device.name}</ion-label></ion-item>`
-        }
-
-        // Render
-        document.getElementById("devices-list").innerHTML = list;
+      case "DEVICE-PARMS-UPDATED":  
+        // Updated the parms
+        // now also update the UI
+        document.getElementById("toggleButton").checked = deviceState == 1? true: false;
         break;
 
       default: 
         // Fetch failed
-        toast("Failed to fetch the list of devices.");
-        break;
-
+        toast("Failed to update the device state");
     }
   }
   catch(err) {
     // Error usually got generated when
     // we are not connected to the internet
-    toast("Failed to fetch the devices list due to connectivity issue.");
+    // Log the error to the console
+    console.log(err);
+
+    // Generate an alert
+    toast("Failed to update the device state due to connectivity issue.");
   }
 }
 
 // Function to logout user
-logout = async () => {
+var logout = async () => {
   // Create Loader
   var loading = await startLoading("Submitting Request");
 
@@ -136,30 +136,64 @@ logout = async () => {
   }
 }
 
-// Function to clear list of paired devices
-clearListPairedDevices = () => {
-  // Clear list
-  document.getElementById("devices-list").innerHTML = "";
+// Function to get device state
+var getDeviceState = async () => {
+
+  // Check if the Apollo is connected
+  if (apolloProject.isConnected()) {
+    // Get reference to device class
+    var device = apolloProject.device();
+
+    // Then get parameters from server
+    var res = await device.getDeviceParms(deviceID);
+
+    // Verify that the device state is returned
+    switch(res.code) {
+      case "DEVICE-PARMS-FETCHED":
+          // Store the state into the variable
+          // after toggling
+          deviceState = res.deviceParms.state == 1? 1: 0;
+
+          // Update UI
+          document.getElementById("toggleButton").checked = deviceState == 1? true: false;
+          break; 
+      
+      default: {
+          // In case of an error while fetching the state
+          // simply generate an error
+          toast("Failed to update the device state");
+          return;
+      }
+    }
+  }
+  else {
+    // Apollo is not connected
+  
+    // Try agin in a while
+    setTimeout(function() {
+      getDeviceState();
+    }, 2000);
+  }
 }
 
 // Function to create a Toast
-toast = async (message) => {
+var toast = async (message) => {
   // Create a new toast
-  const toast = document.createElement('ion-toast');
+  const ionToast = document.createElement('ion-toast');
 
   // Set message and duration
-  toast.message = message;
-  toast.duration = 2000;
+  ionToast.message = message;
+  ionToast.duration = 2000;
 
   // Append
-  document.body.appendChild(toast);
+  document.body.appendChild(ionToast);
 
   // Present
-  await toast.present();
+  await ionToast.present();
 }
 
 // Function to present loader
-startLoading = async (message) => {
+var startLoading = async (message) => {
   // Create a new Loader
   const loading = document.createElement('ion-loading');
 
@@ -173,3 +207,6 @@ startLoading = async (message) => {
   // return handler
   return loading;
 }
+
+// Sync with server on app restart
+getDeviceState();

@@ -79,22 +79,19 @@
             <!-- Header -->
             <ion-card-header>
               <!-- Title of Card -->
-              <ion-card-title>Devices List</ion-card-title>
+              <ion-card-title>Toggle State</ion-card-title>
 
               <!-- Description of Card -->
-              <ion-card-subtitle>Click the button below to get the list of all the devices paired to the user account.</ion-card-title>
+              <ion-card-subtitle>Use the button below to toggle the state of the device.</ion-card-title>
             </ion-card-header>
 
             <!-- Content -->
             <ion-card-content>
-                <!-- Buttons -->
-                <ion-button onclick="listPairedDevices()" size="small">List</ion-button>
-                <ion-button onclick="clearListPairedDevices()" size="small">Clear</ion-button>
-
-                <!-- List -->
-                <ion-list id="devices-list">
-                  
-                </ion-list>
+                <!-- Toggle Button -->
+                <ion-item>
+                  State:
+                  <ion-toggle color="primary" id="toggleButton" onclick="toggleDeviceState()"></ion-toggle>
+                </ion-item>
 
             </ion-card-content>
 

@@ -39,6 +39,10 @@ function init(apiKey) {
 
     // Return reference to the classes
     return {
+        // Helper Method
+        isConnected: () => handlers.duplex.status === "CONNECTED",
+
+        // Classes
         auth: () => new auth(handlers),
         storage: () => new storage(handlers),
         device: () => new device(handlers)
