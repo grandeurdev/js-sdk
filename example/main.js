@@ -57,6 +57,7 @@ var loginUser = async () => {
     // Error usually got generated when
     // we are not connected to the internet
     // Create a Toast
+    console.log(err);
     toast("Failed to authenticate the user due to connectivity issue.");
   }
 }

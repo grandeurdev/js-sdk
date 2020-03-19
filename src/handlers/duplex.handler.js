@@ -19,9 +19,20 @@ class duplex {
         
         // To check the status of Connection
         this.status = "DISCONNECTED";
+
+        // Error response to be returned 
+        // in case of default error
+        this.errResponse = {
+            code: "ERR-CONNECTION-REFUSED",
+            message: "Apollo is not connected to server. Check internet connection."
+        }
+
+        // Setup list for events
+        this.otherEvents = ["setDevicesList"];
+        this.deviceEvents = ["setDeviceSummary", "setDeviceParms", "setDeviceName", "setDeviceStatus"];
     }
 
-    // To initilize the connection
+    // To initialize the connection
     async init(auth) {
         // Before starting the connection
         // verify that either the user is authenticated
@@ -42,7 +53,13 @@ class duplex {
                 case "AUTH-UNAUTHORIZED": 
                     // User is not Authenticated
                     // try to reconnect after some time
-                    this.reconnect(auth);      
+                    this.reconnect(auth);  
+                    
+                    // Setup error response
+                    this.errResponse = {
+                        code: "AUTH-UNAUTHORIZED",
+                        message: "You are not authenticated to the server."
+                    }
                     return; 
             }
         }
@@ -50,10 +67,16 @@ class duplex {
             // Internet connectivity issue
             // so try to reconnect in a while
             this.reconnect(auth);
+
+            // Setup default error
+            this.errResponse = {
+                code: "ERR-CONNECTION-REFUSED",
+                message: "Apollo is not connected to server. Check internet connection."
+            }
             return;
         }
         
-        // When conenction opened with the server
+        // When connection opened with the server
         this.ws.onopen = () => {
             // Set status to connected
             this.status = "CONNECTED";
@@ -76,6 +99,12 @@ class duplex {
 
             // Retry connection after a while
             this.reconnect(auth)
+
+            // Setup default error
+            this.errResponse = {
+                code: "ERR-CONNECTION-REFUSED",
+                message: "Apollo is not connected to server. Check internet connection."
+            }
         }
 
         this.ws.onmessage = (message) => {
@@ -83,12 +112,34 @@ class duplex {
             var data = JSON.parse(message.data);
             
             // Raise user event
-            if(this.eventQueue[data.header.id]){
-                // All messages other than subscription are passed to the event queue
-                this.eventQueue[data.header.id].resolve(data.payload);
-
-                // Deleting the callbacked function from event queue
-                delete this.eventQueue[data.header.id];
+            if (data.header.task === "update") {
+                // Got an update a subscribed topic
+                if (this.deviceEvents.includes(data.payload.event)) {
+                    // If event is of device type
+                    if (this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`]) {
+                        // Handler is defined for the event type
+                        // so execute the callback
+                        this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`](data.payload.update);
+                    }
+                }
+                else {
+                    // otherwise
+                    if (this.subscriptions[data.payload.event]) {
+                        // Handler is defined for the event type
+                        // so execute the callback
+                        this.subscriptions[data.payload.event](data.payload.update);
+                    }
+                }
+            }
+            else {
+                // Got response for a task
+                if(this.eventQueue[data.header.id]){
+                    // All messages other than subscription are passed to the event queue
+                    this.eventQueue[data.header.id].resolve(data.payload);
+    
+                    // Deleting the callback function from event queue
+                    delete this.eventQueue[data.header.id];
+                }
             }
         }
     }
@@ -128,37 +179,91 @@ class duplex {
             }
             else {
                 // Otherwise return a rejection
-                reject({
-                    code: "ERR-CONNECTION-REFUSED", 
-                    message: "Apollo is not connceted to server. Check internet connection or make sure that you are authenticated to the server."
-                });
+                reject(this.errResponse);
             }
         });
     }
-    subscribeTopic(data, callback) {
+
+    async subscribeTopic(event, callback, deviceID) {
         // Method to subscribe to a particular device's data
+        // Verify that the event is valid
+        if (!(this.deviceEvents.includes(event) || this.otherEvents.includes(event))) {
+            // If the event is invalid
+            // then return an error through callback
+            callback({
+                code: "TOPIC-INVALID", 
+                message: "The specified topic seems invalid."
+            });
+
+            return;
+        }
+
+        // Verify that if it is a device event
+        // then device id is provided
+        if (this.deviceEvents.includes(event) && !deviceID) {
+            // device id is not specified
+            callback({
+                code: "DATA-INVALID", 
+                message: "Device ID is required."
+            });
+
+            return;
+        }
+
+        // Packet
         var packet = {
             header: {
                 task: 'subscribeTopic'
             }, 
-            payload: data
-        };
-        this.ws.send(JSON.stringify(packet));
-
-        // Add callback to subscriptions queue
-        this.subscriptions[data.event] = callback;
-        
-        // Return
-        return {
-            clear: () => {
-                var packet = {
-                    header: {
-                        task: 'unsubscribeTopic'
-                    }, 
-                    payload: data
-                };
-                return this.send(packet);
+            payload: {
+                event: event,
+                deviceID: deviceID
             }
+        };
+
+        // Send response in try catch
+        try {
+            // Send the request
+            var res = await this.send(packet);
+ 
+            // Add callback to subscriptions queue
+            // depending upon type of event
+
+            if (this.deviceEvents.includes(event)) {
+                // If event is of device type
+                this.subscriptions[`${event}/${deviceID}`] = callback;
+            }
+            else {
+                // otherwise
+                this.subscriptions[event] = callback;
+            }
+            
+            // Also send an update through callback
+            callback(res);
+            
+            // Return
+            return {
+                clear: () => {
+                    // Packet
+                    var packet = {
+                        header: {
+                            task: 'unsubscribeTopic'
+                        }, 
+                        payload: {
+                            event: event,
+                            deviceID: deviceID
+                        }
+                    };
+
+                    // Send request
+                    return this.send(packet);
+                }
+            }
+        }
+        catch(error) {
+            // Failed to send the request
+            // return an error in the callback
+            throw error;
         }
     }
 

@@ -46,7 +46,10 @@ class post{
                 },
                 (error) => {
                     // Error Happened
-                    reject(error);
+                    reject({
+                        code: "ERR-CONNECTION-REFUSED",
+                        message: "Failed to connect to the server. Check internet connection."
+                    });
                 }
             );
         });

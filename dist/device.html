@@ -27,6 +27,8 @@
           <button onclick="getDeviceDetails()" class="btn btn-warning btn-sm">getDeviceDetails</button>
           <button onclick="setDeviceName()" class="btn btn-success btn-sm">setDeviceName</button>
           <button onclick="getDeviceStatus()" class="btn btn-primary btn-sm">getDeviceStatus</button>
+          <button onclick="setListenerSummary()" class="btn btn-primary btn-sm">setListenerSummary</button>
+          <button onclick="removeListenerSummary()" class="btn btn-primary btn-sm">removeListenerSummary</button>
         </div>
       </div>
     </div>
@@ -75,7 +77,7 @@
        }
        setDeviceSummary = () => {
         var summary = {
-          voltage: 1200,
+          voltage: Date.now(),
           current: 1010
         };
         var deviceID = document.getElementById("deviceId").value;
@@ -85,7 +87,7 @@
        } 
        setDeviceParms = () => {
         var summary = {
-          voltage: 1200,
+          voltage: Date.now(),
           current: 1010
         };
         var deviceID = document.getElementById("deviceId").value;
@@ -101,7 +103,7 @@
        }
        setDeviceName = () => {
         var deviceID = document.getElementById("deviceId").value;
-        device.setDeviceName(deviceID, "A new name").then(res => {
+        device.setDeviceName(deviceID, "FRI-1").then(res => {
            console.log(res);
          });
        }
@@ -109,6 +111,28 @@
         var deviceID = document.getElementById("deviceId").value;
         device.getDeviceStatus(deviceID).then(res => {
            console.log(res);
+         });
+       }
+
+       // Hold the summary clear
+       var clearSummary = null;
+
+       setListenerSummary = async () => {
+          // Set Listener
+          var deviceID = document.getElementById("deviceId").value;
+          clearSummary= await device.onDeviceSummaryUpdated(deviceID, (update) => {
+              // Got an update
+              console.log(update);
+          });
+       }
+       
+       removeListenerSummary = () => {
+         // Remove Listener
+         clearSummary.clear().then(res => {
+           console.log(res);
+         })
+         .catch(err => {
+           console.log(err);
          });
        }
 
