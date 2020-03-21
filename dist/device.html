@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="alert alert-success" id="result">
+            
+          </div>
+          <input value="ck73ngond000338tkbzhlfx4r" type="text" class="form-control" id="deviceId" placeholder="Device Id Here">
+          <button onclick="pair()" class="btn btn-primary btn-sm">Pair Device</button>
+          <button onclick="unPair()" class="btn btn-warning btn-sm">Unpair Device</button>
+          <br><br>
+          <button onclick="getUserDevices()" class="btn btn-danger btn-sm">List all devices</button>
+          <button onclick="getOnlineDevicesCount()" class="btn btn-danger btn-sm">getOnlineDevicesCount</button>
+          <button onclick="getDeviceSummary()" class="btn btn-default btn-sm">getDeviceSummary</button>
+          <button onclick="getDeviceParms()" class="btn btn-primary btn-sm">getDeviceParms</button>
+          <button onclick="setDeviceSummary()" class="btn btn-success btn-sm">setDeviceSummary</button>
+          <button onclick="setDeviceParms()" class="btn btn-danger btn-sm">setDeviceParms</button>
+          <button onclick="getDeviceDetails()" class="btn btn-warning btn-sm">getDeviceDetails</button>
+          <button onclick="setDeviceName()" class="btn btn-success btn-sm">setDeviceName</button>
+          <button onclick="getDeviceStatus()" class="btn btn-primary btn-sm">getDeviceStatus</button>
+          <button onclick="setListenerSummary()" class="btn btn-primary btn-sm">setListenerSummary</button>
+          <button onclick="removeListenerSummary()" class="btn btn-primary btn-sm">removeListenerSummary</button>
+        </div>
+      </div>
+    </div>
+    <script src="./apollo.js"></script>
+    <script>
+       var result=document.getElementById("result");
+       
+       // Get Project Reference
+       var apolloProject = apollo.init("ck412ssij0007xr239uos8jfk");
+       var device=apolloProject.device();
+       pair = () => {
+         var deviceID = document.getElementById("deviceId").value;
+         device.pairDevice(deviceID).then(res => {
+          console.log(res); 
+          result=res.code;
+         }); 
+       }
+       unPair = () => {
+        var deviceID = document.getElementById("deviceId").value;
+         device.unpairDevice(deviceID).then(res => {
+          console.log(res); 
+          result=res.code;
+         }); 
+       }
+       getUserDevices = () => {
+         device.getUserDevices().then(res => {
+           console.log(res);
+         });
+       }
+       getOnlineDevicesCount = () => {
+         device.getOnlineDevicesCount().then(res => {
+           console.log(res);
+         });
+       }
+       getDeviceSummary = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.getDeviceSummary(deviceID).then(res => {
+           console.log(res);
+         });
+       }
+       getDeviceParms = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.getDeviceParms(deviceID).then(res => {
+           console.log(res);
+         });
+       }
+       setDeviceSummary = () => {
+        var summary = {
+          voltage: Date.now(),
+          current: 1010
+        };
+        var deviceID = document.getElementById("deviceId").value;
+        device.setDeviceSummary(deviceID, summary).then(res => {
+           console.log(res);
+         });
+       } 
+       setDeviceParms = () => {
+        var summary = {
+          voltage: Date.now(),
+          current: 1010
+        };
+        var deviceID = document.getElementById("deviceId").value;
+        device.setDeviceParms(deviceID, summary).then(res => {
+           console.log(res);
+         });
+       }
+       getDeviceDetails = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.getDeviceDetails(deviceID).then(res => {
+           console.log(res);
+         });
+       }
+       setDeviceName = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.setDeviceName(deviceID, "FRI-1").then(res => {
+           console.log(res);
+         });
+       }
+       getDeviceStatus = () => {
+        var deviceID = document.getElementById("deviceId").value;
+        device.getDeviceStatus(deviceID).then(res => {
+           console.log(res);
+         });
+       }
+
+       // Hold the summary clear
+       var clearSummary = null;
+
+       setListenerSummary = async () => {
+          // Set Listener
+          var deviceID = document.getElementById("deviceId").value;
+          clearSummary= await device.onDeviceSummaryUpdated(deviceID, (update) => {
+              // Got an update
+              console.log(update);
+          });
+       }
+       
+       removeListenerSummary = () => {
+         // Remove Listener
+         clearSummary.clear().then(res => {
+           console.log(res);
+         })
+         .catch(err => {
+           console.log(err);
+         });
+       }
+
+    </script>
+  </body>
+</html>

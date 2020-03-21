@@ -1,0 +1,356 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="alert alert-success" id="result">
+            
+          </div>
+          <!-- Enter email -->
+          <label for="name"><b>Email</b></label>
+          <input class="form-control" type="text" placeholder="Enter Email" id="email" required>
+          <br>
+          <!-- Enter password -->
+          <label for="psw"><b>Password</b></label>
+          <input class="form-control" type="text" placeholder="Enter Password" id="pwd" required>
+          <br>
+
+          <!-- Enter Display name -->
+          <label for="dname"><b>Display Name</b></label>
+          <input class="form-control" type="text" placeholder="Enter Display name" id="dname" required>
+          <br>
+
+          <!-- Enter phone -->
+          <label for="phone"><b>Phone</b></label>
+          <input class="form-control" type="tel" value="" placeholder="Enter phone number" id="phone" required>
+          <br>
+
+          <!-- Enter Code -->
+          <label for="code"><b>Code</b></label>
+          <input class="form-control" type="number" value="" placeholder="Enter code" id="code" required>
+          <br>
+
+          <!-- Enter Display Picture -->
+          <label for="dpicture"><b>Display Picture</b></label>
+          <input class="form-control" type="url" placeholder="Enter Display Picture URL" id="dpicture" required>
+          <br>
+
+          <!-- Login button -->
+          <button onclick="login()" class="btn btn-primary">Login</button>
+
+          <!-- Logout button -->
+          <button onclick="logout()" class="btn btn-danger">Logout</button>
+
+          <!-- Register button -->
+          <button onclick="register()" class="btn btn-success">Register Now</button>
+          
+          <!-- Confirm button -->
+          <button onclick="confirmRegister()" class="btn btn-success">Confirm Register</button>
+
+          <!-- Is Auth button -->
+          <button onclick="isAuthenticated()" class="btn btn-primary">Profile Details</button>
+
+          <!-- Update Profile button -->
+          <button onclick="updateProfile()" class="btn btn-primary">Update Details</button>
+
+          <!-- Confirm Update button -->
+          <button onclick="confirmUpdate()" class="btn btn-primary">Confirm Update</button>
+          
+          <!-- Update Password button -->
+          <button onclick="changePassword()" class="btn btn-primary">Update Password</button>
+
+          <!-- Confirm Update Password button -->
+          <button onclick="confirmchangePassword()" class="btn btn-primary">Confirm Update Password</button>
+         
+          <!-- Forgot Password button -->
+          <button onclick="forgotPassword()" class="btn btn-danger">Forgot Password</button>
+        
+          <!-- Confirm Forgot Password button -->
+          <button onclick="confirmForgotPassword()" class="btn btn-danger">Confirm Forgot Password</button>
+        
+        </div>
+      </div>
+    </div>
+    <script src="./apollo.js"></script>
+    <script>
+      // For output only
+      var output=document.getElementById("result");
+      var registrationConfirmObject = null;
+      var profileConfirmObject = null;
+      var forgotPasswordConfirmObject = null;
+      var changePasswordConfirmObject = null;
+
+      // Get Project Reference
+      var apolloProject = apollo.init("ck412ssij0007xr239uos8jfk");
+
+      //To test auth.login
+      login = ()=> {
+
+        // Get credentails
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("pwd").value;
+
+        // Here we will test login functionality
+        apolloProject.auth().login(email, password).then(res=>{
+          console.log(res);
+
+          switch (res.code) {
+            case "AUTH-ACCOUNT-LOGGEDIN":
+              // Login Successfull
+              output.innerHTML="Login Successful";
+              break;
+            case "AUTH-ACCOUNT-ALREADY-LOGGEDIN":
+              // Already Logged in
+              output.innerHTML="Already Logged in";
+              break;
+            case "DATA-INVALID":
+              // Data is invalid
+              output.innerHTML="Data is Invalid";
+              break;
+            case "AUTH-ACCOUNT-INVALID-PASSWORD":
+              // Invalid Password
+              output.innerHTML="Invalid Password";
+              break;
+          }
+        });
+      }
+
+      // To test auth.logout
+      logout = ()=>{
+        apolloProject.auth().logout().then(res=>{
+          console.log(res);
+
+          switch (res.code) {
+            case "AUTH-ACCOUNT-LOGGEDOUT":
+              // Logout Successfull
+              output.innerHTML="Loggedout Successful";
+              break;
+          }
+        });
+      }
+
+      // To test send Registration Code
+      register = () =>{
+        // Get credentails
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("pwd").value;
+        var displayName = document.getElementById("dname").value;
+        var phone = document.getElementById("phone").value;
+
+        // Submit Request
+        apolloProject.auth().register(email, password, displayName, phone).then( function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "PHONE-CODE-SENT":
+              // Code Sent
+              output.innerHTML="Code sent to phone";
+              registrationConfirmObject = res.confirm;
+              break;
+
+            case "DATA-INVALID":
+              // Data Invalid
+              output.innerHTML= res.message;
+              break;
+              
+            case "AUTH-ACCOUNT-DUPLICATE":
+              output.innerHTML= "Account already exists";
+              break;
+          }
+        });
+      }
+
+      // Confirm and send the verification code to the
+      // server
+      confirmRegister = () => {
+        var code = document.getElementById("code").value;
+
+        // Submit request
+        registrationConfirmObject(code).then(function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "AUTH-ACCOUNT-REGISTERED":
+              // Account created
+              output.innerHTML="Account has been created";
+              break;
+
+            default:
+              output.innerHTML=res.message;
+          }
+        });
+      }
+
+      // To update the Profile 
+      updateProfile = () => {
+        // Get Data
+        var phone = document.getElementById("phone").value;
+        var displayName = document.getElementById("dname").value;
+        var displayPicture = document.getElementById("dpicture").value;
+
+        // Submit Request
+        apolloProject.auth().updateProfile(displayName, displayPicture, phone).then( function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "AUTH-PROFILE-UPDATED":
+              // Profile Updated
+              output.innerHTML="Profile Updated";
+              break;
+
+            case "PHONE-CODE-SENT":
+              // Code Sent
+              output.innerHTML="Code sent to phone";
+              profileConfirmObject = res.confirm;
+              break;
+
+            default:
+            output.innerHTML=res.message;
+          }
+        });
+      }
+
+      // Confirm and send the verification code to the
+      // server
+      confirmUpdate = () => {
+        var code = document.getElementById("code").value;
+
+        // Submit request
+        profileConfirmObject(code).then(function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "AUTH-PROFILE-UPDATED":
+              // Account created
+              output.innerHTML="Profile has been updated";
+              break;
+
+            default:
+              output.innerHTML=res.message;
+          }
+        });
+      }
+
+      // To request password update 
+      forgotPassword = () => {
+        // Get Data
+        var email = document.getElementById("email").value;
+
+        // Submit Request
+        apolloProject.auth().forgotPassword(email).then( function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "PHONE-CODE-SENT":
+              // Code Sent
+              output.innerHTML="Code sent to phone";
+              forgotPasswordConfirmObject = res.confirm;
+              break;
+
+            default:
+            output.innerHTML=res.message;
+          }
+        });
+      }
+
+      // Confirm and send the verification code to the
+      // server
+      confirmForgotPassword = () => {
+        var code = document.getElementById("code").value;
+        var password= document.getElementById("pwd").value;
+
+        // Submit request
+        forgotPasswordConfirmObject(code, password).then(function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "AUTH-PROFILE-UPDATED":
+              // Account created
+              output.innerHTML="Password has been updated";
+              break;
+
+            default:
+              output.innerHTML=res.message;
+          }
+        });
+      }
+
+      // To request password update 
+      changePassword = () => {
+        // Get Data
+        var password= document.getElementById("pwd").value;
+
+        // Submit Request
+        apolloProject.auth().changePassword(password).then( function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "PHONE-CODE-SENT":
+              // Code Sent
+              output.innerHTML="Code sent to phone";
+              changePasswordConfirmObject = res.confirm;
+              break;
+
+            default:
+            output.innerHTML=res.message;
+          }
+        });
+      }
+
+      // Confirm and send the verification code to the
+      // server
+      confirmchangePassword = () => {
+        var code = document.getElementById("code").value;
+
+        // Submit request
+        changePasswordConfirmObject(code).then(function(res) {
+          // Got the response
+          console.log(res);
+
+          switch (res.code) {
+            case "AUTH-PROFILE-UPDATED":
+              // Account created
+              output.innerHTML="Password has been updated";
+              break;
+
+            default:
+              output.innerHTML=res.message;
+          }
+        });
+      }
+
+      // Function to see if you are authenticated
+      isAuthenticated = ()=>{
+      
+        apolloProject.auth().isAuthenticated().then(res=>{
+          console.log(res);
+          // if code is invalid
+          if(res.code=="AUTH-UNAUTHORIZED"){
+            output.innerHTML="Not authorized to access the information"
+          }
+          // if code is valid
+          else if(res.code="AUTH-AUTHORIZED"){
+            output.innerHTML="Fetched Successfully";
+          }
+        })
+      }
+      
+      
+    </script>
+  </body>
+</html>

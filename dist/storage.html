@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="alert alert-success" id="result">
+            
+          </div>
+          <input type="file" class="form-control" id="userFile">
+          <input type="text" class="form-control" id="userFileName">
+          <button onclick="uploadFile()" class="btn btn-warning">Upload File</button>
+          <br>
+          <input type="text" class="form-control" id="userFileUrl">
+          <button onclick="getUrl()" class="btn btn-danger">Get Url</button>
+        </div>
+      </div>
+    </div>
+    <script src="./apollo.js"></script>
+    <script>
+       var result=document.getElementById("result");
+       // Get Project Reference
+       var apolloProject = apollo.init("ck412ssij0007xr239uos8jfk");
+       var files=apolloProject.storage();
+       uploadFile = ()=>{
+          
+          // Get data
+          var file = document.getElementById('userFile').files[0];
+          var filename = document.getElementById("userFileName").value;
+
+          // Upload file
+          files.uploadFile(file, filename);
+       }
+       getUrl = ()=>{
+        
+        var filename = document.getElementById("userFileUrl").value;
+        // Get file url
+        files.getFileUrl(filename);
+       }
+    </script>
+  </body>
+</html>

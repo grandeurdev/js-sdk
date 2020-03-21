@@ -1,0 +1,25 @@
+{
+  "name": "apollo-js",
+  "version": "1.0.0",
+  "description": "This project is designed to maintain the Grandeur Apollo NodeJS SDK development. It will be then utilized by the developers to add Grandeur Cloud support to their React and Web apps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server --open"
+  },
+  "keywords": [
+    "Javascript",
+    "library",
+    "for",
+    "Grandeur",
+    "cloud"
+  ],
+  "author": "Grandeur Technologies",
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}
