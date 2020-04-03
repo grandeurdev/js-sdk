@@ -22,16 +22,12 @@ class storage{
         data.append('filename', filename);
 
         // Post request
-        return this.post.send("/storage/uploadFile", data, "file").then((res) => {
-            console.log(res);
-        });
+        return this.post.send("/storage/uploadFile", data, "file");
     }
 
     getFileUrl(filename) {
         // Method to fetch a file from the server's file system
-        return this.post.send("/storage/getFileUrl", {filename: filename}).then((res) => {
-            console.log(res);
-        });
+        return this.post.send("/storage/getFileUrl", {filename: filename});
     }
 }
 export default storage;

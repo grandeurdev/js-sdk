@@ -36,13 +36,17 @@
           var filename = document.getElementById("userFileName").value;
 
           // Upload file
-          files.uploadFile(file, filename);
+          files.uploadFile(file, filename).then((res) => {
+            console.log(res);
+          });
        }
+
        getUrl = ()=>{
-        
         var filename = document.getElementById("userFileUrl").value;
         // Get file url
-        files.getFileUrl(filename);
+        files.getFileUrl(filename).then((res) => {
+          console.log(res);
+        });
        }
     </script>
   </body>
