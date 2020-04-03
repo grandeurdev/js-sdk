@@ -238,11 +238,9 @@ class duplex {
                 this.subscriptions[event] = callback;
             }
             
-            // Also send an update through callback
-            callback(res);
-            
-            // Return
+            // Return the response
             return {
+                ...res, 
                 clear: () => {
                     // Packet
                     var packet = {

@@ -71,7 +71,7 @@ class device{
         });
     }
 
-    setDeviceSummary(deviceID,summary) {
+    setDeviceSummary(deviceID, summary) {
         // Method to update a particular device's summary
         return this.duplex.send( {
             header: {    
@@ -84,7 +84,7 @@ class device{
         });
     }
 
-    setDeviceParms(deviceID,parms) {
+    setDeviceParms(deviceID, parms) {
         // Method to update a particular device's parms
         return this.duplex.send( {
             header: {    

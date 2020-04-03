@@ -1080,7 +1080,7 @@ This method accepts the following arguments
 | :---- | :---------- | :--------------------- |
 | deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
 
-This method returns the following code 
+This method returns the following codes in response 
 
 * DEVICE-PAIRED
 
@@ -1104,412 +1104,750 @@ Use of pairDevice method has been illustrated in the example below
 // Submit request to the server
 device.pairDevice(deviceID).then((res) => {
   // Got the response
-  // so handle
   switch(res.code) {
     case "DEVICE-PAIRED": 
       // Transfer the token to the device
-      
+      console.log(res.token);
   }
 })
 ```  
 
-### Unpair Device 
-> unpairDevice ( deviceID: *string* ) : returns *Promise*
+### unpairDevice
+This method allows you to unpair a device from a user account. It simply declares that the user account no longer owns the device. In other words, it makes the device available for other users to claim. This methods makes the device access token null and void which was generated earlier as a result of pair function call.
 
-This function is simply used to unpair a device to **Grandeur Cloud (Grandeur Apollo)**. It asks for a **device ID** and send a request to the server to pair that specific device.  
+This method accepts the following arguments
 
-**Parameters**
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard </td>
-  </tr>
-</table>
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+
+This method returns the following codes in response 
+
+* DEVICE-UNPAIRED
+
+  device paired successfully and access token returned
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of unpairDevice method has been illustrated in the example below
 
 ```javascript
-var device = apolloProject.device();
-device.unpairDevice(deviceID).then((res) =>  {
-        // response can be fetched here.
-        // response codes are given below.
-}); 
+// Submit request to the server
+device.unpairDevice(deviceID).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-UNPAIRED": 
+      // Device got unpaired with the user account
+  }
+})
 ```
 
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-UNPAIRED</td>
-<td>Device is successfully unpaired with the user account. </td>
-</tr>
-<td>DEVICE-ID-INVALID</td>
-<td>Device ID is not registered with the project.</td>
-</tr>
-<tr>
-<td>DATA-INVALID</td>
-<td>Device ID is required for pairing it.</td>
-</tr>
-</table>
+### getUserDevices
+This method comes in handy whenever you need a list of all the devices paired to a user account. 
 
-### Get User Devices 
-> getUserDevices ( ) : returns *Promise*
+This method do not accept anything in the argument and returns the following codes in response
 
-This function returns a **list of all the paired devices** with the current** authenticated ID**.   
-Here is a working example :
+* DEVICES-LIST-FETCHED
+
+  list of paired devices has been fetched
+
+* DEVICES-LIST-FETCHING-FAILED
+
+  failed to fetch the list of paird devices
+
+Use of getUserDevices method has been illustrated in the example below
+
 ```javascript
-var device = apolloProject.device();
-device.getUserDevices().then((res) =>  {
-        // response can be fetched here.
-        // response codes are given below.
+// Submit request to the server
+device.getUserDevices().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICES-LIST-FETCHED": 
+      // Devices list has been fetched
+      console.log(res.devices);
+  }
+})
+```
+
+### getOnlineDevicesCount
+This methods returns the number of online devices in the list of devices paired to a user account. Online devices are simply those devices which are connected to Grandeur Cloud at a moment.
+
+This method do not accept anything in the argument and returns the following codes in response
+
+* DEVICES-ONLINE-COUNT-FETCHED
+
+  count of online devices has been fetched
+
+* DEVICES-ONLINE-COUNT-FETCH-FAILED
+
+  failed to fetch the count of online devices
+
+Use of getOnlineDevicesCount method has been illustrated in the example below
+
+```javascript
+// Submit request to the server
+device.getOnlineDevicesCount().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICES-ONLINE-COUNT-FETCHED": 
+      // Number of online devices has been fetched
+      console.log(res.numberOfOnlineDevices);
+  }
+})
+```
+
+### getDeviceSummary
+As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to get the summary object of a device data.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+
+This method returns the following codes in response 
+
+* DEVICE-SUMMARY-FETCHED
+
+  summary object has been returned
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of getDeviceSummary method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.getDeviceSummary(deviceID).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-SUMMARY-FETCHED": 
+      // Device summary has been fetched
+      console.log(res.deviceSummary);
+  }
+})
+```
+
+### getDeviceParms
+As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to get the parameters object of a device data.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+
+This method returns the following codes in response 
+
+* DEVICE-PARMS-FETCHED
+
+  parameters object has been returned
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of getDeviceParms method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.getDeviceParms(deviceID).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-PARMS-FETCHED": 
+      // Device parameters has been fetched
+      console.log(res.deviceParms);
+  }
+})
+```
+
+### setDeviceSummary
+As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to set the summary object of a device data.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+| summary | object   | a valid JSON object containing the data to be set as new summary |
+
+This method returns the following codes in response 
+
+* DEVICE-SUMMARY-UPDATED
+
+  summary object has been updated
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of setDeviceSummary method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.setDeviceSummary(deviceID, {voltage: 10}).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-SUMMARY-UPDATED": 
+      // Device summary has been updated
+  }
+})
+```
+
+### setDeviceParms
+As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to set the parms object of a device data.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+| parms | object   | a valid JSON object containing the data to be set as new parameters |
+
+This method returns the following codes in response 
+
+* DEVICE-PARMS-UPDATED
+
+  parameters object has been updated
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of setDeviceParms method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.setDeviceParms(deviceID, {state: 1}).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-PARMS-UPDATED": 
+      // Device parameters has been updated
+  }
+})
+```
+
+### getDeviceDetails
+This method should be utilized whenever you need consolidated details regarding a device. It returns details like device name, status, summary and parameters in a single call.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+
+This method returns the following codes in response 
+
+* DEVICE-DETAILS-FETCHED
+
+  details has been fetched
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of getDeviceDetails method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.getDeviceDetails(deviceID).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-DETAILS-FETCHED": 
+      // Device details has been fetched
+      console.log(res.deviceDetails);
+  }
+})
+```
+
+### setDeviceName
+There is a name field associated with every device in the registry, it is meant to assist you in tagging your devices with a human friendly names to make management of the paired devices easy for your end users. This method allows you to set this name field of a device. 
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+| name | string | a human friendly alphanumeric phrase |
+
+This method returns the following codes in response 
+
+* DEVICE-NAME-UPDATED
+
+  name has been updated
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of setDeviceName method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.setDeviceName(deviceID, "Living Room Lamp").then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-NAME-UPDATED": 
+      // Device name has been updated
+  }
+})
+```
+
+### getDeviceStatus
+Grandeur Cloud maintains state of each device paired to a user account. We keep track that either a device is connect to the server at a given moment. While [getOnlineDevicesCount](#getOnlineDevicesCount) method allows you to get count of total online devices, this method gives you the utility to query status of an individual device.
+
+PThis method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+
+This method returns the following codes in response 
+
+* DEVICE-STATUS-FETCHED
+
+  status of the device has been returned
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of getDeviceStatus method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.getDeviceStatus(deviceID).then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-STATUS-FETCHED": 
+      // Device status has been returned
+      console.log(res.status);
+  }
+})
+```
+
+### onDeviceSummaryUpdated
+The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+
+This methods allows you to subscribe to a device's summary update event and it gets fired whenever a device's summary data object gets udpated either through the app or the device it self.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+| callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
+
+This method returns the following codes in the response to the promise
+
+* TOPIC-SUBSCRIBED
+
+  event has been subscribed
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+It is important to note that the update will be directly sent without a response code. So for example if a client updates the summary to `{voltage: 10}` then it will be received as it is in the argument of callback.
+
+The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
+
+* TOPIC-UNSUBSCRIBED
+
+  event has been unsubscribed and update won't trigger the callback provided earlier
+
+The use of this method has been illustrated in the example below
+
+```javascript
+// Variable to store clear method of subscribed event
+var summaryEventListener = null;
+
+// Function to be passed as a callback
+var onUpdate = (update) {
+  // Will be called whenever the
+  // event will be fired
+  console.log(update);
+};
+
+// Subscribe to the summary update event of a device
+device.onDeviceSummaryUpdated(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceSummaryUpdated returns the
+  // clear method as a response to promise 
+  switch(res.code) {
+    case "TOPIC-SUBSCRIBED": 
+      // Event has been subscribed
+      summaryEventListener = res;
+  }
+});
+  
+
+// Then in our code we can clear the event 
+// listener whenever required with the clear method
+summaryEventListener.clear().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "TOPIC-UNSUBSCRIBED": 
+      // Event has been unsubscribed
+  }
 });
 ```
 
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICES-LIST-FETCHED</td>
-<td>List of requested devices is successfully fetched.</td>
-</tr>
-</table>
+### onDeviceParmUpdated
+The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
-### Get Online Devices Count 
-> getOnlineDevicesCount ( ) : returns *Promise*
+This methods allows you to subscribe to a device's parameters update event and it gets fired whenever a device's parameters data object gets udpated either through the app or the device it self.
 
-This function returns a **list of all the online devices** with the current **authenticated ID**.   
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+| callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
+
+This method returns the following codes in the response to the promise
+
+* TOPIC-SUBSCRIBED
+
+  event has been subscribed
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+It is important to note that the update will be directly sent without a response code. So for example if a client updates the parameters to `{state: 1}` then it will be received as it is in the argument of callback.
+
+The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
+
+* TOPIC-UNSUBSCRIBED
+
+  event has been unsubscribed and update won't trigger the callback provided earlier
+
+The use of this method has been illustrated in the example below
 
 ```javascript
-var device = apolloProject.device();
-device.getOnlineDevicesCount().then((res) =>  {
-        // response can be fetched here.
-        // response codes are given below.
+// Variable to store clear method of subscribed event
+var parmsEventListener = null;
+
+// Function to be passed as a callback
+var onUpdate = (update) {
+  // Will be called whenever the
+  // event will be fired
+  console.log(update);
+};
+
+// Subscribe to the parameters update event of a device
+device.onDeviceParmUpdated(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceParmUpdated returns the
+  // clear method as a response to promise 
+  switch(res.code) {
+    case "TOPIC-SUBSCRIBED": 
+      // Event has been subscribed
+      parmsEventListener = res;
+  }
+});
+  
+
+// Then in our code we can clear the event 
+// listener whenever required with the clear method
+parmsEventListener.clear().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "TOPIC-UNSUBSCRIBED": 
+      // Event has been unsubscribed
+  }
 });
 ```
 
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICES-ONLINE-COUNT-FETCHED</td>
-<td>Number of online devices is successfully fetched.</td>
-</tr>
-</table>
+### onDeviceNameUpdated
+The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
-### Get Device Summary 
-> getDeviceSummary( deviceID: *string* ) : returns *Promise*
+This methods allows you to subscribe to a device's name update event and it gets fired whenever a device's name gets udpated an app.
 
-This function asks for a **device ID** and returns a payload which includes data summary of that specific device.  
+This method accepts the following arguments
 
-Parameters :
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+| callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard </td>
-  </tr>
-</table>
+This method returns the following codes in the response to the promise
+
+* TOPIC-SUBSCRIBED
+
+  event has been subscribed
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+It is important to note that the update will be directly sent without a response code. So for example if a client updates the name to `Living Room Lamp` then it will be received as it is in the argument of callback.
+
+The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
+
+* TOPIC-UNSUBSCRIBED
+
+  event has been unsubscribed and update won't trigger the callback provided earlier
+
+The use of this method has been illustrated in the example below
 
 ```javascript
-var device = apolloProject.device();
-device.getDeviceSummary(deviceID).then((res) =>  {
-        console.log(res);
-        // response can be fetched here.
-        // response codes are given below.
+// Variable to store clear method of subscribed event
+var nameEventListener = null;
+
+// Function to be passed as a callback
+var onUpdate = (update) {
+  // Will be called whenever the
+  // event will be fired
+  console.log(update);
+};
+
+// Subscribe to the name update event of a device
+device.onDeviceNameUpdated(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceNameUpdated returns the
+  // clear method as a response to promise 
+  switch(res.code) {
+    case "TOPIC-SUBSCRIBED": 
+      // Event has been subscribed
+      nameEventListener = res;
+  }
+});
+  
+
+// Then in our code we can clear the event 
+// listener whenever required with the clear method
+nameEventListener.clear().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "TOPIC-UNSUBSCRIBED": 
+      // Event has been unsubscribed
+  }
+});
+```
+### onDeviceStatusUpdated
+The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+
+This methods allows you to subscribe to a device's status update event and it gets fired whenever a device connects to the cloud.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| deviceID | string   | device id gets generated when you register <br> a new device with dashboard |
+| callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
+
+This method returns the following codes in the response to the promise
+
+* TOPIC-SUBSCRIBED
+
+  event has been subscribed
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+It is important to note that the update will be directly sent without a response code. So for example whenever the device will come online, the event will be fired and a boolean `true` will be received in argument of the callback and vice versa.
+
+The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
+
+* TOPIC-UNSUBSCRIBED
+
+  event has been unsubscribed and update won't trigger the callback provided earlier
+
+The use of this method has been illustrated in the example below
+
+```javascript
+// Variable to store clear method of subscribed event
+var statusEventListener = null;
+
+// Function to be passed as a callback
+var onUpdate = (update) {
+  // Will be called whenever the
+  // event will be fired
+  console.log(update);
+};
+
+// Subscribe to the status update event of a device
+device.onDeviceStatusUpdated(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceStatusUpdated returns the
+  // clear method as a response to promise 
+  switch(res.code) {
+    case "TOPIC-SUBSCRIBED": 
+      // Event has been subscribed
+      statusEventListener = res;
+  }
+});
+  
+
+// Then in our code we can clear the event 
+// listener whenever required with the clear method
+statusEventListener.clear().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "TOPIC-UNSUBSCRIBED": 
+      // Event has been unsubscribed
+  }
 });
 ```
 
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-SUMMARY-FETCHED</td>
-<td>Summary for the device is successfully fetched.</td>
-</tr>
-</table>
+### onDevicesListUpdated
+The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
-### Get Device Parms 
-> getDeviceParms( deviceID: *string* ) : returns *Promise*
+This methods allows you to subscribe to event related to devices list update and event will be fired whenever a device gets paired or unpaired to a user account. 
 
-This function asks for a **device ID** and returns the payload which includes all the parameters of that specific device.  
+This method accepts the following arguments
 
-Parameters :
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard </td>
-  </tr>
-</table>
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
+
+This method returns the following codes in the response to the promise
+
+* TOPIC-SUBSCRIBED
+
+  event has been subscribed
+
+It is important to note that the update will be directly sent without a response code. So for example whenever a new device will be paird, entire list will be sent as the argument in form an array.
+
+The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
+
+* TOPIC-UNSUBSCRIBED
+
+  event has been unsubscribed and update won't trigger the callback provided earlier
+
+The use of this method has been illustrated in the example below
 
 ```javascript
-var device=apolloProject.device();
-device.getDeviceParms(deviceID).then((res) =>  {
-           console.log(res);
-           // response can be fetched here.
-           // response codes are given below.
+// Variable to store clear method of subscribed event
+var devicesListEventListener = null;
+
+// Function to be passed as a callback
+var onUpdate = (update) {
+  // Will be called whenever the
+  // event will be fired
+  console.log(update);
+};
+
+// Subscribe to the devices list update event of a device
+device.onDevicesListUpdated(onUpdate).then((res) => {
+  // Call to onDevicesListUpdated returns the
+  // clear method as a response to promise 
+  switch(res.code) {
+    case "TOPIC-SUBSCRIBED": 
+      // Event has been subscribed
+      devicesListEventListener = res;
+  }
+});
+  
+
+// Then in our code we can clear the event 
+// listener whenever required with the clear method
+devicesListEventListener.clear().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "TOPIC-UNSUBSCRIBED": 
+      // Event has been unsubscribed
+  }
 });
 ```
-
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-PARMS-FETCHED</td>
-<td>Parms for the device are successfully fetched.</td>
-</tr>
-</table>
-
-### Set Device Summary 
-setDeviceSummary (deviceID : *string*, summary : *JSON-Object*) : returns *Promise*
-
-This function asks for a **device ID** and a **JSON object** which includes summary parameters.  
-
-Parameters :
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard.</td>
-  </tr>
-  <tr>
-    <td>summary</td>
-    <td><em>JSON Object</em></td>
-    <td>A JSON object with all the summary parameters needed to set.</td>
-  </tr>
-</table>
-
-```javascript
-var device=apolloProject.device();
-var summary = {
-          voltage: 1200,
-          current: 1010
-        };
-device.setDeviceSummary(deviceID, summary).then((res) =>  {
-           console.log(res);
-           // response can be fetched here.
-           // response codes are given below.
-});
-```
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-SUMMARY-UPDATED</td>
-<td>Summary for the device is successfully updated.</td>
-</tr>
-</table>
-
-### Set Device Parms 
-setDeviceParms (deviceID : *string*, params : *JSON-Object*) : returns *Promise*
-
-This function asks for a **device ID** and a **JSON object** which includes device parameters needed to set.  
-
-Parameters :
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard.</td>
-  </tr>
-  <tr>
-    <td>params</td>
-    <td><em>JSON Object</em></td>
-    <td>A JSON object with all the parameters needed to set with the values.</td>
-  </tr>
-</table>
-
-```javascript
-var device = apolloProject.device();
-var params = {
-          voltage: 1200,
-          current: 1010
-        };
-device.setDeviceParms(deviceID, params).then((res) =>  {
-           console.log(res);
-           // response can be fetched here.
-           // response codes are given below.
-});
-```
-
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-PARMS-UPDATED</td>
-<td>Parms for the device are successfully updated.</td>
-</tr>
-</table>
-
-
-### Get Device Details 
-getDeviceDetails (deviceID : *string*) : returns *Promise*
-
-This function asks for a **device ID** and returns the payload which includes all the details of that specific device.
-
-Parameters :
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard.</td>
-  </tr>
-</table>
-
-```javascript
-var device=apolloProject.device();
-device.getDeviceDetails(deviceID).then((res) =>  {
-           console.log(res);
-           // response can be fetched here.
-           // response codes are given below.
-});
-```
-
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-DETAILS-FETCHED</td>
-<td>Details of the device are successfully fetched.</td>
-</tr>
-</table>
-
-### Set Device Name 
-setDeviceName (deviceID : *string*, newName : *string*) : returns *Promise*
-
-This function asks for a **device ID** and **a new name** and then it sets a new name for that specific device.  
-
-Parameters :
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard.</td>
-  </tr>
-  <tr>
-    <td>newName</td>
-    <td><em>string</em></td>
-    <td>A new name for that device.</td>
-  </tr>
-</table>
-
-```javascript
-var device = apolloProject.device();
-var newName = "newDeviceName";
-device.setDeviceName(deviceID, newName).then((res) =>  {
-           console.log(res);
-           // response can be fetched here.
-           // response codes are given below.
-});
-```
-
-
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-NAME-UPDATED</td>
-<td>Name of the device is successfully updated.</td>
-</tr>
-</table>
-
-### Get Device Status 
-getDeviceStatus (deviceID : *string*) : returns *Promise*
-
-This function asks for a **device ID** and it returns a payload which the current device status of that specific device.  
-
-Parameters :
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>deviceID</td>
-    <td><em>string</em></td>
-    <td>A device ID which you can get from dashboard.</td>
-  </tr>
-</table>
-
-```javascript
-var device = apolloProject.device();
-device.getDeviceStatus(deviceID).then((res) =>  {
-           console.log(res);
-           // response can be fetched here.
-           // response codes are given below.
-});
-```
-
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>DEVICE-STATUS-FETCHED</td>
-<td>Status of the device is successfully fetched.</td>
-</tr>
-</table>
-
 
 ## Storage
 This module is used to access all the storage features of **Grandeur Cloud** i.e to upload or download a file.
