@@ -31,23 +31,28 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
     * [auth](#auth)
         + [register](#register)
         + [login](#login)
-        + [isAuthenticated](#is-authenticated)
+        + [isAuthenticated](#isAuthenticated)
         + [logout](#logout)
     * [device](#device)
-        + [pairDevice](#pair-device)
-        + [unpairDevice](#unpair-device)
-        + [getUserDevices](#get-user-devices)
-        + [getOnlineDevicesCount](#get-online-devices-count)
-        + [getDeviceSummary](#get-device-summary)
-        + [getDeviceParms](#get-device-parms)
-        + [setDeviceSummary](#set-device-summary)
-        + [setDeviceParms](#set-device-parms)
-        + [getDeviceDetails](#get-device-details)
-        + [setDeviceName](#set-device-name)
-        + [getDeviceStatus](#get-device-status)
+        + [pairDevice](#pairDevice)
+        + [unpairDevice](#unpairDevice)
+        + [getUserDevices](#getUserDevices)
+        + [getOnlineDevicesCount](#getOnlineDevicesCount)
+        + [getDeviceSummary](#getDeviceSummary)
+        + [getDeviceParms](#getDeviceParms)
+        + [setDeviceSummary](#setDeviceSummary)
+        + [setDeviceParms](#setDeviceParms)
+        + [getDeviceDetails](#getDeviceDetails)
+        + [setDeviceName](#setDeviceName)
+        + [getDeviceStatus](#getDeviceStatus)
+        + [onDeviceSummaryUpdated](#onDeviceSummaryUpdated)
+        + [onDeviceParmUpdated](#onDeviceParmUpdated)
+        + [onDeviceNameUpdated](#onDeviceNameUpdated)
+        + [onDeviceStatusUpdated](#onDeviceStatusUpdated)
+        + [onDevicesListUpdated](#onDevicesListUpdated)
     * [storage](#storage)
-        + [uploadFile](#upload-file)
-        + [getFileUrl](#get-file-url)
+        + [uploadFile](#uploadFile)
+        + [getFileUrl](#getFileUrl)
 
 
 # Get Started
@@ -1066,7 +1071,7 @@ This class provides access to the features associated to device. Simply get a re
 ```javascript
 // Get reference to the device class
 // by calling the device method
-var auth = apolloProject.device();
+var device = apolloProject.device();
 ```
 
 Now once you got the reference to the device class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
@@ -1849,97 +1854,98 @@ devicesListEventListener.clear().then((res) => {
 });
 ```
 
-## Storage
-This module is used to access all the storage features of **Grandeur Cloud** i.e to upload or download a file.
+## storage
+This class provides access to the features associated to built in object storage of Grandeur Cloud. Simply get a reference to the storage class by calling `storage()` method with the project object. This is illustrated as below
 
-### Upload File 
-uploadFile (file : *JSON-Object*, fileName : *string*) : returns *void*
+```javascript
+// Get reference to the device class
+// by calling the device method
+var storage = apolloProject.storage();
+```
 
-This function asks for a **file** and **file name** and uploads that file to the server.
-To upload to a file, first fetch the file with html `input` tag.
+Now once you got the reference to the storage class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
+
+### uploadFile 
+This methods takes a file and upload it to the built in object storage associated with your project. It is important to note that with JS SDk the upload size is limited 50 MB. 
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| file | file object | a file object returned through classic DOM selector |
+| fileName | string | optional name to be used on upload. The orignal file name will be utilized if not provided |
+
+This method returns the following codes in the response to the promise
+
+* STORAGE-FILE-UPLOADED
+
+  file has been uplaoded
+
+* STORAGE-FILE-EMPTY
+
+  valid file object is not provided
+
+* STORAGE-FILE-ALREADY-EXISTS
+
+  a file already exists with the name
+
+The usage of this method is illustrated in the example below
 
 ```html
-<input type="file" id="file">
+<!-- Get file from user using input tag -->
+<input type="file" id="file" name="file">
 ```
-Now you can access the file and upload that easily.  
-
-Parameters :
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>file</td>
-    <td><em>JSON-Object</em></td>
-    <td>A default JSON-Object with all the file details.</td>
-  </tr>
-  <tr>
-    <td>fileName</td>
-    <td><em>string</em></td>
-    <td>File name you want to save.</td>
-  </tr>
-</table>
 
 ```javascript
-var files=apolloProject.storage();
-
-// Fetch file data from input tag.
+// Then in JS use the classic
+// DOM selector to get the file user selected
 var file = document.getElementById("file").files[0];
+
+// File name
 var fileName = "displayPicture.jpg";
 
-files.uploadFile(file, fileName);
+// Upload the file
+files.uploadFile(file, fileName).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "STORAGE-FILE-UPLOADED": 
+      // File has been uploaded
+  }
+});
 ```
 
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>STORAGE-FILE-UPLOADED</td>
-<td>File is successfully uploaded to the project.</td>
-</tr>
-</table>
+### getFileUrl
+This method can be utilized to get a public url of a file. With the public url, the file will be accessible through GET request, or in other words the file could be downloaded by visiting the url in browser or in the image tag of html.
 
-### Get File Url 
-getFileUrl (fileName : *string*) : returns *void*
+It is important to note that the `getFileUrl` call generates a public url. Means the url could be utilized to access a file even when a user is not authenticated.
 
-This function asks for a **file name** and gets that file from the server if that file exists.  
+This method accepts the following arguments
 
-Parameters :
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td>fileName</td>
-    <td><em>string</em></td>
-    <td>File name you want to save.</td>
-  </tr>
-</table>
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| fileName | string | provided on the file upload operation |
+
+This method returns the following codes in the response to the promise
+
+* STORAGE-FILE-URL-FETCHED
+
+  file url has been fetched
+
+* STORAGE-FILE-NOT-FOUND
+
+  file not found with the provided name
+
+The usage of this method is illustrated in the example below
 
 ```javascript
-var files=apolloProject.storage();
-// File name you want to fetch.
-var fileName = "displayPicture.jpg";
-
-files.getFileUrl(filename);
+// Get the file url
+files.getFileUrl("displayPicture.jpg").then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "STORAGE-FILE-URL-FETCHED": 
+      // File public url has been generated
+      // open a new tab to download the file
+      window.open(res.fileUrl);
+  }
+});
 ```
-
-<table>
-<tr>
-<th>Response Code</th>
-<th>Description</th>
-</tr>
-<tr>
-<td>STORAGE-FILE-URL-FETCHED</td>
-<td>Here is the URL to access the file.</td>
-</tr>
-</table>
-
-[Let`s Sign Up]: https://cloud.grandeur.tech
