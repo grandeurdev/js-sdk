@@ -148,6 +148,11 @@ class auth {
         return this.post.send("/auth/protectedpage", {});
     }
 
+    ping() {
+        // This function sends "check if a user's logged in" request with required data to the server
+        return this.post.send("/auth/ping", {});
+    }
+
     logout() {
         // This function sends "logout the user" request to the server
         return this.post.send("/auth/logout", {});
