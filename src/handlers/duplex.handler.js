@@ -40,7 +40,7 @@ class duplex {
         // Start the Connection
 
         try {
-            var res = await auth.isAuthenticated();
+            var res = await auth.ping();
 
             // Got the response
             switch(res.code) {

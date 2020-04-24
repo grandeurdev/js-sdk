@@ -1,9 +1,11 @@
 
-# Grandeur Cloud [![Version](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://cloud.grandeur.tech)
+# Grandeur Cloud
 
-Building a smart (IoT) product is an art because it is about unifying the physical world with the digital one. When you connect hardware to the web, magic happens. But it involves development operations to be carried out over a huge technology stack (you need your own hardware, your own apps and even your own backend) to make such products work in production. Then if you are (somehow) done with the development operations, there comes the hardest part; you are going to have to scale it all as your user base grows.
+Building a smart (IoT) product is an art. It is about unifying the physical world with the digital one. When you connect a hardware to the web, magic happens. But it involves development across a huge technology stack (you need to develop your hardware, your apps to monitor/control your hardware and a server backend to manage both) to make such products work in production. Then if you are (somehow) done with the development, there comes the hardest part; you will have to scale it all as your userbase gonna grow.
 
-We can understand this because we have been there. Introducing Grandeur Cloud; a backend as a service for IoT. We have designed this platform so that you do not have to worry about the backend of your next big thing so that you could focus on what matters the most; your hardware and apps. 
+We can understand this because we have been there. 
+
+Introducing Grandeur Cloud; A backend as a service (BaaS) platform for IoT. We have designed this platform so that you do not have to worry about the backend of your next big thing and you could focus on what matters the most; your hardware and apps. It is designed specifically to accelerate your IoT product development and push your product to market in weeks rather than in months or years.
 
 # JavaScript SDK
 Grandeur Cloud can resolve all the problems that you could face in building a smart (IoT) product. Like you can authenticate users, can store files in storage, can save data in database, host static website with builtin hosting and can subscribe to events from hardware and app to do realtime communication with the cloud platform. All it requires the integration of our platform in your technology stack.
@@ -62,9 +64,8 @@ Let us get to the point straight. You are all motivated and ready to dive in. So
 
 Then just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://cloud.grandeur.tech/cdn/apollo.js). 
 
-```javascript
-// Drop this link in your web app
-// and ta-da, you can now make magic happen
+```html
+<!-- Drop the Link of CDN in your Web App -->
 <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
 ```
 This will give you access to the global ` Apollo ` object, through which you can initialize the SDK and get a reference to your project as shown below 
