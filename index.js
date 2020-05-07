@@ -41,6 +41,7 @@ function init(apiKey) {
     return {
         // Helper Method
         isConnected: () => handlers.duplex.status === "CONNECTED",
+        onConnection: (callback) => handlers.duplex.onConnection(callback),
 
         // Classes
         auth: () => new auth(handlers),

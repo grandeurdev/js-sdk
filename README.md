@@ -30,6 +30,7 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
 - [Documentation](#documentation)
     * [init](#init)
     * [isConnected](#isConnected)
+    * [onConnection](#onConnection)
     * [auth](#auth)
         + [register](#register)
         + [login](#login)
@@ -47,11 +48,11 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
         + [getDeviceDetails](#getDeviceDetails)
         + [setDeviceName](#setDeviceName)
         + [getDeviceStatus](#getDeviceStatus)
-        + [onDeviceSummaryUpdated](#onDeviceSummaryUpdated)
-        + [onDeviceParmUpdated](#onDeviceParmUpdated)
-        + [onDeviceNameUpdated](#onDeviceNameUpdated)
-        + [onDeviceStatusUpdated](#onDeviceStatusUpdated)
-        + [onDevicesListUpdated](#onDevicesListUpdated)
+        + [onDeviceSummary](#onDeviceSummary)
+        + [onDeviceParm](#onDeviceParm)
+        + [onDeviceName](#onDeviceName)
+        + [onDeviceStatus](#onDeviceStatus)
+        + [onDevicesList](#onDevicesList)
     * [storage](#storage)
         + [uploadFile](#uploadFile)
         + [getFileUrl](#getFileUrl)
@@ -578,6 +579,43 @@ else {
   // SDK is not connected
   // generate an alert here 
 }
+```
+
+## onConnection
+This methods let to keep track of the persistent connection that the SDK tries to establish with the cloud. As mentioned earlier, the persistent connection is the key because this allows us to do realtime communication with the server. Almost all of the SDK features are based on this realtime channel. This is why we have added this function, which can be utilized to verify either we are connected to the server or not. 
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| callback | function | a valid JS function which will be called whenever connection status changes|
+
+This method returns the following codes in the response to the promise
+
+* CONNECTED
+
+  connection has been established
+
+* DISCONNECTED
+
+  SDK got disconnected from the server
+
+It is important to note that the update will be directly sent without a response code. So for example if a client gets connected, you will received `CONNECTED` in the argument of callback.
+
+The use of this method has been illustrated in the example below
+
+```javascript
+// Subscribe to the connection status
+apolloProject.onConnection((status) => {
+  // This callback gets fired
+  // whenever the connection status
+  // changes
+  switch(status) {
+    case "CONNECTED": 
+      // SDK connected 
+      console.log("Client is connected with the server");
+  }
+});
 ```
 
 ## auth
@@ -1499,7 +1537,7 @@ device.getDeviceStatus(deviceID).then((res) => {
 })
 ```
 
-### onDeviceSummaryUpdated
+### onDeviceSummary
 The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's summary update event and it gets fired whenever a device's summary data object gets udpated either through the app or the device it self.
@@ -1551,8 +1589,8 @@ var onUpdate = (update) {
 };
 
 // Subscribe to the summary update event of a device
-device.onDeviceSummaryUpdated(deviceID, onUpdate).then((res) => {
-  // Call to onDeviceSummaryUpdated returns the
+device.onDeviceSummary(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceSummary returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 
@@ -1573,7 +1611,7 @@ summaryEventListener.clear().then((res) => {
 });
 ```
 
-### onDeviceParmUpdated
+### onDeviceParm
 The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's parameters update event and it gets fired whenever a device's parameters data object gets udpated either through the app or the device it self.
@@ -1625,8 +1663,8 @@ var onUpdate = (update) {
 };
 
 // Subscribe to the parameters update event of a device
-device.onDeviceParmUpdated(deviceID, onUpdate).then((res) => {
-  // Call to onDeviceParmUpdated returns the
+device.onDeviceParm(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceParm returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 
@@ -1647,7 +1685,7 @@ parmsEventListener.clear().then((res) => {
 });
 ```
 
-### onDeviceNameUpdated
+### onDeviceName
 The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's name update event and it gets fired whenever a device's name gets udpated an app.
@@ -1699,8 +1737,8 @@ var onUpdate = (update) {
 };
 
 // Subscribe to the name update event of a device
-device.onDeviceNameUpdated(deviceID, onUpdate).then((res) => {
-  // Call to onDeviceNameUpdated returns the
+device.onDeviceName(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceName returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 
@@ -1720,7 +1758,7 @@ nameEventListener.clear().then((res) => {
   }
 });
 ```
-### onDeviceStatusUpdated
+### onDeviceStatus
 The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's status update event and it gets fired whenever a device connects to the cloud.
@@ -1772,8 +1810,8 @@ var onUpdate = (update) {
 };
 
 // Subscribe to the status update event of a device
-device.onDeviceStatusUpdated(deviceID, onUpdate).then((res) => {
-  // Call to onDeviceStatusUpdated returns the
+device.onDeviceStatus(deviceID, onUpdate).then((res) => {
+  // Call to onDeviceStatus returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 
@@ -1794,7 +1832,7 @@ statusEventListener.clear().then((res) => {
 });
 ```
 
-### onDevicesListUpdated
+### onDevicesList
 The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to event related to devices list update and event will be fired whenever a device gets paired or unpaired to a user account. 
@@ -1833,8 +1871,8 @@ var onUpdate = (update) {
 };
 
 // Subscribe to the devices list update event of a device
-device.onDevicesListUpdated(onUpdate).then((res) => {
-  // Call to onDevicesListUpdated returns the
+device.onDevicesList(onUpdate).then((res) => {
+  // Call to onDevicesList returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 

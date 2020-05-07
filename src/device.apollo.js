@@ -135,31 +135,31 @@ class device{
         });
     }
 
-    onDeviceSummaryUpdated(deviceID, callback) {
+    onDeviceSummary(deviceID, callback) {
         // Method to get updates whenever summary of a 
         // device gets updated
         return this.duplex.subscribeTopic("setDeviceSummary", callback, deviceID);
     }
 
-    onDeviceParmUpdated(deviceID, callback) {
+    onDeviceParm(deviceID, callback) {
         // Method to get updates whenever parms of a 
         // device gets updated
         return this.duplex.subscribeTopic("setDeviceParms", callback, deviceID);
     }
 
-    onDeviceNameUpdated(deviceID, callback) {
+    onDeviceName(deviceID, callback) {
         // Method to get updates whenever name of a 
         // device gets updated
         return this.duplex.subscribeTopic("setDeviceName", callback, deviceID);
     }
 
-    onDeviceStatusUpdated(deviceID, callback) {
+    onDeviceStatus(deviceID, callback) {
         // Method to get updates whenever status of a 
         // device gets updated
         return this.duplex.subscribeTopic("setDeviceStatus", callback, deviceID);
     }
 
-    onDevicesListUpdated(callback) {
+    onDevicesList(callback) {
         // Method to get updates whenever a devices
         // paired or unpaired
         return this.duplex.subscribeTopic("setDevicesList", callback);
