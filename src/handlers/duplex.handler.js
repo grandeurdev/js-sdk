@@ -20,6 +20,9 @@ class duplex {
         // To check the status of Connection
         this.status = "DISCONNECTED";
 
+        // To store the connection callback
+        this.connectionCallback = null;
+
         // Error response to be returned 
         // in case of default error
         this.errResponse = {
@@ -81,6 +84,10 @@ class duplex {
             // Set status to connected
             this.status = "CONNECTED";
 
+            // Notify user about the change
+            if (this.connectionCallback) 
+                this.connectionCallback(this.status);
+
             // Start Ping
             this.ping = setInterval(() => {
                 // Send packet to server
@@ -93,6 +100,10 @@ class duplex {
         this.ws.onclose = () => {
             // Set the status to disconnected
             this.status = "DISCONNECTED";
+
+            // Notify user about the change
+            if (this.connectionCallback) 
+                this.connectionCallback(this.status);
 
             // Clear ping
             clearInterval(this.ping);
@@ -153,6 +164,15 @@ class duplex {
             // Call init again
             this.init(auth);
         }, 5000);
+    }
+
+    onConnection(callback) {
+        // This function will take the 
+        // callback from use and will set
+        // it to context so that
+        // a the user could be notified
+        // about possible connection changes
+        this.connectionCallback = callback;
     }
 
     send(packet) {
