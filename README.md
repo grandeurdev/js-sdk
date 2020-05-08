@@ -49,7 +49,7 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
         + [setDeviceName](#setDeviceName)
         + [getDeviceStatus](#getDeviceStatus)
         + [onDeviceSummary](#onDeviceSummary)
-        + [onDeviceParm](#onDeviceParm)
+        + [onDeviceParms](#onDeviceParms)
         + [onDeviceName](#onDeviceName)
         + [onDeviceStatus](#onDeviceStatus)
         + [onDevicesList](#onDevicesList)
@@ -782,7 +782,7 @@ The response codes are as below
 
   user is authenticated
 
-* DATA-UNAUTHORIZED 
+* AUTH-UNAUTHORIZED 
 
   user is not not authenticated
 
@@ -793,6 +793,12 @@ This is how you can use it in your application
 // if user is authenticated or not
 auth.isAuthenticated().then((res) => {
     // Handle the response
+    switch(res.code) {
+      case "AUTH-AUTHORIZED": 
+        // User is authroized
+        // log the user profile
+        console.log(res.userProfile);
+    }
 });
 ```
 
@@ -1611,7 +1617,7 @@ summaryEventListener.clear().then((res) => {
 });
 ```
 
-### onDeviceParm
+### onDeviceParms
 The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's parameters update event and it gets fired whenever a device's parameters data object gets udpated either through the app or the device it self.
@@ -1663,7 +1669,7 @@ var onUpdate = (update) {
 };
 
 // Subscribe to the parameters update event of a device
-device.onDeviceParm(deviceID, onUpdate).then((res) => {
+device.onDeviceParms(deviceID, onUpdate).then((res) => {
   // Call to onDeviceParm returns the
   // clear method as a response to promise 
   switch(res.code) {
