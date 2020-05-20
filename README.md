@@ -555,14 +555,14 @@ So in order to establish communication from a website using the web SDK, you wil
 In this section, we will present references to each and every feature that our SDK supports. We have divided our SDK in group of functions called classes. Each class represents a feature of Grandeur Cloud. So in this section, we will also document that how can you use each and every function of Grandeur Cloud SDK.
 
 ## init
-First and foremost thing that you are required to do in order to access our platform is initialization. When you drop in the link of the CDN in your app, we create a global object accessible through JS. This object can be then utilized to init the SDK with your API key. Upon init, the SDK returns you a reference to your project, through which you can access all the features of Grandeur Cloud. To understand it in depth please refer to [Projects](#projects) topic in the concepts section.   
+First and foremost thing that you are required to do in order to access our platform is initialization. When you drop in the link of the CDN in your app, we create a global object accessible through JS. This object can be then utilized to init the SDK with your API key and access credential. Upon init, the SDK returns you a reference to your project, through which you can access all the features of Grandeur Cloud. To understand it in depth please refer to [Projects](#projects) topic in the concepts section. To generate access key and token please visit [settings](https://cloud.grandeur.tech/settings) page. It is important to note that access key is a secret so please store it with absolute care in your application code. 
 
 This is how you can init the SDK and can get a reference to your project
 
 ```javascript
 // Get reference to the project by initializing the SDK
 // with your API key
-var apolloProject = apollo.init("YOUR-APIKEY");
+var apolloProject = apollo.init("YOUR-APIKEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
 ```
 
 ## isConnected

@@ -4,6 +4,9 @@
 // have to have a post function 
 // in every class.
 
+// Imports
+import crypto from 'crypto';
+
 // Class
 class post{
     constructor(config){
@@ -11,47 +14,121 @@ class post{
          this.config = config;
     }
     
-    send(path, data, type) {
-        // Get the URL
-        const url = this.config.url + path + '?apiKey=' + this.config.apiKey;
-        //Set default headers
-        var headers={};
+    generateSignature(path, url, headers, body) {
+        // Function to generate the signature of request
+        // Start with path and generate normalized
+        const canonicalPath = encodeURI(path);
 
-        // If data type to be sent is JSON
-        if(type !== 'file'){
-            // Stringify Data
-            data=JSON.stringify(data);
+        // Then normalize the query
+        const canonicalQuery = encodeURIComponent(url.split("?")[1]);
+
+        // Then normalize the headers
+        // only one we need
+        const requiredHeaders = ['gt-date', 'gt-access-token', 'content-type']
+
+        // Convert each header into canonical form and then
+        // form the overall headers string
+        const canonicalHeaders = requiredHeaders.reduce((accumulator, name) => {
+            // Get value and trim spaces
+            var value = headers[name].replace(/\s/g, '');
+
+            // Return accumulated
+            return `${accumulator}${name}:${value}`
+        }, "");
+
+        // Convert the body in the canocial form
+        const canonicalBody = encodeURIComponent(JSON.stringify(body));
+
+        // Build the sign string
+        const signString = `${canonicalPath}\n${canonicalQuery}\n${canonicalHeaders}\n${canonicalBody}`;
+
+        // Generate signature
+        const signature = crypto.createHmac('sha256', this.config.accessKey).update(signString).digest('hex');
+
+        // Return
+        return signature;
+    }
+
+    send(path, data, attachments) {
+        // Function to send a post request to the server
+        // Get the URL
+        const url = `${this.config.url}${path? path: "/"}?apiKey=${this.config.apiKey}`;
+
+        // Set default headers
+        var headers = {
+            'gt-date': Date.now().toString(),
+            'gt-access-token': this.config.accessToken
+        };
+
+        var body = "";
+
+        // If there isn't anything in the attachment
+        // means the request is raw json
+        if(!attachments){
+            // Stringify Data and attach to body
+            body = JSON.stringify(data);
 
             // Set Appropriate headers
-            headers={
-                'Content-Type': 'application/json'    // JSON data type
-            };
+            // to represent data type
+            headers['content-type'] = 'application/json'
+
+            // Generate signature
+            headers['gt-signature'] = this.generateSignature(path, url, headers, data);
         }
+        else {
+            // Create a new form data
+            body = new FormData();
+
+            // Append files
+            attachments.forEach(file => {
+                // Push
+                body.append("files", file);
+            });
+
+            // Then append data
+            Object.keys(data).forEach(key => {
+                // Push
+                body.append(key, data[key]);
+            });
+
+            // Set Appropriate headers to 
+            // represent data type
+            headers['content-type'] = 'multipart/form-data'
+
+            // Generate signature
+            headers['gt-signature'] = this.generateSignature(path, url, headers, data);
+
+            // Remove the content type
+            delete headers['content-type'];
+        }
+
         // Return new Promise
-        return new Promise((resolve, reject) => {
-            // Send Request
-            fetch(url, {
-                method: 'POST', // Request is of Type Post
-                mode: 'cors',   // Cross Origin is the Type
-                body: data, // Data
-                credentials: 'include', // Do Send the Credentials
-                SameSite: 'none',
-                headers: headers
-            })
-            .then (res => res.json())
-            .then (
-                (result) => {
-                    // Results
-                    resolve(result);
-                },
-                (error) => {
-                    // Error Happened
-                    reject({
-                        code: "ERR-CONNECTION-REFUSED",
-                        message: "Failed to connect to the server. Check internet connection."
-                    });
-                }
-            );
+        return new Promise(async (resolve, reject) => {
+            // In a try catch
+            try {
+                // Send Request
+                var res = await fetch(url, {
+                    method: 'POST', // Request is of Type Post
+                    mode: 'cors',   // Cross Origin is the Type
+                    body: body, // Data
+                    credentials: 'include', // Do Send the Credentials
+                    SameSite: 'none',
+                    headers: headers
+                });
+
+                // Then convert the response
+                // to json
+                res = await res.json();
+
+                // Resolve
+                resolve(res);
+            } catch (error) {
+                // Error
+                reject({
+                    code: "ERR-CONNECTION-REFUSED",
+                    message: "Failed to connect to the server. Check internet connection."
+                });
+            };
         });
     }
 }
