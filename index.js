@@ -16,10 +16,10 @@ const config = {
 
 // Function that initializes 
 // the object
-function init(apiKey) {
+function init(apiKey, accessKey, accessToken) {
     // Returns a Object with a refernce to
     // Apollo Supported Classes
-    const apolloConfig = {...config, apiKey}
+    const apolloConfig = {...config, apiKey, accessKey, accessToken}
 
     // Post Handler
     const postHandler = new post(apolloConfig);

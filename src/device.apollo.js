@@ -141,7 +141,7 @@ class device{
         return this.duplex.subscribeTopic("setDeviceSummary", callback, deviceID);
     }
 
-    onDeviceParm(deviceID, callback) {
+    onDeviceParms(deviceID, callback) {
         // Method to get updates whenever parms of a 
         // device gets updated
         return this.duplex.subscribeTopic("setDeviceParms", callback, deviceID);
