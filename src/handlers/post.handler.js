@@ -5,7 +5,7 @@
 // in every class.
 
 // Imports
-import createHmac from 'createhmac-chaintor';
+import crypto from 'crypto';
 
 // Class
 class post{
@@ -43,10 +43,52 @@ class post{
         const signString = `${canonicalPath}\n${canonicalQuery}\n${canonicalHeaders}\n${canonicalBody}`;
 
         // Generate signature
-        const signature = createHmac('sha256', this.config.accessKey).update(signString).digest('hex');
+        const signature = crypto.createHmac('sha256', this.config.accessKey).update(signString).digest('hex');
 
         // Return
         return signature;
+    }
+
+    toFormData(obj, form, namespace) {
+        // Create a new form if form isn't
+        // provided
+        var fd = form || new FormData();
+        
+        // Current key
+        var formKey;
+        
+        // Loop over object properties
+        for(var property in obj) {
+            // If the value at the property is defined
+            if(obj.hasOwnProperty(property) && obj[property]) {
+                // Resolve the case when this call
+                // was recurssive, means it was called by toFromData
+                // to resolve nested objects
+                if (namespace) {
+                    // Attach namespace
+                    formKey = namespace + '[' + property + ']';
+                } else {
+                    // Or key
+                    formKey = property;
+                }
+                
+                // If the property is an object, but not a File, use recursivity.
+                if (obj[property] instanceof Date) {
+                    // Handle date and append
+                    fd.append(formKey, obj[property].toISOString());
+                }
+                else if (typeof obj[property] === 'object') {
+                    // Recurssion to solve nested objects
+                    this.toFormData(obj[property], fd, formKey);
+                } else { 
+                    // If it is a string
+                    fd.append(formKey, obj[property]);
+                }
+            }
+        }
+        
+        // Return form
+        return fd;
     }
 
     send(path, data, attachments) {
@@ -86,10 +128,7 @@ class post{
             });
 
             // Then append data
-            Object.keys(data).forEach(key => {
-                // Push
-                body.append(key, data[key]);
-            });
+            body = this.toFormData(data, body);
 
             // Set Appropriate headers to 
             // represent data type
