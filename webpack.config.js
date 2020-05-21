@@ -10,6 +10,6 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         filename: "apollo.js",
         library: "apollo",
-        libraryTarget: "var"
+        libraryTarget: "umd"
     }
 }
