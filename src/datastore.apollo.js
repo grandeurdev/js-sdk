@@ -39,7 +39,7 @@ class collection{
         });
     }
 
-    search(filter, projection) {
+    search(filter, projection, pageNumber) {
         // Method to search documents from datastore
         return this.duplex.send( {
             header: {
@@ -48,7 +48,8 @@ class collection{
             payload: {
                 collection: this.collection,
                 filter: filter,
-                projection: projection
+                projection: projection,
+                pageNumber: pageNumber
             }
         });
     }
