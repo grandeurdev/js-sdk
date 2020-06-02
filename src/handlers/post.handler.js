@@ -5,7 +5,7 @@
 // in every class.
 
 // Imports
-import crypto from 'crypto';
+import createHmac from 'createhmac-chaintor';
 
 // Class
 class post{
@@ -43,7 +43,7 @@ class post{
         const signString = `${canonicalPath}\n${canonicalQuery}\n${canonicalHeaders}\n${canonicalBody}`;
 
         // Generate signature
-        const signature = crypto.createHmac('sha256', this.config.accessKey).update(signString).digest('hex');
+        const signature = createHmac('sha256', this.config.accessKey).update(signString).digest('hex');
 
         // Return
         return signature;
