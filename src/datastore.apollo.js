@@ -3,6 +3,84 @@
 // could store data related to their
 // devices and app
 
+// Pipeline interface
+class pipeline{
+    // Constructor
+    constructor(handlers, name, query) {
+        // Configuration
+        this.post = handlers.post;
+        this.duplex = handlers.duplex;
+
+        // Store the collection name and query
+        this.collection = name;
+        this.query = query;
+    }
+
+    match(filter) {
+        // Method to add match stage to 
+        // the query and return a new pipeline
+        this.query.push({
+            type: "match",
+            filter: filter
+        });
+
+        // Return a new pipeline
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+    }
+
+    project(specs) {
+        // Method to add project stage to 
+        // the query and return a new pipeline
+        this.query.push({
+            type: "project",
+            specs: specs
+        });
+
+        // Return a new pipeline
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+    }
+
+    group(condition, fields) {
+        // Method to add group stage to 
+        // the query and return a new pipeline
+        this.query.push({
+            type: "group",
+            condition: condition,
+            fields: fields
+        });
+
+        // Return a new pipeline
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+    }
+
+    sort(specs) {
+        // Method to add sort stage to 
+        // the query and return a new pipeline
+        this.query.push({
+            type: "sort",
+            specs: specs,
+        });
+
+        // Return a new pipeline
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+    }
+    
+    execute(pageNumber) {
+        // Method to finally send request
+        // to execute the pipeline
+        return this.duplex.send( {
+            header: {
+                task: "pipelineDocumentsDatastore"
+            },
+            payload: {
+                collection: this.collection,
+                pipeline: this.query,
+                pageNumber: pageNumber
+            }
+        });
+    }
+}
+
 // Collection interface
 class collection{
     // Constructor
@@ -52,6 +130,13 @@ class collection{
                 pageNumber: pageNumber
             }
         });
+    }
+
+    pipeline() {
+        // Method to setup a pipeline
+        // which will allow the users to stage
+        // different quaries togehter and execute together
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, []);
     }
 }
 
