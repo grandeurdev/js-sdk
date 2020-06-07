@@ -17,7 +17,7 @@ const config = {
 
 // Function that initializes 
 // the object
-function init(apiKey, accessKey, accessToken) {
+export function init(apiKey, accessKey, accessToken) {
     // Returns a Object with a refernce to
     // Apollo Supported Classes
     const apolloConfig = {...config, apiKey, accessKey, accessToken}
@@ -51,5 +51,3 @@ function init(apiKey, accessKey, accessToken) {
         datastore: () => new datastore(handlers)
     }
 }
-
-export {init};

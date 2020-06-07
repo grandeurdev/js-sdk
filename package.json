@@ -1,8 +1,9 @@
 {
-  "name": "apollo-js",
+  "name": "apollo",
   "version": "1.0.0",
   "description": "This project is designed to maintain the Grandeur Apollo NodeJS SDK development. It will be then utilized by the developers to add Grandeur Cloud support to their React and Web apps.",
   "main": "dist/apollo.js",
+  "module": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js",
