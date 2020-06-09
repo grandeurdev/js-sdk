@@ -36,6 +36,9 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
         + [login](#login)
         + [isAuthenticated](#isAuthenticated)
         + [logout](#logout)
+        + [updateProfile](#updateProfile)
+        + [forgotPassword](#forgotPassword)
+        + [changePassword](#changePassword)
     * [device](#device)
         + [pairDevice](#pairDevice)
         + [unpairDevice](#unpairDevice)
@@ -63,11 +66,11 @@ Let us get to the point straight. You are all motivated and ready to dive in. So
 
 ![Select a project at Grandeur Cloud Dashboard](/images/select-project.JPG)
 
-Then just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://cloud.grandeur.tech/cdn/apollo.js). 
+Then just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://unpkg.com/@grandeurcloud/apollo). 
 
 ```html
 <!-- Drop the Link of CDN in your Web App -->
-<script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+<script src="https://unpkg.com/@grandeurcloud/apollo"></script>
 ```
 This will give you access to the global ` Apollo ` object, through which you can initialize the SDK and get a reference to your project as shown below 
 
@@ -141,7 +144,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
         <title>First Grandeur App</title>
 
         <!-- Link SDK with CDN -->
-        <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+        <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
       </head>
       
       <!-- Body -->
@@ -180,7 +183,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
         <title>First Grandeur App</title>
 
         <!-- Link SDK with CDN -->
-        <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+        <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
       </head>
       
       <!-- Body -->
@@ -279,7 +282,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
         <title>First Grandeur App</title>
 
         <!-- Link SDK with CDN -->
-        <script src="https://cloud.grandeur.tech/cdn/apollo.js"></script>
+        <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
       </head>
       
       <!-- Body -->

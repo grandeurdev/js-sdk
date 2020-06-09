@@ -1,24 +1,31 @@
 {
-  "name": "apollo-js",
+  "name": "@grandeurcloud/apollo",
   "version": "1.0.0",
-  "description": "This project is designed to maintain the Grandeur Apollo NodeJS SDK development. It will be then utilized by the developers to add Grandeur Cloud support to their React and Web apps.",
+  "description": "Grandeur Cloud SDK from JavaScript. It can be utilized to integrate Grandeur Cloud features into web apps.",
   "main": "dist/apollo.js",
+  "module": "./index.js",
+  "bugs": "https://github.com/grandeurtech/grandeurcloud-js-sdk/issues",
+  "repository": "grandeurtech/grandeurcloud-js-sdk",
+  "homepage": "https://grandeur.tech",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js",
     "start": "webpack-dev-server --open"
   },
   "keywords": [
-    "Javascript",
-    "library",
-    "for",
-    "Grandeur",
-    "cloud"
+    "cloud",
+    "grandeurcloud",
+    "IoT",
+    "serverless",
+    "backend",
+    "database"
   ],
-  "author": "Grandeur Technologies",
-  "license": "ISC",
+  "author": "Grandeur Technologies <hi@grandeur.tech>",
+  "license": "MIT",
   "dependencies": {
-    "createhmac-chaintor": "^1.0.0",
+    "createhmac-chaintor": "^1.0.0"
+  },
+  "devDependencies": {
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"
