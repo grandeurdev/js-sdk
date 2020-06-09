@@ -13,11 +13,11 @@
     "start": "webpack-dev-server --open"
   },
   "keywords": [
-    "cloud", 
-    "grandeurcloud", 
-    "IoT", 
-    "serverless", 
-    "backend", 
+    "cloud",
+    "grandeurcloud",
+    "IoT",
+    "serverless",
+    "backend",
     "database"
   ],
   "author": "Grandeur Technologies <hi@grandeur.tech>",
