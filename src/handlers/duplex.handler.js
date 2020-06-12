@@ -173,6 +173,14 @@ class duplex {
         // a the user could be notified
         // about possible connection changes
         this.connectionCallback = callback;
+
+        // and return a 
+        return {
+            clear: () => {
+                // Remove the callback
+                this.connectionCallback = undefined;
+            }
+        }
     }
 
     send(packet) {
