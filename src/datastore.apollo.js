@@ -119,17 +119,14 @@ class collection{
 
     search(filter, projection, pageNumber) {
         // Method to search documents from datastore
-        return this.duplex.send( {
-            header: {
-                task: "searchDocumentsDatastore"
-            },
-            payload: {
-                collection: this.collection,
-                filter: filter,
-                projection: projection,
-                pageNumber: pageNumber
-            }
-        });
+        // Based on pipeline so create a new one
+        var searchPipeline = new pipeline({post: this.post, duplex: this.duplex}, this.collection, []).match(filter);
+
+        // Add projection if provided
+        if (projection) searchPipeline = searchPipeline.project(projection);
+
+        // Execute
+        return searchPipeline.execute(pageNumber);
     }
 
     pipeline() {
