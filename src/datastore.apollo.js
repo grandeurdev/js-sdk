@@ -117,6 +117,20 @@ class collection{
         });
     }
 
+    update(filter, update) {
+        // Method to delete documents from datastore
+        return this.duplex.send( {
+            header: {
+                task: "updateDocumentsDatastore"
+            },
+            payload: {
+                collection: this.collection,
+                filter: filter,
+                update: update
+            }
+        });
+    }
+
     search(filter, projection, pageNumber) {
         // Method to search documents from datastore
         // Based on pipeline so create a new one
