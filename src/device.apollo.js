@@ -14,7 +14,14 @@ class device{
 
     pairDevice(deviceID) {
         // Method to send request for pairing a device with this User ID
-        return this.post.send("/devices/pairDevice", {deviceID: deviceID});
+        return this.duplex.send( {
+            header: {
+                task: "pairDevice"
+            },
+            payload: {
+                deviceID: deviceID
+            }
+        });
     }
 
     unpairDevice(deviceID) {
