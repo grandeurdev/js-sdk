@@ -4,7 +4,155 @@
 // To pair device
 
 //Class
-class device{
+class device {
+    // Constructor
+    constructor(handlers, deviceID) {
+        // Configuration
+        this.post = handlers.post;
+        this.duplex = handlers.duplex;
+
+        // Setup device ID to context
+        this.deviceID = deviceID;
+    }
+
+    pair() {
+        // Method to send request for pairing a device with this User ID
+        return this.duplex.send( {
+            header: {
+                task: "/device/pair"
+            },
+            payload: {
+                deviceID: this.deviceID
+            }
+        });
+    }
+
+    unpair() {
+        // Method to unpair a device from the user ID
+        return this.duplex.send( {
+            header: {
+                task: "/device/unpair"
+            },
+            payload: {
+                deviceID: this.deviceID
+            }
+        });
+    }
+
+    getSummary() {
+        // Method to request a particular device's summary
+        return this.duplex.send( {
+            header: {    
+                task: '/device/summary/get'
+            },
+            payload: {
+                deviceID: this.deviceID
+            }
+        });
+    }
+
+    getParms() {
+        // Method to request a particular device's parms
+        return this.duplex.send( {
+            header: {    
+                task: '/device/parms/get'
+            },
+            payload: {
+                deviceID: this.deviceID
+            }
+        });
+    }
+
+    setSummary(summary) {
+        // Method to update a particular device's summary
+        return this.duplex.send( {
+            header: {    
+                task: '/device/summary/set'
+            },
+            payload: {
+                deviceID: this.deviceID,
+                summary: summary
+            }
+        });
+    }
+
+    setParms(parms) {
+        // Method to update a particular device's parms
+        return this.duplex.send( {
+            header: {    
+                task: '/device/parms/set'
+            },
+            payload: {
+                deviceID: this.deviceID,
+                parms: parms
+            }
+        });
+
+    }
+
+    getDetails() {
+        // Method to request a particular device's details
+        return this.duplex.send( {
+            header: {    
+                task: '/device/details/get'
+            },
+            payload: {
+                deviceID: this.deviceID
+            }
+        });
+    }
+
+    setName(deviceName) {
+        // Method to update a particular device's name
+        return this.duplex.send( {
+            header: {    
+                task: '/device/name/set'
+            },
+            payload: {
+                deviceID: this.deviceID,
+                deviceName: deviceName
+            }
+        });
+    }
+
+    getStatus() {
+        // Method to request a particular device's online status
+        return this.duplex.send( {
+            header: {    
+                task: '/device/status/get'
+            },
+            payload: {
+                deviceID: this.deviceID
+            }
+        });
+    }
+
+    onSummary(callback) {
+        // Method to get updates whenever summary of a 
+        // device gets updated
+        return this.duplex.subscribe("deviceSummary", callback, this.deviceID);
+    }
+
+    onParms(callback) {
+        // Method to get updates whenever parms of a 
+        // device gets updated
+        return this.duplex.subscribe("deviceParms", callback, this.deviceID);
+    }
+
+    onName(callback) {
+        // Method to get updates whenever name of a 
+        // device gets updated
+        return this.duplex.subscribe("deviceName", callback, this.deviceID);
+    }
+
+    onStatus(callback) {
+        // Method to get updates whenever status of a 
+        // device gets updated
+        return this.duplex.subscribe("deviceStatus", callback, this.deviceID);
+    }
+}
+
+class devices {
     // Constructor
     constructor(handlers) {
         // Configuration
@@ -12,164 +160,33 @@ class device{
         this.duplex = handlers.duplex;
     }
 
-    pairDevice(deviceID) {
-        // Method to send request for pairing a device with this User ID
-        return this.duplex.send( {
-            header: {
-                task: "pairDevice"
-            },
-            payload: {
-                deviceID: deviceID
-            }
-        });
-    }
-
-    unpairDevice(deviceID) {
-        // Method to unpair a device from the user ID
-        return this.duplex.send( {
-            header: {
-                task: "unpairDevice"
-            },
-            payload: {
-                deviceID: deviceID
-            }
-        });
-    }
-
-    getUserDevices() {
+    list() {
         // Method to list all devices paired to user ID
         return this.duplex.send( {
             header: {    
-                task: 'getUserDevices'
+                task: '/devices/list/get'
             }
         });
     }
 
-    getOnlineDevicesCount() {
+    onlineCount() {
         // Method to count all online devices paired to user ID
         return this.duplex.send( {
             header: {    
-                task: 'getOnlineDevicesCount'
+                task: '/devices/onlineCount/get'
             }
         });
     }
 
-    getDeviceSummary(deviceID) {
-        // Method to request a particular device's summary
-        return this.duplex.send( {
-            header: {    
-                task: 'getDeviceSummary'
-            },
-            payload: {
-                deviceID: deviceID
-            }
-        });
-    }
-
-    getDeviceParms(deviceID) {
-        // Method to request a particular device's parms
-        return this.duplex.send( {
-            header: {    
-                task: 'getDeviceParms'
-            },
-            payload: {
-                deviceID: deviceID
-            }
-        });
-    }
-
-    setDeviceSummary(deviceID, summary) {
-        // Method to update a particular device's summary
-        return this.duplex.send( {
-            header: {    
-                task: 'setDeviceSummary'
-            },
-            payload: {
-                deviceID: deviceID,
-                summary: summary
-            }
-        });
-    }
-
-    setDeviceParms(deviceID, parms) {
-        // Method to update a particular device's parms
-        return this.duplex.send( {
-            header: {    
-                task: 'setDeviceParms'
-            },
-            payload: {
-                deviceID: deviceID,
-                parms: parms
-            }
-        });
-
-    }
-
-    getDeviceDetails(deviceID) {
-        // Method to request a particular device's details
-        return this.duplex.send( {
-            header: {    
-                task: 'getDeviceDetails'
-            },
-            payload: {
-                deviceID: deviceID
-            }
-        });
-    }
-
-    setDeviceName(deviceID, deviceName) {
-        // Method to update a particular device's name
-        return this.duplex.send( {
-            header: {    
-                task: 'setDeviceName'
-            },
-            payload: {
-                deviceID: deviceID,
-                deviceName: deviceName
-            }
-        });
-    }
-
-    getDeviceStatus(deviceID) {
-        // Method to request a particular device's online status
-        return this.duplex.send( {
-            header: {    
-                task: 'getDeviceStatus'
-            },
-            payload: {
-                deviceID: deviceID
-            }
-        });
-    }
-
-    onDeviceSummary(deviceID, callback) {
-        // Method to get updates whenever summary of a 
-        // device gets updated
-        return this.duplex.subscribeTopic("setDeviceSummary", callback, deviceID);
-    }
-
-    onDeviceParms(deviceID, callback) {
-        // Method to get updates whenever parms of a 
-        // device gets updated
-        return this.duplex.subscribeTopic("setDeviceParms", callback, deviceID);
-    }
-
-    onDeviceName(deviceID, callback) {
-        // Method to get updates whenever name of a 
-        // device gets updated
-        return this.duplex.subscribeTopic("setDeviceName", callback, deviceID);
-    }
-
-    onDeviceStatus(deviceID, callback) {
-        // Method to get updates whenever status of a 
-        // device gets updated
-        return this.duplex.subscribeTopic("setDeviceStatus", callback, deviceID);
-    }
-
-    onDevicesList(callback) {
+    onList(callback) {
         // Method to get updates whenever a devices
         // paired or unpaired
-        return this.duplex.subscribeTopic("setDevicesList", callback);
+        return this.duplex.subscribe("devicesList", callback);
+    }
+
+    device(deviceID) {
+        // Operation is required to be performed on a device
+        return new device({post: this.post, duplex: this.duplex}, deviceID);
     }
 }
-export default device;
+export default devices;

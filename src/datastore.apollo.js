@@ -70,7 +70,7 @@ class pipeline{
         // to execute the pipeline
         return this.duplex.send( {
             header: {
-                task: "pipelineDocumentsDatastore"
+                task: "/datastore/pipeline"
             },
             payload: {
                 collection: this.collection,
@@ -95,7 +95,7 @@ class collection{
         // Method to insert documents to datastore
         return this.duplex.send( {
             header: {
-                task: "insertDocumentsDatastore"
+                task: "/datastore/insert"
             },
             payload: {
                 collection: this.collection,
@@ -108,7 +108,7 @@ class collection{
         // Method to delete documents from datastore
         return this.duplex.send( {
             header: {
-                task: "deleteDocumentsDatastore"
+                task: "/datastore/delete"
             },
             payload: {
                 collection: this.collection,
@@ -121,7 +121,7 @@ class collection{
         // Method to delete documents from datastore
         return this.duplex.send( {
             header: {
-                task: "updateDocumentsDatastore"
+                task: "/datastore/update"
             },
             payload: {
                 collection: this.collection,
@@ -171,7 +171,7 @@ class datastore{
         // Method to list all collections
         return this.duplex.send( {
             header: {
-                task: "listCollectionsDatastore"
+                task: "/datastore/listCollections"
             }
         });
     }
@@ -180,7 +180,7 @@ class datastore{
         // Method to drop a collection
         return this.duplex.send( {
             header: {
-                task: "dropCollectionDatastore"
+                task: "/datastore/dropCollection"
             },
             payload: {
                 collectionName: name

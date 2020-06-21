@@ -1,7 +1,7 @@
 // Support classes
 import auth from "./src/auth.apollo";
 import storage from "./src/storage.apollo";
-import device from "./src/device.apollo";
+import devices from "./src/devices.apollo";
 import datastore from "./src/datastore.apollo";
 
 // Handlers
@@ -47,7 +47,7 @@ export function init(apiKey, accessKey, accessToken) {
         // Classes
         auth: () => new auth(handlers),
         storage: () => new storage(handlers),
-        device: () => new device(handlers),
+        devices: () => new devices(handlers),
         datastore: () => new datastore(handlers)
     }
 }
