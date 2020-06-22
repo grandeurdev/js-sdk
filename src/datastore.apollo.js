@@ -70,7 +70,7 @@ class pipeline{
         // to execute the pipeline
         return this.duplex.send( {
             header: {
-                task: "pipelineDocumentsDatastore"
+                task: "/datastore/pipeline"
             },
             payload: {
                 collection: this.collection,
@@ -95,7 +95,7 @@ class collection{
         // Method to insert documents to datastore
         return this.duplex.send( {
             header: {
-                task: "insertDocumentsDatastore"
+                task: "/datastore/insert"
             },
             payload: {
                 collection: this.collection,
@@ -108,7 +108,7 @@ class collection{
         // Method to delete documents from datastore
         return this.duplex.send( {
             header: {
-                task: "deleteDocumentsDatastore"
+                task: "/datastore/delete"
             },
             payload: {
                 collection: this.collection,
@@ -117,19 +117,30 @@ class collection{
         });
     }
 
-    search(filter, projection, pageNumber) {
-        // Method to search documents from datastore
+    update(filter, update) {
+        // Method to delete documents from datastore
         return this.duplex.send( {
             header: {
-                task: "searchDocumentsDatastore"
+                task: "/datastore/update"
             },
             payload: {
                 collection: this.collection,
                 filter: filter,
-                projection: projection,
-                pageNumber: pageNumber
+                update: update
             }
         });
+    }
+
+    search(filter, projection, pageNumber) {
+        // Method to search documents from datastore
+        // Based on pipeline so create a new one
+        var searchPipeline = new pipeline({post: this.post, duplex: this.duplex}, this.collection, []).match(filter);
+
+        // Add projection if provided
+        if (projection) searchPipeline = searchPipeline.project(projection);
+
+        // Execute
+        return searchPipeline.execute(pageNumber);
     }
 
     pipeline() {
@@ -160,7 +171,7 @@ class datastore{
         // Method to list all collections
         return this.duplex.send( {
             header: {
-                task: "listCollectionsDatastore"
+                task: "/datastore/listCollections"
             }
         });
     }
@@ -169,7 +180,7 @@ class datastore{
         // Method to drop a collection
         return this.duplex.send( {
             header: {
-                task: "dropCollectionDatastore"
+                task: "/datastore/dropCollection"
             },
             payload: {
                 collectionName: name

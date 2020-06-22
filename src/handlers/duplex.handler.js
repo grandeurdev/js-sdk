@@ -31,8 +31,8 @@ class duplex {
         }
 
         // Setup list for events
-        this.otherEvents = ["setDevicesList"];
-        this.deviceEvents = ["setDeviceSummary", "setDeviceParms", "setDeviceName", "setDeviceStatus"];
+        this.otherEvents = ["devicesList"];
+        this.deviceEvents = ["deviceSummary", "deviceParms", "deviceName", "deviceStatus"];
     }
 
     // To initialize the connection
@@ -62,6 +62,17 @@ class duplex {
                     this.errResponse = {
                         code: "AUTH-UNAUTHORIZED",
                         message: "You are not authenticated to the server."
+                    }
+                    return; 
+
+                case "SIGNATURE-INVALID": 
+                    // Signature is invalid
+                    // Don't reconnect
+                    
+                    // Setup error response
+                    this.errResponse = {
+                        code: "SIGNATURE-INVALID",
+                        message: "Please check your accessKey and accessToken."
                     }
                     return; 
             }
@@ -127,10 +138,10 @@ class duplex {
                 // Got an update a subscribed topic
                 if (this.deviceEvents.includes(data.payload.event)) {
                     // If event is of device type
-                    if (this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`]) {
+                    if (this.subscriptions[`${data.payload.event}/${data.payload.deviceId}`]) {
                         // Handler is defined for the event type
                         // so execute the callback
-                        this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`](data.payload.update);
+                        this.subscriptions[`${data.payload.event}/${data.payload.deviceId}`](data.payload.update);
                     }
                 }
                 else {
@@ -173,6 +184,14 @@ class duplex {
         // a the user could be notified
         // about possible connection changes
         this.connectionCallback = callback;
+
+        // and return a 
+        return {
+            clear: () => {
+                // Remove the callback
+                this.connectionCallback = undefined;
+            }
+        }
     }
 
     send(packet) {
@@ -204,7 +223,7 @@ class duplex {
         });
     }
 
-    async subscribeTopic(event, callback, deviceID) {
+    async subscribe(event, callback, deviceID) {
         // Method to subscribe to a particular device's data
         // Verify that the event is valid
         if (!(this.deviceEvents.includes(event) || this.otherEvents.includes(event))) {
@@ -233,7 +252,7 @@ class duplex {
         // Packet
         var packet = {
             header: {
-                task: 'subscribeTopic'
+                task: '/topic/subscribe'
             }, 
             payload: {
                 event: event,
@@ -265,7 +284,7 @@ class duplex {
                     // Packet
                     var packet = {
                         header: {
-                            task: 'unsubscribeTopic'
+                            task: '/topic/unsubscribe'
                         }, 
                         payload: {
                             event: event,
