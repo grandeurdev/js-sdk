@@ -16,7 +16,13 @@ class storage{
     uploadFile(file, filename) {
         // Method to upload a file to the server's file system
         // Post request
-        return this.post.send("/storage/uploadFile", {filename: filename}, [file]);
+        var data = {};
+
+        // If filename is provided then append
+        if (filename) data.filename = filename;
+
+        // Submit 
+        return this.post.send("/storage/uploadFile", data, [file]);
     }
 
     getFileUrl(filename) {
