@@ -157,6 +157,19 @@ class auth {
         // This function sends "logout the user" request to the server
         return this.post.send("/auth/logout", {});
     }
+
+    async oauth(integrationID) {
+        // This function redirects the client to OAuth redirect
+        const res = await this.post.send("/auth/getOAuthUrl", {integrationID: integrationID});
+
+        // Redirect
+        window.location = res.redirectUrl;
+    }
+
+    oauthAccessToken(integrationID) {
+        // This function to get oauth token
+        return this.post.send("/auth/getOAuthToken", {integrationID: integrationID});
+    }
 }
 
 export default auth;

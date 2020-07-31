@@ -138,10 +138,10 @@ class duplex {
                 // Got an update a subscribed topic
                 if (this.deviceEvents.includes(data.payload.event)) {
                     // If event is of device type
-                    if (this.subscriptions[`${data.payload.event}/${data.payload.deviceId}`]) {
+                    if (this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`]) {
                         // Handler is defined for the event type
                         // so execute the callback
-                        this.subscriptions[`${data.payload.event}/${data.payload.deviceId}`](data.payload.update);
+                        this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`](data.payload.update);
                     }
                 }
                 else {
