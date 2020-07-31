@@ -1,6 +1,10 @@
 
 # Grandeur Cloud
 
+[![NPM](https://img.shields.io/npm/v/@grandeurcloud/apollo.svg)](https://www.npmjs.com/package/@grandeurcloud/apollo) 
+[![Downloads/week](https://img.shields.io/npm/dw/@grandeurcloud/apollo.svg)](https://npmjs.org/package/@grandeurcloud/apollo)
+[![License](https://img.shields.io/npm/l/@grandeurcloud/apollo.svg)](https://github.com/grandeurtech/grandeurcloud-js-sdk/blob/master/package.json)
+
 Building a smart (IoT) product is an art. It is about unifying the physical world with the digital one. When you connect a hardware to the web, magic happens. But it involves development across a huge technology stack (you need to develop your hardware, your apps to monitor/control your hardware and a server backend to manage both) to make such products work in production. Then if you are (somehow) done with the development, there comes the hardest part; you will have to scale it all as your userbase gonna grow.
 
 We can understand this because we have been there. 
