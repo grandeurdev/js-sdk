@@ -162,8 +162,12 @@ class auth {
         // This function redirects the client to OAuth redirect
         const res = await this.post.send("/auth/getOAuthUrl", {integrationID: integrationID});
 
-        // Redirect
-        window.location = res.redirectUrl;
+        // Redirect if request has been processed successfully
+        if (res.redirectUrl)
+            window.location = res.redirectUrl;
+        
+        // Otherwise send response
+        else return res;
     }
 
     oauthAccessToken(integrationID) {

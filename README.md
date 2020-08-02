@@ -43,6 +43,8 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
         + [updateProfile](#updateProfile)
         + [forgotPassword](#forgotPassword)
         + [changePassword](#changePassword)
+        + [oauth](#oauth)
+        + [oauthAccessToken](#oauthAccessToken)
     * [devices](#devices)
         + [list](#list)
         + [onlineCount](#onlineCount)
@@ -1118,6 +1120,86 @@ confirmChangePassword(code).then((res) => {
         // Password has been updated
   }
 });
+```
+
+### oauth
+This function starts the OAuth authorization process by redirecting the user to the provider website. After completing the
+authorization, the user will be redirected back to url of the app that you provided while enabling the integration. Then you
+can get the OAuth token by calling [oauthAccessToken](#oauthAccessToken) function.
+
+This function accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| integrationID | string      | will be generated after enabling an integration through [accounts](https://cloud.grandeur.tech/accounts) page |
+
+This method automatically redirects the browser to Auth Url on successful execution
+
+* DATA-INVALID
+
+  integration id is not provided
+
+* AUTH-UNAUTHORIZED 
+
+  user is not authenticated
+
+* INTEGRATION-NOT-ENABLED
+
+  the integration id is invalid
+
+* INTEGRATION-UNAUTHORIZED
+
+  user haven't authorized the integration
+
+Use of oauth method has been illustrated in the example below
+
+```javascript
+// Start OAuth Authorization process and get token
+auth.oauth("INTEGRATION-ID");
+```
+
+### oauthAccessToken
+After completion of the authorization process, we retrive the token for you and store it in database with reference to the user who authorized the integration and you can call this function at any stage in your app logic to get the token from our database.
+
+This function accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| integrationID | string      | will be generated after enabling an integration through [accounts](https://cloud.grandeur.tech/accounts) page |
+
+Upon execution, this method returns the following code in form of promise
+
+* DATA-INVALID
+
+  integration id is not provided
+
+* AUTH-UNAUTHORIZED 
+
+  user is not authenticated
+
+* INTEGRATION-NOT-ENABLED
+
+  the integration id is invalid
+
+* INTEGRATION-UNAUTHORIZED
+
+  user haven't authorized the integration
+
+* INTEGRATION-TOKEN-FETCHED
+
+  token has been fetched and included in the response
+
+Use of oauthAccessToken method has been illustrated in the example below
+
+```javascript
+// Start OAuth Authorization process and get token
+auth.oauthAccessToken("INTEGRATION-ID").then( res=> {
+  // Got the response
+  switch(res.code) {
+    case "INTEGRATION-TOKEN-FETCHED":
+        // Token has been fetched
+        console.log(res.token);
+}).c;
 ```
 
 ## devices
