@@ -6,13 +6,14 @@
 // Pipeline interface
 class pipeline{
     // Constructor
-    constructor(handlers, name, query) {
+    constructor(handlers, name, index, query) {
         // Configuration
         this.post = handlers.post;
         this.duplex = handlers.duplex;
 
         // Store the collection name and query
         this.collection = name;
+        this.index = index;
         this.query = query;
     }
 
@@ -25,7 +26,7 @@ class pipeline{
         });
 
         // Return a new pipeline
-        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.index, this.query);
     }
 
     project(specs) {
@@ -37,7 +38,7 @@ class pipeline{
         });
 
         // Return a new pipeline
-        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.index, this.query);
     }
 
     group(condition, fields) {
@@ -50,7 +51,7 @@ class pipeline{
         });
 
         // Return a new pipeline
-        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.index, this.query);
     }
 
     sort(specs) {
@@ -62,7 +63,7 @@ class pipeline{
         });
 
         // Return a new pipeline
-        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.query);
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.index, this.query);
     }
     
     execute(pageNumber) {
@@ -74,6 +75,7 @@ class pipeline{
             },
             payload: {
                 collection: this.collection,
+                index: this.index,
                 pipeline: this.query,
                 pageNumber: pageNumber
             }
@@ -134,7 +136,7 @@ class collection{
     search(filter, projection, pageNumber) {
         // Method to search documents from datastore
         // Based on pipeline so create a new one
-        var searchPipeline = new pipeline({post: this.post, duplex: this.duplex}, this.collection, []).match(filter);
+        var searchPipeline = new pipeline({post: this.post, duplex: this.duplex}, this.collection, {}, []).match(filter);
 
         // Add projection if provided
         if (projection) searchPipeline = searchPipeline.project(projection);
@@ -143,11 +145,11 @@ class collection{
         return searchPipeline.execute(pageNumber);
     }
 
-    pipeline() {
+    pipeline(index) {
         // Method to setup a pipeline
         // which will allow the users to stage
         // different quaries togehter and execute together
-        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, []);
+        return new pipeline({post: this.post, duplex: this.duplex}, this.collection, index, []);
     }
 }
 
