@@ -2,6 +2,9 @@
 // of Grandeur Cloud. This 
 // handles the real time connectivity.
 
+// Import the event emitter class
+import { EventEmitter } from 'events';
+
 // Class
 class duplex {
     // Constructor
@@ -11,11 +14,11 @@ class duplex {
         
         // Event queue object to handle callbacks
         // on Response
-        this.eventQueue = { };
+        this.tasks = new EventEmitter();
 
         // User subscriptions object to handle
         // user subscriptions
-        this.subscriptions = {};
+        this.subscriptions = new EventEmitter();
         
         // To check the status of Connection
         this.status = "DISCONNECTED";
@@ -138,29 +141,26 @@ class duplex {
                 // Got an update a subscribed topic
                 if (this.deviceEvents.includes(data.payload.event)) {
                     // If event is of device type
-                    if (this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`]) {
+                    if (this.subscriptions.eventNames().includes(`${data.payload.event}/${data.payload.deviceID}`)) {
                         // Handler is defined for the event type
                         // so execute the callback
-                        this.subscriptions[`${data.payload.event}/${data.payload.deviceID}`](data.payload.update);
+                        this.subscriptions.emit(`${data.payload.event}/${data.payload.deviceID}`, data.payload.update);
                     }
                 }
                 else {
                     // otherwise
-                    if (this.subscriptions[data.payload.event]) {
+                    if (this.subscriptions.eventNames().includes(data.payload.event)) {
                         // Handler is defined for the event type
                         // so execute the callback
-                        this.subscriptions[data.payload.event](data.payload.update);
+                        this.subscriptions.emit(data.payload.event, data.payload.update);
                     }
                 }
             }
             else {
                 // Got response for a task
-                if(this.eventQueue[data.header.id]){
-                    // All messages other than subscription are passed to the event queue
-                    this.eventQueue[data.header.id].resolve(data.payload);
-    
-                    // Deleting the callback function from event queue
-                    delete this.eventQueue[data.header.id];
+                if(this.tasks.eventNames().includes(data.header.id.toString())) {
+                    // Fire event
+                    this.tasks.emit(data.header.id, data.payload);
                 }
             }
         }
@@ -205,13 +205,11 @@ class duplex {
                 // Append ID to header
                 packet.header.id = id;
 
-                // Save promise in the event queue
-                // so that event could be raised whenever
-                // response will be received in the onmessage
-                this.eventQueue[id] = {
-                    resolve: resolve,
-                    reject: reject
-                }
+                // Attach an event listener
+                this.tasks.once(id, (res) => {
+                    // Resolve the promise
+                    resolve(res);
+                });
 
                 // Send packet
                 this.ws.send(JSON.stringify(packet));
@@ -270,11 +268,11 @@ class duplex {
 
             if (this.deviceEvents.includes(event)) {
                 // If event is of device type
-                this.subscriptions[`${event}/${deviceID}`] = callback;
+                this.subscriptions.on(`${event}/${deviceID}`, callback);
             }
             else {
                 // otherwise
-                this.subscriptions[event] = callback;
+                this.subscriptions.on(event, callback);
             }
             
             // Return the response
