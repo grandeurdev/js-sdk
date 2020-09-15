@@ -169,11 +169,14 @@ class datastore{
         return new collection({post: this.post, duplex: this.duplex}, name);
     }
 
-    listCollections() {
+    listCollections(pageNumber) {
         // Method to list all collections
         return this.duplex.send( {
             header: {
                 task: "/datastore/listCollections"
+            },
+            payload: {
+                pageNumber: pageNumber
             }
         });
     }
