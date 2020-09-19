@@ -57,12 +57,20 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
             + [setSummary](#setSummary)
             + [setParms](#setParms)
             + [getDetails](#getDetails)
-            + [getName](#getName)
+            + [setName](#setName)
             + [getStatus](#getStatus)
             + [onSummary](#onSummary)
             + [onParms](#onParms)
             + [onName](#onName)
             + [onStatus](#onStatus)
+    * [datastore](#datastore)
+        + [collection](#collection)
+            + [insert](#insert)
+            + [delete](#delete)
+            + [update](#update)
+            + [search](#search)
+        + [listCollections](#listCollections)
+        + [dropCollection](#dropCollection)
     * [storage](#storage)
         + [uploadFile](#uploadFile)
         + [getFileUrl](#getFileUrl)
@@ -1956,19 +1964,435 @@ statusEventListener.clear().then((res) => {
 });
 ```
 
-## storage
-This class provides access to the features associated to built in object storage of Grandeur Cloud. Simply get a reference to the storage class by calling `storage()` method with the project object. This is illustrated as below
+## datastore
+Data storage is the basic requirement of a data driven application or device. We have build this feature in order to enable users to store large amount of data like logs of devices. To access this feature simply get a reference to the storage class by calling `datastore()` method with the project object. This is illustrated as below
 
 ```javascript
-// Get reference to the device class
-// by calling the device method
+// Get reference to the datastore class
+// by calling the datastore method
+var datastore = apolloProject.datastore();
+```
+
+Now once you got the reference to the datastore class, you can simply use all the features by calling the respective methods. 
+
+Datastore of Grandeur Cloud is based on no-sql/document based database model. So you can store documents (as knonw as records in sql) into various collections (as known as tables in sql). The document is based on JSON datastructure. Methods of this class are documented in following sections
+
+### collection
+From the datastore class, you can get a reference to a collection in order to execute a query or insert new documents into it. 
+
+```javascript
+// Get reference to a collection 
+var collection = datastore.collection(name);
+```
+
+It is important to note here that it is not required for a collection to pre exist in order to get reference to it. A collection automatically gets created when you insert first document into it. So you will get an error only if you queried a collection which don't contains any document. You can execute following operations on a collection
+
+#### insert
+This method can be used to insert a json object/document into a collection. It accepts an array of json objects (so you can insert one or many documents into a collection with single function call). It returns the ids of inserted documents in response (we automatically assign a unique id to each document before actually inserting it into the datastore - primary key). It accepts following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| documents | array | an array of json objects |
+
+This method returns following codes
+
+* DATA-INVALID
+
+  empty array is provided or collection name wasn't specified while getting the reference
+
+* DATASTORE-DOCUMENTS-INSERTED
+
+  documents has been inserted successfully
+
+* DATASTORE-DOCUMENTS-INSERTION-FAILED
+
+  failed to insert the documents into the collection
+
+The usage of this method is illustrated in the example below
+
+```javascript
+// Define an array of json objects
+var documents = [{
+  voltage: 20,
+  current: 2
+}]
+
+// Insert document into a collection
+collection.insert(documents).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-INSERTED": 
+      // Methods returns the unique ids of each
+      // inserted document
+      console.log(res.insertedIDs);
+  }
+});
+```
+
+#### delete
+This method can be used to delete a document from a collection. It accepts a json object which specifies the match condition and returns the count of total deleted documents. It accepts following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| filter | object | a json object which specifies the match condition of documens |
+
+It is important to note here that running this function without specifying the match condition will result in deletion of all the documents of a collection.
+
+This method returns following codes
+
+* DATA-INVALID
+
+  collection name wasn't specified while getting the reference
+
+* DATASTORE-DOCUMENTS-NOT-FOUND
+
+  not even a single document qualified the match condition so delete count is zero
+
+* DATASTORE-DOCUMENTS-DELETED
+
+  deleted the matched documents
+
+* DATASTORE-DOCUMENTS-DELETION-FAILED
+
+  failed to delete the documents
+
+The usage of this method is illustrated in the example below
+
+```javascript
+// This method can be used in many ways
+
+// Case: delete a specific document by providing
+// the document id, you can use this on other 
+// attributes as well
+collection.delete({documentID: "id"}).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-DELETED": 
+      // Method returns the count
+      // should be exactly 1 here
+      console.log(res.deletedCount);
+  }
+});
+
+// Case: delete multiple but specific documents
+// Define an array of ids of documents required to
+// be deleted, you can use this on other 
+// attributes as well
+var documentIDs = ["1", "2", "3"];
+
+// Run operation with $in operator
+collection.delete({documentID: {$in: documentIDs}}).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-DELETED": 
+      // Method returns the count
+      // should match the length of the array
+      console.log(res.deletedCount);
+  }
+});
+
+// Case: delete in range
+// Run operation with $lt and $gt operator on attributes
+collection.delete({voltage: {$lt: 25, $gt: 30}}).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-DELETED": 
+      // Method returns the count
+      console.log(res.deletedCount);
+  }
+});
+
+// Case: delete all
+// Run operation with $in operator
+collection.delete().then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-DELETED": 
+      // Method returns the count
+      console.log(res.deletedCount);
+  }
+});
+```
+
+#### update
+This method can be used to update a document in a collection. It accepts a json object which specifies the match condition and returns the count of total updated documents. It accepts following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| filter | object | a json object which specifies the match condition of documens |
+| update | object | a json object which specifies new values of attributes |
+
+It is important to note here that running this function without specifying the match condition will update all the documents of a collection. This method don't overwrites the matched documents entirely but instead only replaces the matched attributes in a document with new values or adds new attributes (if none matched). In other words, if a matched document got structure similar to
+
+```javascript
+{
+  voltage: 20,
+  current: 2
+}
+```
+
+and you run this method with update 
+
+```javascript
+{
+  voltage: 30,
+  power: 60
+}
+```
+
+then the document will be updated to
+
+```javascript
+{
+  voltage: 30,
+  current: 2,
+  power: 60
+}
+```
+
+This method returns following codes
+
+* DATA-INVALID
+
+  collection name wasn't specified while getting the reference
+
+* DATASTORE-DOCUMENTS-NOT-FOUND
+
+  not even a single document qualified the match condition
+
+* DATASTORE-DOCUMENTS-UPDATED
+
+  updated the matched documents
+
+* DATASTORE-DOCUMENTS-UPDATE-FAILED
+
+  failed to update the documents
+
+The usage of this method is illustrated in the example below
+
+```javascript
+// Define an update
+var update = {
+  voltage: 30,
+  power: 60
+}
+
+// This method can be used in many ways
+
+// Case: update a specific document by providing
+// the document id, you can use this on other 
+// attributes as well
+collection.update({documentID: "id"}, update).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-UPDATED": 
+      // Method returns the count
+      // should be exactly 1 here
+      console.log(res.modifiedCount);
+  }
+});
+
+// Case: update multiple but specific documents
+// Define an array of ids of documents required to
+// be updated, you can use this on other 
+// attributes as well
+var documentIDs = ["1", "2", "3"];
+
+// Run operation with $in operator
+collection.update({documentID: {$in: documentIDs}}, update).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-UPDATED": : 
+      // Method returns the count
+      // should match the length of the array
+      console.log(res.modifiedCount);
+  }
+});
+
+// Case: update in range
+// Run operation with $lt and $gt operator on attributes
+collection.update({voltage: {$lt: 25, $gt: 30}}, update).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-UPDATED": 
+      // Method returns the count
+      console.log(res.modifiedCount);
+  }
+});
+```
+
+#### search
+This method can be used to query documents in a collection. It accepts a match condition and fetches the documents. It accepts following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| filter | object | a json object which specifies the match condition of documents |
+| projection | object | condition to specify the fields of a document to be returned or opted out |
+| pageNumber | integer | this method returns paginated result |
+
+It is important to note here that the method is subjected to rate limiting so maximum 20 results will be returned and then you can use page number argument of the method to get the ramining. So if you have 25 documents in a collection then calling `collection.search()` will return first 20 while calling `collection.search({}, undefined, 1)` will return the remaining 5 documents. Then it is also important to note that projection condition cannot be a empty object to instead pass `undefined` if you don't want to project out fields in matched documents. Whereas the filter can be an empty object in which case all the documents will be returned.
+
+This method returns following codes
+
+* DATA-INVALID
+
+  collection name wasn't specified while getting the reference
+
+* DATASTORE-DOCUMENTS-FETCHED
+
+  returned the matched documents
+
+* DATASTORE-DOCUMENTS-FETCH-FAILED
+
+  failed to search the documents
+
+The usage of this method is illustrated in the example below
+
+```javascript
+// This method can be used in many ways
+
+// Case: fetch a specific document by providing
+// the document id, you can use this on other 
+// attributes as well
+collection.search({documentID: "id"}).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-FETCHED": 
+      // Method returns documents
+      console.log(res.documents);
+  }
+});
+
+// Case: fetch multiple but specific documents
+// Define an array of ids of documents. 
+// you can use this on other attributes as well
+var documentIDs = ["1", "2", "3"];
+
+// Run operation with $in operator
+collection.search({documentID: {$in: documentIDs}}).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-FETCHED": : 
+      // Method returns documents
+      console.log(res.documents);
+  }
+});
+
+// Case: search in range
+// Run operation with $lt and $gt operator on attributes
+collection.search({voltage: {$lt: 25, $gt: 30}}).then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-FETCHED": 
+      // Method returns documents
+      console.log(res.documents);
+  }
+});
+
+// Case: fetch all documents by running an empty search
+collection.search().then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-FETCHED": 
+      // Method returns documents
+      console.log(res.documents);
+  }
+});
+
+// Case: you can specify what fields of a documents to be returned and what not to be returned by projection condition
+collection.search({}, {name: 0}).then((res) => {
+  // Got response from server
+  // documents will contain all fields except name
+  switch(res.code) {
+    case "DATASTORE-DOCUMENTS-FETCHED": 
+      // Method returns documents
+      console.log(res.documents);
+  }
+});
+```
+
+### listCollections
+This method returns the list of collections in the datastore of your project. This method accpets the following input arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| pageNumber | integer | this method returns paginated result |
+
+It is important to note here that the method is subjected to rate limiting so maximum 20 results will be returned and then you can use page number argument of the method to get the ramining. So if you have 25 collections then calling `datastore.listCollections()` will return first 20 while calling `datastore.listCollections(1)` will return the remaining 5 collections.
+
+This method returns the following codes.
+
+* DATASTORE-COLLECTIONS-FETCHED
+
+  list has been fetched
+
+* DATASTORE-COLLECTIONS-FETCH-FAILED
+
+  failed to get the list due to an error
+
+The usage of this method is illustrated in the example below
+
+```javascript
+// Get the list of collections
+datastore.listCollections().then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-COLLECTIONS-FETCHED": 
+      // List has been returned
+      console.log(res.collections);
+  }
+});
+```
+
+### dropCollection
+This method deletes a collections and all of its documents from the datastore of your project. This method accpets the following input arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| collection | strong | name of the collection which is required to be dropped |
+
+It is important to note here that the method deletes all the documents associated with a collection.
+
+This method returns the following codes.
+
+* DATASTORE-COLLECTION-DROPPED
+
+  collection has been dropped
+
+* DATASTORE-COLLECTION-NOT-FOUND
+
+  collection name is invalid
+
+* DATASTORE-COLLECTION-DROPPING-FAILED
+
+  failed to delete the collection due to an error
+
+The usage of this method is illustrated in the example below
+
+```javascript
+// Get the list of collections
+datastore.dropCollection("logs").then((res) => {
+  // Got response from server
+  switch(res.code) {
+    case "DATASTORE-COLLECTION-DROPPED": 
+      // Collection has been dropped
+  }
+});
+```
+
+## storage
+This class provides access to the features associated to built in file storage of Grandeur Cloud. Simply get a reference to the storage class by calling `storage()` method with the project object. This is illustrated as below
+
+```javascript
+// Get reference to the storage class
+// by calling the storage method
 var storage = apolloProject.storage();
 ```
 
 Now once you got the reference to the storage class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
 
 ### uploadFile 
-This methods takes a file and upload it to the built in object storage associated with your project. It is important to note that with JS SDk the upload size is limited 50 MB. 
+This methods takes a file and upload it to the built in file storage associated with your project. It is important to note that with JS SDk the upload size is limited to 50 MB. 
 
 This method accepts the following arguments
 
