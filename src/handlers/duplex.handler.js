@@ -29,8 +29,7 @@ class duplex {
         // Error response to be returned 
         // in case of default error
         this.errResponse = {
-            code: "ERR-CONNECTION-REFUSED",
-            message: "Apollo is not connected to server. Check internet connection."
+            code: "CONNECTING"
         }
 
         // Setup list for events
@@ -63,8 +62,7 @@ class duplex {
                     
                     // Setup error response
                     this.errResponse = {
-                        code: "AUTH-UNAUTHORIZED",
-                        message: "You are not authenticated to the server."
+                        code: "AUTH-UNAUTHORIZED"
                     }
                     return; 
 
@@ -74,8 +72,7 @@ class duplex {
                     
                     // Setup error response
                     this.errResponse = {
-                        code: "SIGNATURE-INVALID",
-                        message: "Please check your accessKey and accessToken."
+                        code: "SIGNATURE-INVALID"
                     }
                     return; 
             }
@@ -87,8 +84,7 @@ class duplex {
 
             // Setup default error
             this.errResponse = {
-                code: "ERR-CONNECTION-REFUSED",
-                message: "Apollo is not connected to server. Check internet connection."
+                code: "ERR-CONNECTION-REFUSED"
             }
             return;
         }
@@ -127,8 +123,7 @@ class duplex {
 
             // Setup default error
             this.errResponse = {
-                code: "ERR-CONNECTION-REFUSED",
-                message: "Apollo is not connected to server. Check internet connection."
+                code: "CONNECTING"
             }
         }
 
@@ -172,6 +167,11 @@ class duplex {
         // object after certain time
 
         setTimeout(() => {
+            // Set status
+            this.errResponse = {
+                code: "CONNECTING"
+            }
+
             // Call init again
             this.init(auth);
         }, 5000);
