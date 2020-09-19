@@ -1,6 +1,6 @@
 {
   "name": "@grandeurcloud/apollo",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "Grandeur Cloud SDK from JavaScript. It can be utilized to integrate Grandeur Cloud features into web apps.",
   "main": "dist/apollo.js",
   "module": "./index.js",
