@@ -21,16 +21,13 @@ class duplex {
         this.subscriptions = new EventEmitter();
         
         // To check the status of Connection
-        this.status = "DISCONNECTED";
+        this.status = "CONNECTING";
 
         // To store the connection callback
-        this.connectionCallback = null;
+        this.cConnection = null;
 
-        // Error response to be returned 
-        // in case of default error
-        this.errResponse = {
-            code: "CONNECTING"
-        }
+        // Queue to store packets
+        this.queue = [];
 
         // Setup list for events
         this.otherEvents = ["devicesList"];
@@ -61,9 +58,11 @@ class duplex {
                     this.reconnect(auth);  
                     
                     // Setup error response
-                    this.errResponse = {
-                        code: "AUTH-UNAUTHORIZED"
-                    }
+                    this.status = "AUTH-UNAUTHORIZED";
+
+                    // Flush queue
+                    this.flush();
+
                     return; 
 
                 case "SIGNATURE-INVALID": 
@@ -71,9 +70,11 @@ class duplex {
                     // Don't reconnect
                     
                     // Setup error response
-                    this.errResponse = {
-                        code: "SIGNATURE-INVALID"
-                    }
+                    this.status = "SIGNATURE-INVALID";
+
+                    // Flush queue
+                    this.flush();
+
                     return; 
             }
         }
@@ -83,9 +84,11 @@ class duplex {
             this.reconnect(auth);
 
             // Setup default error
-            this.errResponse = {
-                code: "ERR-CONNECTION-REFUSED"
-            }
+            this.status = "CONNECTION-REFUSED";
+
+            // Flush queue
+            this.flush();
+
             return;
         }
         
@@ -95,36 +98,34 @@ class duplex {
             this.status = "CONNECTED";
 
             // Notify user about the change
-            if (this.connectionCallback) 
-                this.connectionCallback(this.status);
+            if (this.cConnection) 
+                this.cConnection("CONNECTED");
 
             // Start Ping
             this.ping = setInterval(() => {
                 // Send packet to server
                 var packet = {header: {id: 'ping', task: 'ping'},payload:{}};
                 this.ws.send(JSON.stringify(packet));
-            }, 25000)
+            }, 25000);
+
+            // Handle queued packets
+            this.handle();
         }
 
         // When connection closed with the server
         this.ws.onclose = () => {
-            // Set the status to disconnected
-            this.status = "DISCONNECTED";
+            // Set the status to connecting
+            this.status = "CONNECTING";
 
             // Notify user about the change
-            if (this.connectionCallback) 
-                this.connectionCallback(this.status);
+            if (this.cConnection) 
+                this.cConnection("DISCONNECTED");
 
             // Clear ping
             clearInterval(this.ping);
 
             // Retry connection after a while
-            this.reconnect(auth)
-
-            // Setup default error
-            this.errResponse = {
-                code: "CONNECTING"
-            }
+            this.reconnect(auth);
         }
 
         this.ws.onmessage = (message) => {
@@ -168,12 +169,11 @@ class duplex {
 
         setTimeout(() => {
             // Set status
-            this.errResponse = {
-                code: "CONNECTING"
-            }
+            this.status = "CONNECTING";
 
             // Call init again
             this.init(auth);
+
         }, 5000);
     }
 
@@ -183,22 +183,50 @@ class duplex {
         // it to context so that
         // a the user could be notified
         // about possible connection changes
-        this.connectionCallback = callback;
+        this.cConnection = callback;
 
         // and return a 
         return {
             clear: () => {
                 // Remove the callback
-                this.connectionCallback = undefined;
+                this.cConnection = undefined;
             }
+        }
+    }
+
+    handle() {
+        // This function handles all the packets
+        // queued while the duplex was connecting
+
+        while (this.queue.length > 0) {
+            // Pop a packet
+            var packet = this.queue.pop();
+
+            // Then emit send the packet
+            this.ws.send(JSON.stringify(packet));
+        }
+    }
+
+    flush() {
+        // This function flushes the event
+        // queue of the duplex. Loop over the queue
+
+        while (this.queue.length > 0) {
+            // Pop a packet
+            var packet = this.queue.pop();
+
+            // Then emit event and throw error
+            this.tasks.emit(packet.header.id, undefined, {
+                code: this.status
+            });
         }
     }
 
     send(packet) {
         // Create promise 
         return new Promise((resolve, reject) => {
-            // If Connected to the server
-            if (this.status === "CONNECTED") {
+            // If connecting to the server
+            if (this.status === "CONNECTING" || this.status === "CONNECTED") {
                 // Generate unique ID for the request
                 var id = Date.now();
 
@@ -206,17 +234,28 @@ class duplex {
                 packet.header.id = id;
 
                 // Attach an event listener
-                this.tasks.once(id, (res) => {
+                this.tasks.once(id, (res, err) => {
+                    // Reject if error has been returned
+                    if (err) return reject(err);
+
                     // Resolve the promise
                     resolve(res);
                 });
 
-                // Send packet
-                this.ws.send(JSON.stringify(packet));
+                // If Connected to server
+                if (this.status === "CONNECTED")
+                    // Then send packet right away if 
+                    this.ws.send(JSON.stringify(packet));
+                
+                else 
+                    // Otherwise store the packet into a queue
+                    this.queue.push(packet);
             }
             else {
                 // Otherwise return a rejection
-                reject(this.errResponse);
+                reject({
+                    code: this.status
+                });
             }
         });
     }
@@ -228,8 +267,7 @@ class duplex {
             // If the event is invalid
             // then return an error through callback
             callback({
-                code: "TOPIC-INVALID", 
-                message: "The specified topic seems invalid."
+                code: "TOPIC-INVALID"
             });
 
             return;
@@ -240,8 +278,7 @@ class duplex {
         if (this.deviceEvents.includes(event) && !deviceID) {
             // device id is not specified
             callback({
-                code: "DATA-INVALID", 
-                message: "Device ID is required."
+                code: "DATA-INVALID"
             });
 
             return;
