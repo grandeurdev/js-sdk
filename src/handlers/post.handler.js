@@ -164,8 +164,7 @@ class post{
             } catch (error) {
                 // Error
                 reject({
-                    code: "ERR-CONNECTION-REFUSED",
-                    message: "Failed to connect to the server. Check internet connection."
+                    code: "CONNECTION-REFUSED"
                 });
             };
         });
