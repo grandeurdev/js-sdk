@@ -327,6 +327,16 @@ class duplex {
                         }
                     };
 
+                    // Remove event listener
+                    if (this.deviceEvents.includes(event)) {
+                        // If event is of device type
+                        this.subscriptions.removeListener(`${event}/${deviceID}`, callback);
+                    }
+                    else {
+                        // otherwise
+                        this.subscriptions.removeListener(event, callback);
+                    }
+
                     // Send request
                     return this.send(packet);
                 }
