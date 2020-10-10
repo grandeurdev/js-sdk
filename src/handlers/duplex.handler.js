@@ -225,8 +225,8 @@ class duplex {
     send(packet) {
         // Create promise 
         return new Promise((resolve, reject) => {
-            // If connecting to the server
-            if (this.status === "CONNECTING" || this.status === "CONNECTED") {
+            //  If the connection is not borked
+            if (this.status !== "SIGNATURE-INVALID") {
                 // Generate unique ID for the request
                 var id = Date.now();
 
