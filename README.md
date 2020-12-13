@@ -1,5 +1,5 @@
 
-# Grandeur Cloud
+# Grandeur
 
 [![NPM](https://img.shields.io/npm/v/grandeur-js.svg)](https://www.npmjs.com/package/grandeur-js) 
 [![Downloads/week](https://img.shields.io/npm/dw/grandeur-js.svg)](https://npmjs.org/package/grandeur-js.svg)
@@ -9,19 +9,19 @@ Building a smart (IoT) product is an art. It is about unifying the physical worl
 
 We can understand this because we have been there. 
 
-Introducing Grandeur Cloud; A backend as a service (BaaS) platform for IoT. We have designed this platform so that you do not have to worry about the backend of your next big thing and you could focus on what matters the most; your hardware and apps. It is designed specifically to accelerate your IoT product development and push your product to market in weeks rather than in months or years.
+Introducing Grandeur; A backend as a service (BaaS) platform for IoT. We have designed this platform so that you do not have to worry about the backend of your next big thing and you could focus on what matters the most; your hardware and apps. It is designed specifically to accelerate your IoT product development and push your product to market in weeks rather than in months or years.
 
 # JavaScript SDK
-Grandeur Cloud can resolve all the problems that you could face in building a smart (IoT) product. Like you can authenticate users, can store files in storage, can save data in database, host static website with builtin hosting and can subscribe to events from hardware and app to do realtime communication with the cloud platform. All it requires the integration of our platform in your technology stack.
+Grandeur can resolve all the problems that you could face in building a smart (IoT) product. Like you can authenticate users, can store files in storage, can save data in database, host static website with builtin hosting and can subscribe to events from hardware and app to do realtime communication with the cloud platform. All it requires the integration of our platform in your technology stack.
 
-By this time you would be like okay, we got it why Grandeur is building this platform and yeah it is super great and super useful. But how we can integrate it into our apps? So here is the answer. We have built this amazing JavaScript SDK to make the integration process of Grandeur Cloud in web apps a lot simpler. So now all you have to do is to follow the [get started](#get-started) guidelines to quickly start building your solution. 
+By this time you would be like okay, we got it why Grandeur is building this platform and yeah it is super great and super useful. But how we can integrate it into our apps? So here is the answer. We have built this amazing JavaScript SDK to make the integration process of Grandeur in web apps a lot simpler. So now all you have to do is to follow the [get started](#get-started) guidelines to quickly start building your solution. 
 
 Now to get a deep insight into our SDK and platform capabilities, you can follow the [documentation](#documentation) or get to understand the core concepts simply dive into [ecosystem](#grandeur-ecosystem) section.
 
 - [Get Started](#get-started)
 - [Example](#example)
 - [Grandeur Ecosystem](#grandeur-ecosystem)
-    * [Why use Grandeur Cloud as a developer?](#why-use-grandeur-cloud-as-a-developer)
+    * [Why use Grandeur as a developer?](#why-use-grandeur-cloud-as-a-developer)
     * [A brief case study](#a-brief-case-study)
     * [Concepts](#concepts)
         + [Projects](#projects)
@@ -77,9 +77,9 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
 
 
 # Get Started
-Let us get to the point straight. You are all motivated and ready to dive in. So quickly go to [Grandeur Cloud](https://cloud.grandeur.tech/), create a new project or select a project to get the API key.
+Let us get to the point straight. You are all motivated and ready to dive in. So quickly go to [Grandeur](https://cloud.grandeur.tech/), create a new project or select a project to get the API key.
 
-![Select a project at Grandeur Cloud Dashboard](/images/select-project.JPG)
+![Select a project at Grandeur Dashboard](/images/select-project.JPG)
 
 Then just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://unpkg.com/grandeur-js). 
 
@@ -97,12 +97,12 @@ This will give you access to the global ` Grandeur ` object, through which you c
 var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
 ```
 
-Go change the world. You can now access all the amazing features of Grandeur Cloud with the reference object of your project that you just got.  Take a look at the [example](#example) to learn how to quickly build an app to get a list of devices paired to the user account.
+Go change the world. You can now access all the amazing features of Grandeur with the reference object of your project that you just got.  Take a look at the [example](#example) to learn how to quickly build an app to get a list of devices paired to the user account.
 
 In the end, it is important to note it comes with CORS protection in it by default. So to start communicating with the cloud platform, simply visit [settings](https://cloud.grandeur.tech/settings) page at cloud dashboard and whitelist the domain that your web app is using (if you are testing it locally and haven't deployed it to a domain yet, just add localhost:[port] to the allowed domains list but don't forget to remove it from a list before shipping you app in production).
 
 # Example
-Now when you know how to get started with Grandeur Cloud, it is time to dive into bit depth. In this example, we will be building a web app to toggle the state of a device paired to a user account. So start building and follow the steps
+Now when you know how to get started with Grandeur, it is time to dive into bit depth. In this example, we will be building a web app to toggle the state of a device paired to a user account. So start building and follow the steps
 
 1. Start a new Project
   
@@ -501,9 +501,9 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     Time has come to make our creation available live. Traditionally to do this you will have to pay for hosting services separately. We have resolved this problem as well for you. So push your app to a code collaboration platform like `Github`. Then visit [hosting](https://cloud.grandeur.tech/hosting) page at the cloud dashboard. Finally, enable the hosting by providing in the link of your repo and done. We will automatically fetch your app from the source and will make it live on domain `YOUR-PROJECT-NAME.hosting.cloud.grandeur.tech`.
     
 # Grandeur Ecosystem
-The purpose behind writing is to tell you what is the thought process and psychology behind the Grandeur Cloud Platform. We believe that the first important step toward choosing a platform for your product and company is to understand how the developer designed the system. So we wanted to write about it in detail. We wanted to document how you can use this platform effectively to make your life as a developer or founder a bit simpler. So in this section, we will first illustrate why to use Grandeur Cloud as a developer, then we will present a brief case study and finally, we will write about the concepts.
+The purpose behind writing is to tell you what is the thought process and psychology behind the Grandeur Platform. We believe that the first important step toward choosing a platform for your product and company is to understand how the developer designed the system. So we wanted to write about it in detail. We wanted to document how you can use this platform effectively to make your life as a developer or founder a bit simpler. So in this section, we will first illustrate why to use Grandeur as a developer, then we will present a brief case study and finally, we will write about the concepts.
 
-## Why use Grandeur Cloud as a developer?
+## Why use Grandeur as a developer?
 * It is simple to [get started](#get-started). Just create a project at the cloud dashboard and simply get a reference to your project using our SDK.
 * No need to mix and match various services because it is a single spot solution for all of your needs. It has built-in support for authenticating users and device registration. You can access all the features like authentication, file storage, database and device registry from a single SDK.
 * Simple pricing. [Start free](https://cloud.granduer.tech/register) and then pay as you go based on resource consumption. Checkout [pricing](https://grandeur.tech/pricing) to get more details.
@@ -515,17 +515,17 @@ To resolve this issue, you decided to build an electronic solution that could be
 
 That is where the problem started. You are a hardware startup in the end and your expertise is in building amazing electronics technology. Now you gotta deal with few more things as well. You will have to build your app and figure out how to establish the communication between hardware and app (backend of your system). You decided to hire more engineers, but you know how much of them you will have to hire? To give you an idea, you need 8+ engineers just to do backend, Like one for database, one for networking, one for API development, one for dev ops and about four for building SDK (one for each platform android, ios, web, and hardware). This makes it a package of $8000+ just to figure out the backend of your system and you haven't yet validated your product. That is bad and now you don't know what to do about it.
 
-Then one day the sun of fate shown. You discovered a platform termed as `Grandeur Cloud`, which could just solve all of your problems. You wanted to authenticate your users, it had the auth feature in it. You needed a online storage space to store your user's profile picture, it came with builtin support for storage. You needed a database to store power consumption logs so that your users could see how much they have saved, it provided a cloud datastore service. You wanted to build a communication bridge between the hardware and the software, thank god, it's SDK was available for all the stacks like arduino, web, and mobile.
+Then one day the sun of fate shown. You discovered a platform termed as `Grandeur`, which could just solve all of your problems. You wanted to authenticate your users, it had the auth feature in it. You needed a online storage space to store your user's profile picture, it came with builtin support for storage. You needed a database to store power consumption logs so that your users could see how much they have saved, it provided a cloud datastore service. You wanted to build a communication bridge between the hardware and the software, thank god, it's SDK was available for all the stacks like arduino, web, and mobile.
 
 So you simply registered for the platform, created a project and started integrating your apps and hardware with the SDK. Then finally you registered your products to the platform before making them available for sale (because the platform comes with built-in security features and only allows only registered products to communicate). Your apps are now live on the store. People loved you built. You made an early entry into the market and now adding a dent to the universe.
 
-That is the story of the team `SolDrive`. Check out their [website](https://sol-drive.com) right now and explore how are they transforming the world with Grandeur Cloud.
+That is the story of the team `SolDrive`. Check out their [website](https://sol-drive.com) right now and explore how are they transforming the world with Grandeur.
  
 ## Concepts
-In this subsection, we will explore the Grandeur Cloud Platform in detail. We will see how it all works in depth. So let's get started
+In this subsection, we will explore the Grandeur Platform in detail. We will see how it all works in depth. So let's get started
 
 ### Projects
-To start working with Grandeur Cloud, the first thing that you will have to do is to create a new project. Now, what is a project? Project is like a workspace and we store, communicate and display data regarding your project. While you can technically create an unlimited number of projects, but you cannot share data or resources of any sort between two projects. `Your project works like a namespace`. Like users registered to one project cannot log in to applications based on other projects. Similarly, devices registered to one project, cannot be shared with another project. 
+To start working with Grandeur, the first thing that you will have to do is to create a new project. Now, what is a project? Project is like a workspace and we store, communicate and display data regarding your project. While you can technically create an unlimited number of projects, but you cannot share data or resources of any sort between two projects. `Your project works like a namespace`. Like users registered to one project cannot log in to applications based on other projects. Similarly, devices registered to one project, cannot be shared with another project. 
 
 When you create a project, we give you a project API key. An API key is a digital signature that identifies a project in our system, just like your identification card or your social security number identifies you as a citizen. To connect your apps or hardware to our network, that is what you should provide to our SDK. Our SDK sends us your API key with every request and that is what we utilize to understand what data are we supposed to update or return or in which namespace we are supposed to execute your request. Checkout [sdk](#sdk) section in concepts to read more about it.
 
@@ -534,7 +534,7 @@ In the end, it is important to note that our pricing applies separately to each 
 ### SDK
 You use our SDK to communicate with our cloud platform. We call our SDK `Grandeur` and it acts like an interface that gives you easy access to integrate our platform in your stack. Like in the case of web apps, simply drop in the link of JS SDK CDN in your codebase and done. We have tried our best to make it coherent in between the platforms. So that you could work and collaborate seamlessly.
 
-So that is how it works. You can the SDK global object by name and initialize it with an API key (plus a couple of more stuff in case of hardware SDK). As a result of initialization, you will get the reference to your project (in case of the app) or your device (in case of hardware), with which you can access all the features of Grandeur Cloud depending upon the scope. Like in case of device reference you can access features limited to the device only, while with project reference, you can access all the possible features after user authentication. Checkout [authentication and access](#authentication-and-access) section to get more insight into scope.
+So that is how it works. You can the SDK global object by name and initialize it with an API key (plus a couple of more stuff in case of hardware SDK). As a result of initialization, you will get the reference to your project (in case of the app) or your device (in case of hardware), with which you can access all the features of Grandeur depending upon the scope. Like in case of device reference you can access features limited to the device only, while with project reference, you can access all the possible features after user authentication. Checkout [authentication and access](#authentication-and-access) section to get more insight into scope.
 
 ### Users and Administrator
 This topic is about the relationship between you as an administrator and your users. We will describe who can access what so technically we are gonna start talking about the scope of access. You create a project and add resources to it like users and devices. So you own it all. You own the namespace of a project and only you can manage your project using your account credentials and our dashboard application. But in real-world settings, you want your apps to handle a part of your responsibilities. Like obviously you would like your users to automatically sign up. Then you would want your users to automatically access their devices and some data upon authentication. This means you will have to delegate some of your authorities to our SDK because in the end your apps are gonna communicate to our platform with SDK. You can do this by just giving our SDK your API key and configuring [allowed origins](#allowed-origins) setting through the dashboard.
@@ -542,7 +542,7 @@ This topic is about the relationship between you as an administrator and your us
 But who are users? Users are just entities that you can either create through the dashboard or SDK. To be more precise, a user entity defines the scope of access of a person who is using your app. By default, a user is limited to access devices paired to his own account, but can access all of your files and datastore (at the moment - you cannot define fine grain control of your files and data stored in storage and datastore respectively. While we are actively working on adding this support to our platform but currently it is very important to develop a data model in a way that the privacy of users could be protected.). This way a user can request the device logs or his profile picture from our platform upon authentication but cannot access devices paired to another user accounts. But we mean by accessing devices? To read more about it, check out [devices registry](#devices-registry) topic.
 
 ### Devices Registry
-Just like users, devices are entities which essentially defines the scope of access. But unlike users, you can only register new devices through dashboard only. This is one of the key features of Grandeur Cloud. We wanted to resolve this issue. There are two types of solutions out there i) those are dealing with users part only e.g. firebase and ii) those are just dealing with devices registry part e.g. Google IoT Core. We wanted to combine best of both worlds. This is why at Grandeur Cloud, where on one hand we have added the authentication feature, then on the other hand we also maintains a devices registry for you. Where you can seamlessly register new entities and pair those entities to users.
+Just like users, devices are entities which essentially defines the scope of access. But unlike users, you can only register new devices through dashboard only. This is one of the key features of Grandeur. We wanted to resolve this issue. There are two types of solutions out there i) those are dealing with users part only e.g. firebase and ii) those are just dealing with devices registry part e.g. Google IoT Core. We wanted to combine best of both worlds. This is why at Grandeur, where on one hand we have added the authentication feature, then on the other hand we also maintains a devices registry for you. Where you can seamlessly register new entities and pair those entities to users.
 
 Now how this entity defines the scope? `Devices are global entities`. Unlike user account entity, `no body owns a device` except an administrator. So a user can pair a device to his account or in order words say a user `can claim a device and access data` specific to it. But a user cannot delete or inherently modify a device. We designed this considering the real world relation that we develop with our things. So the devices entity in the end defines two things i) what a hardware can access in your namespace and ii) which hardware devices a user can control. Now this really matters a lot because that's the key. You obviously do not want your neighbors to control your air conditioner (that would be so horrible situation). That's what this entity has been designed for. So as mentioned earlier, this entity also limits what a hardware product can access in your namespace. So when you pair a device to an account, we generate an access token for you. Then you can provide this token to our hardware SDK in init in order to access the data (unlike app SDK, hardware SDK can access scope limited to a device only and you delegate a device access to hardware SDK by providing access token at the init. That is how you authenticate your products)
 
@@ -560,7 +560,7 @@ Now comes the devices entity. We designed this entity as a global resource. Your
 That is the whole picture. That is how we make sure that everyone is getting what they are allowed to access. That is how we grant you authority over your data and resources and keep in check that everything is working just the way you want them to work.
 
 ### Networking
-Grandeur Cloud is a managed backend as a service platform. We tie it all up for you so you won't have to do it yourself. This is one of the pain points that you face when building your IoT products with services like Google Cloud Platform and AWS. You will have a mix and match services together and tie it all up yourself. But it is always a good practice to fully understand a platform before using it. Therefore we are writing about how the networking works with Grandeur Cloud.
+Grandeur is a managed backend as a service platform. We tie it all up for you so you won't have to do it yourself. This is one of the pain points that you face when building your IoT products with services like Google Cloud Platform and AWS. You will have a mix and match services together and tie it all up yourself. But it is always a good practice to fully understand a platform before using it. Therefore we are writing about how the networking works with Grandeur.
 
 We works with two communication channel in apps SDK i) http based REST API and ii) duplex based realtime API. We use the first REST API channel to do stuff like authentication and file upload, while the other realtime API for fast request transmission like device data requests etc. Realtime channel is really fast and designed to transfer packets to server and from server at transmission rate of 200ms. It is based on our custom protocol and we call it duplex. We don't allow unauthenticated connection over this channel so initially establish communication over REST till authentication.
 
@@ -572,10 +572,10 @@ This is another amazing topic and somehow related to access delegation in the en
 So in order to establish communication from a website using the web SDK, you will have to first whitelist the domain name via [settings](https://cloud.grandeur.tech/settings) page in the dashboard application. You cannot even send a request from your localhost without first whitelisting it. Now at this point, it is important to note that whitelisting localhost in production application is not a good practice and should be avoided in order to protect your users.
 
 # Documentation
-In this section, we will present references to each and every feature that our SDK supports. We have divided our SDK in group of functions called classes. Each class represents a feature of Grandeur Cloud. So in this section, we will also document that how can you use each and every function of Grandeur Cloud SDK.
+In this section, we will present references to each and every feature that our SDK supports. We have divided our SDK in group of functions called classes. Each class represents a feature of Grandeur. So in this section, we will also document that how can you use each and every function of Grandeur SDK.
 
 ## init
-First and foremost thing that you are required to do in order to access our platform is initialization. When you drop in the link of the CDN in your app, we create a global object accessible through JS. This object can be then utilized to init the SDK with your API key and access credential. Upon init, the SDK returns you a reference to your project, through which you can access all the features of Grandeur Cloud. To understand it in depth please refer to [Projects](#projects) topic in the concepts section. To generate access key and token please visit [settings](https://cloud.grandeur.tech/settings) page. It is important to note that access key is a secret so please store it with absolute care in your application code. 
+First and foremost thing that you are required to do in order to access our platform is initialization. When you drop in the link of the CDN in your app, we create a global object accessible through JS. This object can be then utilized to init the SDK with your API key and access credential. Upon init, the SDK returns you a reference to your project, through which you can access all the features of Grandeur. To understand it in depth please refer to [Projects](#projects) topic in the concepts section. To generate access key and token please visit [settings](https://cloud.grandeur.tech/settings) page. It is important to note that access key is a secret so please store it with absolute care in your application code. 
 
 This is how you can init the SDK and can get a reference to your project
 
@@ -639,7 +639,7 @@ project.onConnection((status) => {
 ```
 
 ## auth
-This class provides access to the auth feature of Grandeur Cloud. Simply get a reference to the auth class by calling `auth()` method with the project object. This is illustrated as below
+This class provides access to the auth feature of Grandeur. Simply get a reference to the auth class by calling `auth()` method with the project object. This is illustrated as below
 
 ```javascript
 // Get reference to the auth class
@@ -1249,7 +1249,7 @@ devices.list().then((res) => {
 ```
 
 ### onlineCount
-This methods returns the number of online devices in the list of devices paired to a user account. Online devices are simply those devices which are connected to Grandeur Cloud at a moment.
+This methods returns the number of online devices in the list of devices paired to a user account. Online devices are simply those devices which are connected to Grandeur at a moment.
 
 This method do not accept anything in the argument and returns the following codes in response
 
@@ -1276,7 +1276,7 @@ devices.onlineCount().then((res) => {
 ```
 
 ### onList
-The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to event related to devices list update and event will be fired whenever a device gets paired or unpaired to a user account. 
 
@@ -1639,7 +1639,7 @@ device.setName("Living Room Lamp").then((res) => {
 ```
 
 #### getStatus
-Grandeur Cloud maintains state of each device paired to a user account. We keep track that either a device is connect to the server at a given moment. While [onlineCount](#onlineCount) method allows you to get count of total online devices, this method gives you the utility to query status of an individual device.
+Grandeur maintains state of each device paired to a user account. We keep track that either a device is connect to the server at a given moment. While [onlineCount](#onlineCount) method allows you to get count of total online devices, this method gives you the utility to query status of an individual device.
 
 This method returns the following codes in response 
 
@@ -1674,7 +1674,7 @@ device.getStatus().then((res) => {
 ```
 
 #### onSummary
-The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's summary update event and it gets fired whenever a device's summary data object gets udpated either through the app or the device it self.
 
@@ -1747,7 +1747,7 @@ summaryEventListener.clear().then((res) => {
 ```
 
 #### onParms
-The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's parameters update event and it gets fired whenever a device's parameters data object gets udpated either through the app or the device it self.
 
@@ -1820,7 +1820,7 @@ parmsEventListener.clear().then((res) => {
 ```
 
 #### onName
-The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's name update event and it gets fired whenever a device's name gets udpated an app.
 
@@ -1892,7 +1892,7 @@ nameEventListener.clear().then((res) => {
 });
 ```
 #### onStatus
-The best thing about Grandeur Cloud is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
 
 This methods allows you to subscribe to a device's status update event and it gets fired whenever a device connects to the cloud.
 
@@ -1975,7 +1975,7 @@ var datastore = project.datastore();
 
 Now once you got the reference to the datastore class, you can simply use all the features by calling the respective methods. 
 
-Datastore of Grandeur Cloud is based on no-sql/document based database model. So you can store documents (as knonw as records in sql) into various collections (as known as tables in sql). The document is based on JSON datastructure. Methods of this class are documented in following sections
+Datastore of Grandeur is based on no-sql/document based database model. So you can store documents (as knonw as records in sql) into various collections (as known as tables in sql). The document is based on JSON datastructure. Methods of this class are documented in following sections
 
 ### collection
 From the datastore class, you can get a reference to a collection in order to execute a query or insert new documents into it. 
@@ -2381,7 +2381,7 @@ datastore.dropCollection("logs").then((res) => {
 ```
 
 ## storage
-This class provides access to the features associated to built in file storage of Grandeur Cloud. Simply get a reference to the storage class by calling `storage()` method with the project object. This is illustrated as below
+This class provides access to the features associated to built in file storage of Grandeur. Simply get a reference to the storage class by calling `storage()` method with the project object. This is illustrated as below
 
 ```javascript
 // Get reference to the storage class

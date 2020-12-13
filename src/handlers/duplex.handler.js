@@ -1,5 +1,5 @@
 // This is the most important class 
-// of Grandeur Cloud. This 
+// of Grandeur. This 
 // handles the real time connectivity.
 
 // Import the event emitter class
