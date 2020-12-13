@@ -1,5 +1,5 @@
 // This is the most important class 
-// of Grandeur Cloud. This 
+// of Grandeur. This 
 // handles the real time connectivity.
 
 // Import the event emitter class
@@ -225,8 +225,8 @@ class duplex {
     send(packet) {
         // Create promise 
         return new Promise((resolve, reject) => {
-            // If connecting to the server
-            if (this.status === "CONNECTING" || this.status === "CONNECTED") {
+            //  If the connection is not borked
+            if (this.status !== "SIGNATURE-INVALID") {
                 // Generate unique ID for the request
                 var id = Date.now();
 
@@ -326,6 +326,16 @@ class duplex {
                             deviceID: deviceID
                         }
                     };
+
+                    // Remove event listener
+                    if (this.deviceEvents.includes(event)) {
+                        // If event is of device type
+                        this.subscriptions.removeListener(`${event}/${deviceID}`, callback);
+                    }
+                    else {
+                        // otherwise
+                        this.subscriptions.removeListener(event, callback);
+                    }
 
                     // Send request
                     return this.send(packet);

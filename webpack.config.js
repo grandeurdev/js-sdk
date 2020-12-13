@@ -8,8 +8,8 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "apollo.js",
-        library: "apollo",
+        filename: "grandeur.js",
+        library: "grandeur",
         libraryTarget: "umd",
         globalObject: 'this'
     }
