@@ -1,11 +1,11 @@
 {
-  "name": "@grandeurcloud/apollo",
-  "version": "1.4.2",
-  "description": "Grandeur Cloud SDK from JavaScript. It can be utilized to integrate Grandeur Cloud features into web apps.",
-  "main": "dist/apollo.js",
+  "name": "grandeur-js",
+  "version": "1.0.0",
+  "description": "Grandeur SDK from JavaScript. It can be utilized to integrate Grandeur features into web apps.",
+  "main": "dist/grandeur.js",
   "module": "./index.js",
-  "bugs": "https://github.com/grandeurtech/grandeurcloud-js-sdk/issues",
-  "repository": "grandeurtech/grandeurcloud-js-sdk",
+  "bugs": "https://github.com/grandeurtech/js-sdk/issues",
+  "repository": "grandeurtech/js-sdk",
   "homepage": "https://grandeur.tech",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,7 +14,7 @@
   },
   "keywords": [
     "cloud",
-    "grandeurcloud",
+    "grandeurtech",
     "IoT",
     "serverless",
     "backend",

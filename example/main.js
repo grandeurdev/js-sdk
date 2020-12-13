@@ -2,7 +2,7 @@
 
 // Initialize the SDK and get
 // a reference to the project
-var apolloProject = apollo.init("ck412ssij0007xr239uos8jfk");
+var project = grandeur.init("ck412ssij0007xr239uos8jfk");
 
 // Variable to store state and deviseID
 var deviceState = 0;
@@ -19,7 +19,7 @@ var loginUser = async () => {
   var password = document.getElementById("password").value;
   
   // Get reference to the auth class
-  var auth = apolloProject.auth();
+  var auth = project.auth();
 
   // Use try and catch block in order to 
   // use async await otherwise promises are also supported
@@ -66,7 +66,7 @@ var loginUser = async () => {
 // user account
 var toggleDeviceState = async () => {
   // Get reference to the auth class
-  var device = apolloProject.device();
+  var device = project.device();
 
   // Use try and catch block in order to 
   // use async await otherwise promises are also supported
@@ -107,7 +107,7 @@ var logout = async () => {
   var loading = await startLoading("Submitting Request");
 
   // Get reference to the auth class
-  var auth = apolloProject.auth();
+  var auth = project.auth();
 
   // Use try and catch block in order to 
   // use async await otherwise promises are also supported
@@ -140,10 +140,10 @@ var logout = async () => {
 // Function to get device state
 var getDeviceState = async () => {
 
-  // Check if the Apollo is connected
-  if (apolloProject.isConnected()) {
+  // Check if the Grandeur is connected
+  if (project.isConnected()) {
     // Get reference to device class
-    var device = apolloProject.device();
+    var device = project.device();
 
     // Then get parameters from server
     var res = await device.getDeviceParms(deviceID);
@@ -168,7 +168,7 @@ var getDeviceState = async () => {
     }
   }
   else {
-    // Apollo is not connected
+    // Grandeur is not connected
   
     // Try agin in a while
     setTimeout(function() {

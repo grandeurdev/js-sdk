@@ -1,9 +1,9 @@
 
 # Grandeur Cloud
 
-[![NPM](https://img.shields.io/npm/v/@grandeurcloud/apollo.svg)](https://www.npmjs.com/package/@grandeurcloud/apollo) 
-[![Downloads/week](https://img.shields.io/npm/dw/@grandeurcloud/apollo.svg)](https://npmjs.org/package/@grandeurcloud/apollo)
-[![License](https://img.shields.io/npm/l/@grandeurcloud/apollo.svg)](https://github.com/grandeurtech/grandeurcloud-js-sdk/blob/master/package.json)
+[![NPM](https://img.shields.io/npm/v/grandeur-js.svg)](https://www.npmjs.com/package/grandeur-js) 
+[![Downloads/week](https://img.shields.io/npm/dw/grandeur-js.svg)](https://npmjs.org/package/grandeur-js.svg)
+[![License](https://img.shields.io/npm/l/grandeur-js.svg)](https://github.com/grandeurtech/js-sdk/blob/master/package.json)
 
 Building a smart (IoT) product is an art. It is about unifying the physical world with the digital one. When you connect a hardware to the web, magic happens. But it involves development across a huge technology stack (you need to develop your hardware, your apps to monitor/control your hardware and a server backend to manage both) to make such products work in production. Then if you are (somehow) done with the development, there comes the hardest part; you will have to scale it all as your userbase gonna grow.
 
@@ -81,20 +81,20 @@ Let us get to the point straight. You are all motivated and ready to dive in. So
 
 ![Select a project at Grandeur Cloud Dashboard](/images/select-project.JPG)
 
-Then just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://unpkg.com/@grandeurcloud/apollo). 
+Then just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://unpkg.com/grandeur-js). 
 
 ```html
 <!-- Drop the Link of CDN in your Web App -->
-<script src="https://unpkg.com/@grandeurcloud/apollo"></script>
+<script src="https://unpkg.com/grandeur-js"></script>
 ```
-This will give you access to the global ` Apollo ` object, through which you can initialize the SDK and get a reference to your project as shown below 
+This will give you access to the global ` Grandeur ` object, through which you can initialize the SDK and get a reference to your project as shown below 
 
 ```javascript
-// With global Apollo object,
+// With global Grandeur object,
 // you can simply initialize the SDK 
 // with your API key and get reference 
 // to your project
-var apolloProject = apollo.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
 ```
 
 Go change the world. You can now access all the amazing features of Grandeur Cloud with the reference object of your project that you just got.  Take a look at the [example](#example) to learn how to quickly build an app to get a list of devices paired to the user account.
@@ -159,7 +159,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
         <title>First Grandeur App</title>
 
         <!-- Link SDK with CDN -->
-        <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
+        <script src="https://unpkg.com/grandeur-js"></script>
       </head>
       
       <!-- Body -->
@@ -178,7 +178,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
 
     // Initialize the SDK and get
     // a reference to the project
-    var apolloProject = apollo.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+    var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
     ```
     
     You can get your accessKey and accessToken from security section of the [settings](https://cloud.grandeur.tech/settings) page.
@@ -200,7 +200,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
         <title>First Grandeur App</title>
 
         <!-- Link SDK with CDN -->
-        <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
+        <script src="https://unpkg.com/grandeur-js"></script>
       </head>
       
       <!-- Body -->
@@ -234,7 +234,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     
     // Initialize the SDK and get
     // a reference to the project
-    var apolloProject = apollo.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+    var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
 
     // Function to login user
     var loginUser = async () => {
@@ -244,7 +244,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
       var password = document.getElementById("password").value;
       
       // Get reference to the auth class
-      var auth = apolloProject.auth();
+      var auth = project.auth();
 
       // Use try and catch block in order to 
       // use async await otherwise promises are also supported
@@ -299,7 +299,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
         <title>First Grandeur App</title>
 
         <!-- Link SDK with CDN -->
-        <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
+        <script src="https://unpkg.com/grandeur-js"></script>
       </head>
       
       <!-- Body -->
@@ -343,7 +343,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     
     // Initialize the SDK and get
     // a reference to the project
-    var apolloProject = apollo.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+    var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
     
     // Function to login user
     var loginUser = async () => {
@@ -353,7 +353,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
       var password = document.getElementById("password").value;
       
       // Get reference to the auth class
-      var auth = apolloProject.auth();
+      var auth = project.auth();
 
       // Use try and catch block in order to 
       // use async await otherwise promises are also supported
@@ -393,7 +393,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     // user account
     var toggleDeviceState = async () => {
       // Get reference to the auth class
-      var devices = apolloProject.devices();
+      var devices = project.devices();
 
       // Use try and catch block in order to 
       // use async await otherwise promises are also supported
@@ -455,7 +455,7 @@ Now when you know how to get started with Grandeur Cloud, it is time to dive int
     // Function to logout user
     var logout = async () => {
       // Get reference to the auth class
-      var auth = apolloProject.auth();
+      var auth = project.auth();
 
       // Use try and catch block in order to 
       // use async await otherwise promises are also supported
@@ -532,7 +532,7 @@ When you create a project, we give you a project API key. An API key is a digita
 In the end, it is important to note that our pricing applies separately to each project. So you will get free tier on every project and then you will pay for each project separately regarding what you consume in each namespace.
 
 ### SDK
-You use our SDK to communicate with our cloud platform. We call our SDK `Apollo` and it acts like an interface that gives you easy access to integrate our platform in your stack. Like in the case of web apps, simply drop in the link of JS SDK CDN in your codebase and done. We have tried our best to make it coherent in between the platforms. So that you could work and collaborate seamlessly.
+You use our SDK to communicate with our cloud platform. We call our SDK `Grandeur` and it acts like an interface that gives you easy access to integrate our platform in your stack. Like in the case of web apps, simply drop in the link of JS SDK CDN in your codebase and done. We have tried our best to make it coherent in between the platforms. So that you could work and collaborate seamlessly.
 
 So that is how it works. You can the SDK global object by name and initialize it with an API key (plus a couple of more stuff in case of hardware SDK). As a result of initialization, you will get the reference to your project (in case of the app) or your device (in case of hardware), with which you can access all the features of Grandeur Cloud depending upon the scope. Like in case of device reference you can access features limited to the device only, while with project reference, you can access all the possible features after user authentication. Checkout [authentication and access](#authentication-and-access) section to get more insight into scope.
 
@@ -582,7 +582,7 @@ This is how you can init the SDK and can get a reference to your project
 ```javascript
 // Get reference to the project by initializing the SDK
 // with your API key
-var apolloProject = apollo.init("YOUR-APIKEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
+var project = grandeur.init("YOUR-APIKEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
 ```
 
 ## isConnected
@@ -592,7 +592,7 @@ You can use this function as illustrated below
 
 ```javascript
 // If the SDK is connected
-if (apolloProject.isConnected()) {
+if (project.isConnected()) {
   // Do something here 
 }
 else {
@@ -626,7 +626,7 @@ The use of this method has been illustrated in the example below
 
 ```javascript
 // Subscribe to the connection status
-apolloProject.onConnection((status) => {
+project.onConnection((status) => {
   // This callback gets fired
   // whenever the connection status
   // changes
@@ -644,7 +644,7 @@ This class provides access to the auth feature of Grandeur Cloud. Simply get a r
 ```javascript
 // Get reference to the auth class
 // by calling the auth method
-var auth = apolloProject.auth();
+var auth = project.auth();
 ```
 
 Now once you got the reference to the auth class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
@@ -1216,7 +1216,7 @@ This class provides access to the features associated to device. Simply get a re
 ```javascript
 // Get reference to the devices class
 // by calling the device method
-var devices = apolloProject.devices();
+var devices = project.devices();
 ```
 
 Now once you got the reference to the devices class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
@@ -1970,7 +1970,7 @@ Data storage is the basic requirement of a data driven application or device. We
 ```javascript
 // Get reference to the datastore class
 // by calling the datastore method
-var datastore = apolloProject.datastore();
+var datastore = project.datastore();
 ```
 
 Now once you got the reference to the datastore class, you can simply use all the features by calling the respective methods. 
@@ -2386,7 +2386,7 @@ This class provides access to the features associated to built in file storage o
 ```javascript
 // Get reference to the storage class
 // by calling the storage method
-var storage = apolloProject.storage();
+var storage = project.storage();
 ```
 
 Now once you got the reference to the storage class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below

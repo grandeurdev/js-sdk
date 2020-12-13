@@ -1,8 +1,8 @@
 // Support classes
-import auth from "./src/auth.apollo";
-import storage from "./src/storage.apollo";
-import devices from "./src/devices.apollo";
-import datastore from "./src/datastore.apollo";
+import auth from "./src/auth";
+import storage from "./src/storage";
+import devices from "./src/devices";
+import datastore from "./src/datastore";
 
 // Handlers
 import post from "./src/handlers/post.handler";
@@ -19,14 +19,14 @@ const config = {
 // the object
 export function init(apiKey, accessKey, accessToken) {
     // Returns a Object with a refernce to
-    // Apollo Supported Classes
-    const apolloConfig = {...config, apiKey, accessKey, accessToken}
+    // Grandeur Supported Classes
+    const grandeurConfig = {...config, apiKey, accessKey, accessToken}
 
     // Post Handler
-    const postHandler = new post(apolloConfig);
+    const postHandler = new post(grandeurConfig);
 
     // Duplex Handler
-    const duplexHandler = new duplex(apolloConfig);
+    const duplexHandler = new duplex(grandeurConfig);
     
     // Handlers
     const handlers = {
