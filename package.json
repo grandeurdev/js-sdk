@@ -1,6 +1,6 @@
 {
   "name": "grandeur-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Grandeur SDK from JavaScript. It can be utilized to integrate Grandeur features into web apps.",
   "main": "dist/grandeur.js",
   "module": "./index.js",
