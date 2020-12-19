@@ -11,7 +11,10 @@ import createHmac from 'createhmac-chaintor';
 class post{
     constructor(config){
         // Default configuration
-         this.config = config;
+        this.config = config;
+
+        // Status of the handler
+        this.status = "ACTIVE";
     }
     
     generateSignature(path, url, headers, body) {
@@ -91,58 +94,69 @@ class post{
         return fd;
     }
 
+    dispose() {
+        // Set the status to dispose
+        this.status = "DISPOSED";
+    }
+
     send(path, data, attachments) {
         // Function to send a post request to the server
-        // Get the URL
-        const url = `${this.config.url}${path? path: "/"}?apiKey=${this.config.apiKey}`;
-
-        // Set default headers
-        var headers = {
-            'gt-date': Date.now().toString(),
-            'gt-access-token': this.config.accessToken
-        };
-
-        var body = "";
-
-        // If there isn't anything in the attachment
-        // means the request is raw json
-        if(!attachments){
-            // Stringify Data and attach to body
-            body = JSON.stringify(data);
-
-            // Set Appropriate headers
-            // to represent data type
-            headers['content-type'] = 'application/json'
-
-            // Generate signature
-            headers['gt-signature'] = this.generateSignature(path, url, headers, data);
-        }
-        else {
-            // Create a new form data
-            body = new FormData();
-
-            // Append files
-            attachments.forEach(file => {
-                // Push
-                body.append("files", file);
-            });
-
-            // Then append data
-            body = this.toFormData(data, body);
-
-            // Set Appropriate headers to 
-            // represent data type
-            headers['content-type'] = 'multipart/form-data'
-
-            // Generate signature
-            headers['gt-signature'] = this.generateSignature(path, url, headers, data);
-
-            // Remove the content type
-            delete headers['content-type'];
-        }
 
         // Return new Promise
         return new Promise(async (resolve, reject) => {
+            // If the object is disposed then reject
+            if (this.status === "DISPOSED") return reject({
+                code: "DISPOSED"
+            });
+
+            // Get the URL
+            const url = `${this.config.url}${path? path: "/"}?apiKey=${this.config.apiKey}`;
+
+            // Set default headers
+            var headers = {
+                'gt-date': Date.now().toString(),
+                'gt-access-token': this.config.accessToken
+            };
+
+            var body = "";
+
+            // If there isn't anything in the attachment
+            // means the request is raw json
+            if(!attachments){
+                // Stringify Data and attach to body
+                body = JSON.stringify(data);
+
+                // Set Appropriate headers
+                // to represent data type
+                headers['content-type'] = 'application/json'
+
+                // Generate signature
+                headers['gt-signature'] = this.generateSignature(path, url, headers, data);
+            }
+            else {
+                // Create a new form data
+                body = new FormData();
+
+                // Append files
+                attachments.forEach(file => {
+                    // Push
+                    body.append("files", file);
+                });
+
+                // Then append data
+                body = this.toFormData(data, body);
+
+                // Set Appropriate headers to 
+                // represent data type
+                headers['content-type'] = 'multipart/form-data'
+
+                // Generate signature
+                headers['gt-signature'] = this.generateSignature(path, url, headers, data);
+
+                // Remove the content type
+                delete headers['content-type'];
+            }
+
             // In a try catch
             try {
                 // Send Request

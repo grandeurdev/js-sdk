@@ -58,7 +58,7 @@ class duplex {
                     this.reconnect(auth);  
                     
                     // Setup error response
-                    this.status = "AUTH-UNAUTHORIZED";
+                    this.setStatus("AUTH-UNAUTHORIZED");
 
                     // Flush queue
                     this.flush();
@@ -70,7 +70,7 @@ class duplex {
                     // Don't reconnect
                     
                     // Setup error response
-                    this.status = "SIGNATURE-INVALID";
+                    this.setStatus("SIGNATURE-INVALID");
 
                     // Flush queue
                     this.flush();
@@ -84,7 +84,7 @@ class duplex {
             this.reconnect(auth);
 
             // Setup default error
-            this.status = "CONNECTION-REFUSED";
+            this.setStatus("CONNECTION-REFUSED");
 
             // Flush queue
             this.flush();
@@ -95,7 +95,7 @@ class duplex {
         // When connection opened with the server
         this.ws.onopen = () => {
             // Set status to connected
-            this.status = "CONNECTED";
+            this.setStatus("CONNECTED");
 
             // Notify user about the change
             if (this.cConnection) 
@@ -115,7 +115,7 @@ class duplex {
         // When connection closed with the server
         this.ws.onclose = () => {
             // Set the status to connecting
-            this.status = "CONNECTING";
+            this.setStatus("CONNECTING");
 
             // Notify user about the change
             if (this.cConnection) 
@@ -167,14 +167,42 @@ class duplex {
         // init event again with the auth
         // object after certain time
 
-        setTimeout(() => {
+        // If the connection was disposed then don't reconnect
+        if (this.status === "DISPOSED") return;
+
+        // Start timer
+        this.recon = setTimeout(() => {
             // Set status
-            this.status = "CONNECTING";
+            this.setStatus("CONNECTING");
 
             // Call init again
             this.init(auth);
 
         }, 5000);
+    }
+
+    setStatus(status) {
+        // Function to set status
+
+        // Prevent setting status if the connection was disposed
+        if (this.status === "DISPOSED") return;
+
+        // Set
+        this.status = status;
+    }
+
+    dispose() {
+        // The function will close the duplex
+        if (this.status === "CONNECTED") {
+            // Also close the connection
+            this.ws.close();
+        }
+
+        // Set status to disposed
+        this.setStatus("DISPOSED");
+
+        // Clear timeout
+        clearTimeout(this.recon);
     }
 
     onConnection(callback) {
@@ -226,7 +254,7 @@ class duplex {
         // Create promise 
         return new Promise((resolve, reject) => {
             //  If the connection is not borked
-            if (this.status !== "SIGNATURE-INVALID") {
+            if (this.status !== "SIGNATURE-INVALID" && this.status !== "DISPOSED") {
                 // Generate unique ID for the request
                 var id = Date.now();
 
