@@ -66,7 +66,7 @@ class pipeline{
         return new pipeline({post: this.post, duplex: this.duplex}, this.collection, this.index, this.query);
     }
     
-    execute(pageNumber) {
+    execute(nPage) {
         // Method to finally send request
         // to execute the pipeline
         return this.duplex.send( {
@@ -77,7 +77,7 @@ class pipeline{
                 collection: this.collection,
                 index: this.index,
                 pipeline: this.query,
-                pageNumber: pageNumber
+                nPage: nPage
             }
         });
     }
@@ -133,7 +133,7 @@ class collection{
         });
     }
 
-    search(filter, projection, pageNumber) {
+    search(filter, projection, nPage) {
         // Method to search documents from datastore
         // Based on pipeline so create a new one
         var searchPipeline = new pipeline({post: this.post, duplex: this.duplex}, this.collection, {}, []).match(filter);
@@ -142,7 +142,7 @@ class collection{
         if (projection) searchPipeline = searchPipeline.project(projection);
 
         // Execute
-        return searchPipeline.execute(pageNumber);
+        return searchPipeline.execute(nPage);
     }
 
     pipeline(index) {
@@ -169,26 +169,26 @@ class datastore{
         return new collection({post: this.post, duplex: this.duplex}, name);
     }
 
-    listCollections(pageNumber) {
+    list(nPage) {
         // Method to list all collections
         return this.duplex.send( {
             header: {
-                task: "/datastore/listCollections"
+                task: "/datastore/list"
             },
             payload: {
-                pageNumber: pageNumber
+                nPage: nPage
             }
         });
     }
 
-    dropCollection(name) {
+    drop(name) {
         // Method to drop a collection
         return this.duplex.send( {
             header: {
-                task: "/datastore/dropCollection"
+                task: "/datastore/drop"
             },
             payload: {
-                collectionName: name
+                collection: name
             }
         });
     }

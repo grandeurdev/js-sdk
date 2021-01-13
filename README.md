@@ -5,14 +5,14 @@
 [![Downloads/week](https://img.shields.io/npm/dw/grandeur-js.svg)](https://npmjs.org/package/grandeur-js.svg)
 [![License](https://img.shields.io/npm/l/grandeur-js.svg)](https://github.com/grandeurtech/js-sdk/blob/master/package.json)
 
-Building a smart (IoT) product is an art. It is about unifying the physical world with the digital one. When you connect a hardware to the web, magic happens. But it involves development across a huge technology stack (you need to develop your hardware, your apps to monitor/control your hardware and a server backend to manage both) to make such products work in production. Then if you are (somehow) done with the development, there comes the hardest part; you will have to scale it all as your userbase gonna grow.
+Building a smart (IoT) product is an art. It is about unifying the physical world with the digital one. When you connect a hardware to the web, magic happens. But it involves development across an immense technology stack. You need to develop your hardware, your apps to monitor/control your hardware and a server backend to manage both. Then if you are (somehow) done with the development, there comes the hardest part; you will have to scale it all as your userbase gonna grow.
 
 We can understand this because we have been there. 
 
 Introducing Grandeur; A backend as a service (BaaS) platform for IoT. We have designed this platform so that you do not have to worry about the backend of your next big thing and you could focus on what matters the most; your hardware and apps. It is designed specifically to accelerate your IoT product development and push your product to market in weeks rather than in months or years.
 
 # JavaScript SDK
-Grandeur can resolve all the problems that you could face in building a smart (IoT) product. Like you can authenticate users, can store files in storage, can save data in database, host static website with builtin hosting and can subscribe to events from hardware and app to do realtime communication with the cloud platform. All it requires the integration of our platform in your technology stack.
+Grandeur can resolve all the problems that you could face in building a smart (IoT) product. Like you can authenticate users, manage devices, can store files in storage, can save data in database, host static website with builtin hosting. All it requires the integration of our platform in your technology stack.
 
 By this time you would be like okay, we got it why Grandeur is building this platform and yeah it is super great and super useful. But how we can integrate it into our apps? So here is the answer. We have built this amazing JavaScript SDK to make the integration process of Grandeur in web apps a lot simpler. So now all you have to do is to follow the [get started](#get-started) guidelines to quickly start building your solution. 
 
@@ -28,52 +28,43 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
         + [SDK](#sdk)
         + [Users and Administrator](#users-and-administrator)
         + [Devices Registry](#devices-registry)
-        + [Authentication and Access](#authentication-and-access)
-        + [Networking](#networking)
-        + [Allowed Origins](#allowed-origins)
 - [Documentation](#documentation)
     * [init](#init)
     * [isConnected](#isConnected)
     * [onConnection](#onConnection)
     * [auth](#auth)
-        + [register](#register)
-        + [login](#login)
-        + [isAuthenticated](#isAuthenticated)
-        + [logout](#logout)
-        + [updateProfile](#updateProfile)
-        + [forgotPassword](#forgotPassword)
-        + [changePassword](#changePassword)
-        + [oauth](#oauth)
-        + [oauthAccessToken](#oauthAccessToken)
+        + [register](#authregisteremail-password-displayName-phone)
+        + [login](#authloginemail-password)
+        + [isAuthenticated](#authisauthenticated)
+        + [logout](#authlogout)
+        + [updateProfile](#authupdateProfiledisplayName-displayPicture-phone)
+        + [forgotPassword](#authforgotPasswordemail)
+        + [changePassword](#authchangePasswordpassword)
     * [devices](#devices)
-        + [list](#list)
-        + [onlineCount](#onlineCount)
-        + [onList](#onList)
-        + [device](#device)
-            + [pair](#pair)
-            + [unpair](#unpair)
-            + [getSummary](#getSummary)
-            + [getParms](#getParms)
-            + [setSummary](#setSummary)
-            + [setParms](#setParms)
-            + [getDetails](#getDetails)
-            + [setName](#setName)
-            + [getStatus](#getStatus)
-            + [onSummary](#onSummary)
-            + [onParms](#onParms)
-            + [onName](#onName)
-            + [onStatus](#onStatus)
+        + [get](#devicesgetfilter)
+        + [count](#devicescountfilter)
+        + [on](#devicesoncallback)
+        + [device](#devicesdevicedeviceID)
+            + [pair](#devicepair)
+            + [unpair](#deviceunpair)
+            + [get](#devicegetpath)
+            + [set](#devicesetpath-value)
+            + [on](#deviceonpath-callback)
+            + [data](#devicedatagetpath)
+                + [get](#devicedatagetpath)
+                + [set](#devicedatasetpath-value)
+                + [on](#devicedataonpath-callback)
     * [datastore](#datastore)
-        + [collection](#collection)
-            + [insert](#insert)
-            + [delete](#delete)
-            + [update](#update)
-            + [search](#search)
-        + [listCollections](#listCollections)
-        + [dropCollection](#dropCollection)
+        + [collection](#datastorecollectionname)
+            + [insert](#collectioninsertdocuments)
+            + [delete](#collectiondeletefilter)
+            + [update](#collectionupdatefilter-update)
+            + [search](#collectionsearchfilter-projection-npage)
+        + [list](#datastorelistnpage)
+        + [drop](#datastoredropname)
     * [storage](#storage)
-        + [uploadFile](#uploadFile)
-        + [getFileUrl](#getFileUrl)
+        + [upload](#storageuploadfile-filename)
+        + [getUrl](#storagegetUrlfilename)
 
 
 # Get Started
@@ -525,51 +516,30 @@ That is the story of the team `SolDrive`. Check out their [website](https://sol-
 In this subsection, we will explore the Grandeur Platform in detail. We will see how it all works in depth. So let's get started
 
 ### Projects
-To start working with Grandeur, the first thing that you will have to do is to create a new project. Now, what is a project? Project is like a workspace and we store, communicate and display data regarding your project. While you can technically create an unlimited number of projects, but you cannot share data or resources of any sort between two projects. `Your project works like a namespace`. Like users registered to one project cannot log in to applications based on other projects. Similarly, devices registered to one project, cannot be shared with another project. 
+To start working with Grandeur, you got to first create a new project. Project is like a workspace. We store, communicate and handle data with reference to your project. You cannot share data between two projects. `Your project works like a namespace`.
 
-When you create a project, we give you a project API key. An API key is a digital signature that identifies a project in our system, just like your identification card or your social security number identifies you as a citizen. To connect your apps or hardware to our network, that is what you should provide to our SDK. Our SDK sends us your API key with every request and that is what we utilize to understand what data are we supposed to update or return or in which namespace we are supposed to execute your request. Checkout [sdk](#sdk) section in concepts to read more about it.
+You get a an API key after creating a new project. An API key is a unique identifier of your project. You are required to provide your API key to our SDKs. Our SDK sends us your API key with every request and that is what we utilize to understand in which namespace we are supposed to execute your request. Checkout [sdk](#sdk) section in concepts to read more about it.
 
-In the end, it is important to note that our pricing applies separately to each project. So you will get free tier on every project and then you will pay for each project separately regarding what you consume in each namespace.
+Our pricing applies separately to each project. So you will get free tier on every project and then you will pay for each project separately regarding what you consume.
 
 ### SDK
-You use our SDK to communicate with our cloud platform. We call our SDK `Grandeur` and it acts like an interface that gives you easy access to integrate our platform in your stack. Like in the case of web apps, simply drop in the link of JS SDK CDN in your codebase and done. We have tried our best to make it coherent in between the platforms. So that you could work and collaborate seamlessly.
+You use our SDK to communicate with our platform. It acts like an interface that gives you easy access to integrate our platform in your stack. Like in the case of web apps, simply drop in the link of JS SDK CDN in your codebase and then you can call functions to add features into your stack.
 
-So that is how it works. You can the SDK global object by name and initialize it with an API key (plus a couple of more stuff in case of hardware SDK). As a result of initialization, you will get the reference to your project (in case of the app) or your device (in case of hardware), with which you can access all the features of Grandeur depending upon the scope. Like in case of device reference you can access features limited to the device only, while with project reference, you can access all the possible features after user authentication. Checkout [authentication and access](#authentication-and-access) section to get more insight into scope.
+To start working with the SDK, you got to first include it in your code. In case of JS SDK, you can use the CDN link and for react you can download our package from NPM. Then you are required to init the SDK with API key and access. After initialization you will get the reference to your project, with which you can access all the features of Grandeur depending upon the platform. Like in case of hardware SDK, you can access features limited to the device only with authentication token. While in case of app SKDs, you can access all the features after authentication.
 
 ### Users and Administrator
-This topic is about the relationship between you as an administrator and your users. We will describe who can access what so technically we are gonna start talking about the scope of access. You create a project and add resources to it like users and devices. So you own it all. You own the namespace of a project and only you can manage your project using your account credentials and our dashboard application. But in real-world settings, you want your apps to handle a part of your responsibilities. Like obviously you would like your users to automatically sign up. Then you would want your users to automatically access their devices and some data upon authentication. This means you will have to delegate some of your authorities to our SDK because in the end your apps are gonna communicate to our platform with SDK. You can do this by just giving our SDK your API key and configuring [allowed origins](#allowed-origins) setting through the dashboard.
+In each project you can register users either through the app SDKs or through the [dashboard](https://cloud.grandeur.tech/accounts). You can create user to delegate the access. This means, you can provide these credentials to end users or end users can directly register themselves through your app to access features of Grandeur. This way you can build an auth layer in your apps. 
 
-But who are users? Users are just entities that you can either create through the dashboard or SDK. To be more precise, a user entity defines the scope of access of a person who is using your app. By default, a user is limited to access devices paired to his own account, but can access all of your files and datastore (at the moment - you cannot define fine grain control of your files and data stored in storage and datastore respectively. While we are actively working on adding this support to our platform but currently it is very important to develop a data model in a way that the privacy of users could be protected.). This way a user can request the device logs or his profile picture from our platform upon authentication but cannot access devices paired to another user accounts. But we mean by accessing devices? To read more about it, check out [devices registry](#devices-registry) topic.
+So if you are building an app with which users can control their air conditioners over web. Then they will be first required to register an account to pair devices and access data.
 
 ### Devices Registry
-Just like users, devices are entities which essentially defines the scope of access. But unlike users, you can only register new devices through dashboard only. This is one of the key features of Grandeur. We wanted to resolve this issue. There are two types of solutions out there i) those are dealing with users part only e.g. firebase and ii) those are just dealing with devices registry part e.g. Google IoT Core. We wanted to combine best of both worlds. This is why at Grandeur, where on one hand we have added the authentication feature, then on the other hand we also maintains a devices registry for you. Where you can seamlessly register new entities and pair those entities to users.
+We have created a special datastructure in our platform to help you with connecting devices to our platform. In order to connect a hardware to our platform, you are first required to register it through our [dashboard](https://cloud.grandeur.tech/accounts). After registration, we provide you with a unique device id and access token. With the device id and access token, you can connect your hardware to our platform with help of our hardware SDKs.
 
-Now how this entity defines the scope? `Devices are global entities`. Unlike user account entity, `no body owns a device` except an administrator. So a user can pair a device to his account or in order words say a user `can claim a device and access data` specific to it. But a user cannot delete or inherently modify a device. We designed this considering the real world relation that we develop with our things. So the devices entity in the end defines two things i) what a hardware can access in your namespace and ii) which hardware devices a user can control. Now this really matters a lot because that's the key. You obviously do not want your neighbors to control your air conditioner (that would be so horrible situation). That's what this entity has been designed for. So as mentioned earlier, this entity also limits what a hardware product can access in your namespace. So when you pair a device to an account, we generate an access token for you. Then you can provide this token to our hardware SDK in init in order to access the data (unlike app SDK, hardware SDK can access scope limited to a device only and you delegate a device access to hardware SDK by providing access token at the init. That is how you authenticate your products)
+Each of your hardware should have a unique id. You should never use same id for multiple devices because our platform automatically detects and terminates multiple connections based on a single id. You can use the device id to refer the device in the app SDKS. For instance in order to pair a device to a user, you will provide the device id to the pair function.
 
-What do we mean by saying that a user can access data of devices paired to his own account only? We have made it simple for you. You won't have to handle data specific to your device yourself using datastore. We do this for you with devices registry. When you register a device to your registry, we create a new namespace for you where we save data in two objects i) `Parms` and ii) `Summary` specific to the device you just created. In other words, we maintain a special storage space where you can save data specific to device. It is like a secure contained spot and only accounts to which the device is paired can access it through the SDK, similarly, only the devices with access token of the namespace can access it through hardware SDK.
+Each device comes with a privileged and sandboxed storage space in which you can store data specific to it in JSON format. For instance, if you have build a power meter, then the hardware can read the voltage, current and power with sensors and store it in the space. Then the app can access the data using the device id and can display or consume it in any way.
 
-In the end, let's define what you can store in the two object i) Parms and ii) Summary. To be honest, we are very flexible in it. We just created two objects instead of a single one to help you develop understanding. Our approach is, Parms are like controllable state of a device and Summary is something that device wanted to log or display to apps. In other words, Parms are like the inputs and Summary is like the output of a device. So for example, consider an example where you have a smart light bulb. The parms can be utilized to control the bulb state, while in summary you can log that how much voltage is being consumed by the bulb or another sensor data. We defined this because we wanted to go a step forward. We wanted to help you in building a logic. But again, we are very flexible. So you can define what should be the initial schema of these two objects but we never monitor that either the schema is being followed or not.
-
-### Authentication and Access
-In last two sections, we have discussed in depth that what are the various access scopes and who can access what. This section will revisit this topic again to give you an overall picture of auth and access. Let's start with outlining the relationships. There are three kinds of entities i) projects ii) users and iii) devices. You create a project so own a project and can access all the possible features and data. You do this all by using our dashboard application. End goal is to provide access of the data and devices (that you are building) to your users. You can do this by using our SDK in your apps and hardware. But for this purpose, our SDK should also have access to your namespace. So technically, you can also delegate your access.
-
-This is where the other two entities comes. We designed these two entities to give you fine grain control over what you are delegating and how are you granting access. Users got wider scope of access. A user entity can access devices data (paired to his account), can access the files you stored in storage and can also access the data you maintained in datastore. In other words, this entity allows you to delegate access of your project to your apps through our SDK in a controlled fashion. Or in another way, we can say that the piece of code that you have written in your apps can only make a request to our platform once a user authenticate. Now I believe that you can see the big picture here! You delegate actually delegate some authorities to your users. Now your users can request to authenticate (via our SDK). As a result we will generate an auth token that your hardware can then utilize to communicate to our platform. 
-
-Now comes the devices entity. We designed this entity as a global resource. Your users can claim access to a device but cannot actually own it. Whenever a user claims a device, we first verify that an other user hasn't claimed the same device earlier and then generate an access token. The hardware SDK can use this access token to communicate to our platform and access data specific to the device only.
-
-That is the whole picture. That is how we make sure that everyone is getting what they are allowed to access. That is how we grant you authority over your data and resources and keep in check that everything is working just the way you want them to work.
-
-### Networking
-Grandeur is a managed backend as a service platform. We tie it all up for you so you won't have to do it yourself. This is one of the pain points that you face when building your IoT products with services like Google Cloud Platform and AWS. You will have a mix and match services together and tie it all up yourself. But it is always a good practice to fully understand a platform before using it. Therefore we are writing about how the networking works with Grandeur.
-
-We works with two communication channel in apps SDK i) http based REST API and ii) duplex based realtime API. We use the first REST API channel to do stuff like authentication and file upload, while the other realtime API for fast request transmission like device data requests etc. Realtime channel is really fast and designed to transfer packets to server and from server at transmission rate of 200ms. It is based on our custom protocol and we call it duplex. We don't allow unauthenticated connection over this channel so initially establish communication over REST till authentication.
-
-In the hardware SDK, we use only a single channel; duplex based realtime API. Because of the fact that hardware uses access token to authenticate and which we provide very early on at init. So we do not need a separate channel for authentication and neither we are required to do heavy lifting like file upload. Because while duplex is very fast, it is reliable only for quick messages communication.
-
-### Allowed Origins
-This is another amazing topic and somehow related to access delegation in the end. As mentioned earlier in other sections that you can also access your project namespace using SDK by simply providing your API key to the SDK durning init. SDK returns a reference object to the project after initialization which can be then utilized to access the namespace. Which poses a security threat particularly in case of web apps but API key can be easily stolen. While in the end, you require a user to be authenticated first before making any request to platform, a hacker with stolen API key can still cause some damage. Like a hacker can register bogus users to your namespace or can create a copycat site for pishing. To handle this, we introduced cross origin request protection to our platform. 
-
-So in order to establish communication from a website using the web SDK, you will have to first whitelist the domain name via [settings](https://cloud.grandeur.tech/settings) page in the dashboard application. You cannot even send a request from your localhost without first whitelisting it. Now at this point, it is important to note that whitelisting localhost in production application is not a good practice and should be avoided in order to protect your users.
+The device is very special entities and we have powered it with data driven interface. This means you can subscribe to device events from both app and hardware end. You can subscribe to changes of device meta data like device name and status. Similarly you can place event listeners on device data.
 
 # Documentation
 In this section, we will present references to each and every feature that our SDK supports. We have divided our SDK in group of functions called classes. Each class represents a feature of Grandeur. So in this section, we will also document that how can you use each and every function of Grandeur SDK.
@@ -649,7 +619,7 @@ var auth = project.auth();
 
 Now once you got the reference to the auth class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
 
-### register
+### auth.register(email, password, displayName, phone)
 This method allows you to add new users to your project through SDK. To create a new user account, simply provide the user email, password, display name and phone number as an argument to this function. Unlike dashboard, where you can create a user account without validation by just filling user details in a form, registering a new user account with SDK is little bit different. Because instead of directly registering the new user, we first verify that either the user is genuine to protect you from bogus users. So when you execute this function, we automatically send a verification code to the phone number provided in the argument and returns you a promise.
 
 With this promise, you can access the confirmation method. So you can get the verification code from user through an input tag in html and validate the user by providing it to the confirmation method. On successful validation, we return you a success message and register the user automatically.
@@ -686,7 +656,7 @@ Register method returns the following code in form of promise
   failed to send the verification code
 
 
-#### confirmRegistration
+#### confirm(code)
 Once you submit the register request, we validate the data and send a code to the provided phone number. We do this to validate the user as a built in security mechanism. This is where we also return you a callback so that you could send us a confirmation request after promoting user about the code.
 
 This function receives a single argument as illustrated below
@@ -718,7 +688,7 @@ Account registration has been illustrated in the example below
 ```javascript
 // Variable to hold the confirmRegistration
 // method so that it could be used afterwards
-var confirmRegistration = null;
+var confirm = null;
 
 // Get user data from the inputs and
 // Submit request to the server
@@ -728,7 +698,7 @@ auth.register(email, password, displayName, phone).then((res) => {
   switch(res.code) {
     case "PHONE-CODE-SENT": 
       // Verification code has been sent
-      confirmRegistration = res.confirm;
+      confirm = res.confirm;
   }
 })
 
@@ -736,7 +706,7 @@ auth.register(email, password, displayName, phone).then((res) => {
 // Prompt the user about the verification code
 // and submit it to server with the confirm 
 // method
-confirmRegistration(code).then((res) => {
+confirm(code).then((res) => {
   // Got the response
   // Checkout the response code
   switch(res.code) {
@@ -746,7 +716,7 @@ confirmRegistration(code).then((res) => {
 });
 ```
 
-### login
+### auth.login(email, password)
 This method allows you to login a user into his account. Simply provide the user email and password in the argument and execute method. The SDK will automatically obtain the auth token from the server. It is important to note that nearly all the methods of this SDK requires a user to be authenticated first. 
 
 
@@ -793,7 +763,7 @@ auth.login(email,password).then((res) => {
 });
 ```
 
-### isAuthenticated
+### auth.isAuthenticated()
 Often times, it is required to verify that a user account is authenticated into the application or not. This functionality can be achieved through this method. It returns a response with user profile details if user is authorized. 
 
 The response codes are as below
@@ -822,7 +792,7 @@ auth.isAuthenticated().then((res) => {
 });
 ```
 
-### logout
+### auth.logout()
 This method comes handy because along with logging the user in, it is also required to logout a user when required. It serves as the most basic and important feature. 
 
 This method returns the following codes upon execution
@@ -849,7 +819,7 @@ auth.logout().then((res) => {
 });
 ```
 
-### updateProfile
+### auth.updateProfile(displayName, displayPicture, phone)
 A user profile gets automatically created whenever you register a new user account. This makes it really easy for you as a developer to handle data specific to user. Like you can setup display picture of a user. Which allows you present a unique experience to each user. This is why we have added this method with which you can update the profile of a authenticated user. 
 
 Update profile function accepts the following arguments
@@ -889,7 +859,7 @@ Update profile method returns the following code in form of promise
   failed to update the profile
 
 
-#### confirmProfileUpdate
+#### confirm(code)
 We are very particular about the phone number associated with the profile. This is why we validate the phone number whenever a user try to update it. As a result, we return you a confirm function so that you could proceed with the update profile operation after prompting the user about the verification code.
 
 This function receives a single argument as illustrated below
@@ -921,7 +891,7 @@ Use of updateProfile method has been illustrated in the example below
 ```javascript
 // Variable to hold the confirmProfileUpdate
 // method so that it could be used afterwards
-var confirmProfileUpdate = null;
+var confirm = null;
 
 // Get user data from the inputs and
 // Submit request to the server
@@ -931,7 +901,7 @@ auth.updateProfile(displayName, displayPicture, phone).then((res) => {
   switch(res.code) {
     case "PHONE-CODE-SENT": 
       // Verification code has been sent
-      confirmProfileUpdate = res.confirm;
+      confirm = res.confirm;
       break;
     case "AUTH-PROFILE-UPDATED":
       // Profile has been updated
@@ -942,7 +912,7 @@ auth.updateProfile(displayName, displayPicture, phone).then((res) => {
 // Prompt the user about the verification code
 // and submit it to server with the confirm 
 // method
-confirmProfileUpdate(code).then((res) => {
+confirm(code).then((res) => {
   // Got the response
   switch(res.code) {
     case "AUTH-PROFILE-UPDATED":
@@ -951,7 +921,7 @@ confirmProfileUpdate(code).then((res) => {
 });
 ```
 
-### forgotPassword
+### auth.forgotPassword(email)
 A rather very important feature is to add forgot password option into your app. This method allows you to update the password of a user account if the user is not authenticated. We validate a user with phone authentication in this case. So just prompt user about the email account associated with the account, we will automatically send the verification code the phone number associated with the profile and after which you can submit a confirmation request.
 
 Forgot password function accepts the following arguments
@@ -979,7 +949,7 @@ This method returns the following code in form of promise
   failed to send code to phone number
 
 
-#### confirmForgotPassword
+#### confirm(code)
 After submitting forgot password request, we send a verification code to the phone number associated with user's accounts. As a result, we also return you a confirm function, so that you could proceed with the forgot password operation after prompting the user about the verification code and a new password.
 
 This function receives a single argument as illustrated below
@@ -1016,7 +986,7 @@ Use of forgotPassword method has been illustrated in the example below
 ```javascript
 // Variable to hold the confirmForgotPassword
 // method so that it could be used afterwards
-var confirmForgotPassword = null;
+var confirm = null;
 
 // Get user data from the inputs and
 // Submit request to the server
@@ -1026,7 +996,7 @@ auth.forgotPassword(email).then((res) => {
   switch(res.code) {
     case "PHONE-CODE-SENT": 
       // Verification code has been sent
-      confirmForgotPassword = res.confirm;
+      confirm = res.confirm;
   }
 })
 
@@ -1034,7 +1004,7 @@ auth.forgotPassword(email).then((res) => {
 // Prompt the user about the verification code
 // and submit it to server with the confirm 
 // method
-confirmForgotPassword(code).then((res) => {
+confirm(code).then((res) => {
   // Got the response
   switch(res.code) {
     case "AUTH-PROFILE-UPDATED":
@@ -1043,7 +1013,7 @@ confirmForgotPassword(code).then((res) => {
 });
 ```
 
-### changePassword
+### auth.changePassword(password)
 This method is very similar to the forgot password feature. But unlike forgot password, here it is important for a user to be logged into his account first. To ensure the security of a user account, we send a verification code to the phone number associated with user account and return you a confirmation method.
 
 Change password function accepts the following arguments
@@ -1071,7 +1041,7 @@ This method returns the following code in form of promise
   failed to send code to phone number
 
 
-#### confirmChangePassword
+#### confirm(code)
 After submitting change password request, we send a verification code to the phone number associated with user's accounts. As a result, we also return you a confirmation function, so that you could proceed with the change password operation after prompting the user about the verification code.
 
 This function receives a single argument as illustrated below
@@ -1103,7 +1073,7 @@ Use of changePassword method has been illustrated in the example below
 ```javascript
 // Variable to hold the confirmChangePassword
 // method so that it could be used afterwards
-var confirmChangePassword = null;
+var confirm = null;
 
 // Get user data from the inputs and
 // Submit request to the server
@@ -1113,7 +1083,7 @@ auth.changePassword(password).then((res) => {
   switch(res.code) {
     case "PHONE-CODE-SENT": 
       // Verification code has been sent
-      confirmChangePassword = res.confirm;
+      confirm = res.confirm;
   }
 })
 
@@ -1121,93 +1091,13 @@ auth.changePassword(password).then((res) => {
 // Prompt the user about the verification code
 // and submit it to server with the confirm 
 // method
-confirmChangePassword(code).then((res) => {
+confirm(code).then((res) => {
   // Got the response
   switch(res.code) {
     case "AUTH-PROFILE-UPDATED":
         // Password has been updated
   }
 });
-```
-
-### oauth
-This function starts the OAuth authorization process by redirecting the user to the provider website. After completing the
-authorization, the user will be redirected back to url of the app that you provided while enabling the integration. Then you
-can get the OAuth token by calling [oauthAccessToken](#oauthAccessToken) function.
-
-This function accepts the following arguments
-
-| Name  | Type        | Description |
-| :---- | :---------- | :--------------------- |
-| integrationID | string      | will be generated after enabling an integration through [accounts](https://cloud.grandeur.tech/accounts) page |
-
-This method automatically redirects the browser to Auth Url on successful execution
-
-* DATA-INVALID
-
-  integration id is not provided
-
-* AUTH-UNAUTHORIZED 
-
-  user is not authenticated
-
-* INTEGRATION-NOT-ENABLED
-
-  the integration id is invalid
-
-* INTEGRATION-UNAUTHORIZED
-
-  user haven't authorized the integration
-
-Use of oauth method has been illustrated in the example below
-
-```javascript
-// Start OAuth Authorization process and get token
-auth.oauth("INTEGRATION-ID");
-```
-
-### oauthAccessToken
-After completion of the authorization process, we retrive the token for you and store it in database with reference to the user who authorized the integration and you can call this function at any stage in your app logic to get the token from our database.
-
-This function accepts the following arguments
-
-| Name  | Type        | Description |
-| :---- | :---------- | :--------------------- |
-| integrationID | string      | will be generated after enabling an integration through [accounts](https://cloud.grandeur.tech/accounts) page |
-
-Upon execution, this method returns the following code in form of promise
-
-* DATA-INVALID
-
-  integration id is not provided
-
-* AUTH-UNAUTHORIZED 
-
-  user is not authenticated
-
-* INTEGRATION-NOT-ENABLED
-
-  the integration id is invalid
-
-* INTEGRATION-UNAUTHORIZED
-
-  user haven't authorized the integration
-
-* INTEGRATION-TOKEN-FETCHED
-
-  token has been fetched and included in the response
-
-Use of oauthAccessToken method has been illustrated in the example below
-
-```javascript
-// Start OAuth Authorization process and get token
-auth.oauthAccessToken("INTEGRATION-ID").then( res=> {
-  // Got the response
-  switch(res.code) {
-    case "INTEGRATION-TOKEN-FETCHED":
-        // Token has been fetched
-        console.log(res.token);
-}).c;
 ```
 
 ## devices
@@ -1221,10 +1111,16 @@ var devices = project.devices();
 
 Now once you got the reference to the devices class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
 
-### list
+### devices.get(filter)
 This method comes in handy whenever you need a list of all the devices paired to a user account. 
 
-This method do not accept anything in the argument and returns the following codes in response
+This function receives a single argument with which you can filter the result
+
+| Name        | Type        | Description |
+| :---------- | :---------- | :--------------------- |
+| filter        | string      | can be offline, online or empty to get disconnected, connected or all devices paired to an account |
+
+Upon execution, this method returns the following code in form of promise
 
 * DEVICES-LIST-FETCHED
 
@@ -1238,7 +1134,7 @@ Use of getUserDevices method has been illustrated in the example below
 
 ```javascript
 // Submit request to the server
-devices.list().then((res) => {
+devices.get().then((res) => {
   // Got the response
   switch(res.code) {
     case "DEVICES-LIST-FETCHED": 
@@ -1248,37 +1144,43 @@ devices.list().then((res) => {
 })
 ```
 
-### onlineCount
-This methods returns the number of online devices in the list of devices paired to a user account. Online devices are simply those devices which are connected to Grandeur at a moment.
+### devices.count(filter)
+This methods returns the total number of online, offline or all devices paired to a user account. 
 
-This method do not accept anything in the argument and returns the following codes in response
+This function receives a single argument with which you can filter the result
 
-* DEVICES-ONLINE-COUNT-FETCHED
+| Name        | Type        | Description |
+| :---------- | :---------- | :--------------------- |
+| filter        | string      | can be offline, online or empty to get disconnected, connected or all devices paired to an account |
 
-  count of online devices has been fetched
+Upon execution, this method returns the following code in form of promise
 
-* DEVICES-ONLINE-COUNT-FETCH-FAILED
+* DEVICES-COUNT-FETCHED
 
-  failed to fetch the count of online devices
+  count of devices has been fetched
 
-Use of getOnlineDevicesCount method has been illustrated in the example below
+* DEVICES-COUNT-FETCH-FAILED
+
+  failed to fetch the count of devices
+
+Use of count method has been illustrated in the example below
 
 ```javascript
 // Submit request to the server
-devices.onlineCount().then((res) => {
+devices.count().then((res) => {
   // Got the response
   switch(res.code) {
-    case "DEVICES-ONLINE-COUNT-FETCHED": 
+    case "DEVICES-COUNT-FETCHED": 
       // Number of online devices has been fetched
-      console.log(res.numberOfOnlineDevices);
+      console.log(res.nDevices);
   }
 })
 ```
 
-### onList
-The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+### devices.on(callback)
+The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed event will occur. 
 
-This methods allows you to subscribe to event related to devices list update and event will be fired whenever a device gets paired or unpaired to a user account. 
+This methods allows you to subscribe to event related to devices list update. An event will be fired whenever a device gets paired or unpaired to a user account. 
 
 This method accepts the following arguments
 
@@ -1292,7 +1194,7 @@ This method returns the following codes in the response to the promise
 
   event has been subscribed
 
-It is important to note that the update will be directly sent without a response code. So for example whenever a new device will be paird, entire list will be sent as the argument in form an array.
+It is important to note that the update will be directly sent without a response code. So for example whenever a new device will be paired, entire list will be sent as the argument in form an array.
 
 The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
 
@@ -1304,7 +1206,7 @@ The use of this method has been illustrated in the example below
 
 ```javascript
 // Variable to store clear method of subscribed event
-var devicesListEventListener = null;
+var listener = null;
 
 // Function to be passed as a callback
 var onUpdate = (update) {
@@ -1314,20 +1216,20 @@ var onUpdate = (update) {
 };
 
 // Subscribe to the devices list update event of a device
-devices.onList(onUpdate).then((res) => {
+devices.on(onUpdate).then((res) => {
   // Call to onDevicesList returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 
       // Event has been subscribed
-      devicesListEventListener = res;
+      listener = res;
   }
 });
   
 
 // Then in our code we can clear the event 
 // listener whenever required with the clear method
-devicesListEventListener.clear().then((res) => {
+listener.clear().then((res) => {
   // Got the response
   switch(res.code) {
     case "TOPIC-UNSUBSCRIBED": 
@@ -1335,7 +1237,7 @@ devicesListEventListener.clear().then((res) => {
   }
 });
 ```
-### device
+### devices.device(deviceID)
 From the devices class, you can get reference to a device class by calling this function. Then you can perform various operations on a device using the device reference.
 
 ```javascript
@@ -1344,7 +1246,7 @@ From the devices class, you can get reference to a device class by calling this 
 var devices = devices.device(deviceID);
 ```
 
-#### pair 
+#### device.pair() 
 As documented earlier in [devices](#devices-registry) topic of concepts section that it is compulsory to pair a device with a user account before getting access to its data. Pairing feature is similar to claiming ownership over a device. When you send us a pairing request, we first verify that the device isn't paired to another account.
 
 This method returns the following codes in response 
@@ -1379,7 +1281,7 @@ device.pair().then((res) => {
 })
 ```  
 
-#### unpair
+#### device.unpair()
 This method allows you to unpair a device from a user account. It simply declares that the user account no longer owns the device. In other words, it makes the device available for other users to claim. 
 
 This method returns the following codes in response 
@@ -1413,158 +1315,14 @@ device.unpair().then((res) => {
 })
 ```
 
-#### getSummary
-As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to get the summary object of a device data.
+#### device.get(path)
+This method returns the meta data of a device like device name, product id, device id and state.
 
-This method returns the following codes in response 
-
-* DEVICE-SUMMARY-FETCHED
-
-  summary object has been returned
-
-* DEVICE-NOT-PAIRED
-
-  device is not paired to the account
-
-* DEVICE-ID-INVALID
-
-  device is not registered with this id
-
-* DATA-INVALID
-
-  device id is required
-
-Use of getSumamry method has been illustrated in the example below 
-
-```javascript
-// Submit request to the server
-device.getSummary().then((res) => {
-  // Got the response
-  switch(res.code) {
-    case "DEVICE-SUMMARY-FETCHED": 
-      // Device summary has been fetched
-      console.log(res.deviceSummary);
-  }
-})
-```
-
-#### getParms
-As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to get the parameters object of a device data.
-
-This method returns the following codes in response 
-
-* DEVICE-PARMS-FETCHED
-
-  parameters object has been returned
-
-* DEVICE-NOT-PAIRED
-
-  device is not paired to the account
-
-* DEVICE-ID-INVALID
-
-  device is not registered with this id
-
-* DATA-INVALID
-
-  device id is required
-
-Use of getParms method has been illustrated in the example below 
-
-```javascript
-// Submit request to the server
-device.getParms().then((res) => {
-  // Got the response
-  switch(res.code) {
-    case "DEVICE-PARMS-FETCHED": 
-      // Device parameters has been fetched
-      console.log(res.deviceParms);
-  }
-})
-```
-
-#### setSummary
-As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to set the summary object of a device data.
-
-This method accepts the following arguments
+You can provide a filter to this method to return a get a single key instead of all the keys.
 
 | Name  | Type        | Description |
 | :---- | :---------- | :--------------------- |
-| summary | object   | a valid JSON object containing the data to be set as new summary |
-
-This method returns the following codes in response 
-
-* DEVICE-SUMMARY-UPDATED
-
-  summary object has been updated
-
-* DEVICE-NOT-PAIRED
-
-  device is not paired to the account
-
-* DEVICE-ID-INVALID
-
-  device is not registered with this id
-
-* DATA-INVALID
-
-  device id is required
-
-Use of setSummary method has been illustrated in the example below 
-
-```javascript
-// Submit request to the server
-device.setSumamry({voltage: 10}).then((res) => {
-  // Got the response
-  switch(res.code) {
-    case "DEVICE-SUMMARY-UPDATED": 
-      // Device summary has been updated
-  }
-})
-```
-
-#### setParms
-As mentioned in [devices registry](#devices-registry) topic that with each device you can save data which will be private to the device only and accessible after pairing. We categorize the data associated with a device into two objects; summary and parameters. This methods allows you to set the parms object of a device data.
-
-This method accepts the following arguments
-
-| Name  | Type        | Description |
-| :---- | :---------- | :--------------------- |
-| parms | object   | a valid JSON object containing the data to be set as new parameters |
-
-This method returns the following codes in response 
-
-* DEVICE-PARMS-UPDATED
-
-  parameters object has been updated
-
-* DEVICE-NOT-PAIRED
-
-  device is not paired to the account
-
-* DEVICE-ID-INVALID
-
-  device is not registered with this id
-
-* DATA-INVALID
-
-  device id is required
-
-Use of setParms method has been illustrated in the example below 
-
-```javascript
-// Submit request to the server
-device.setParms({state: 1}).then((res) => {
-  // Got the response
-  switch(res.code) {
-    case "DEVICE-PARMS-UPDATED": 
-      // Device parameters has been updated
-  }
-})
-```
-
-#### getDetails
-This method should be utilized whenever you need consolidated details regarding a device. It returns details like device name, status, summary and parameters in a single call.
+| path | function | can be name of key, like you can use 'status' to get the current status of device |
 
 This method returns the following codes in response 
 
@@ -1584,34 +1342,35 @@ This method returns the following codes in response
 
   device id is required
 
-Use of getDetails method has been illustrated in the example below 
+Use of get method has been illustrated in the example below 
 
 ```javascript
 // Submit request to the server
-device.getDetails().then((res) => {
+device.get().then((res) => {
   // Got the response
   switch(res.code) {
     case "DEVICE-DETAILS-FETCHED": 
       // Device details has been fetched
-      console.log(res.deviceDetails);
+      console.log(res.device);
   }
 })
 ```
 
-#### setName
-There is a name field associated with every device in the registry, it is meant to assist you in tagging your devices with a human friendly names to make management of the paired devices easy for your end users. This method allows you to set this name field of a device. 
+#### device.set(path, value)
+You can also change few fields of the device data. For example the name of the device can be changed from the SDK.
 
 This method accepts the following arguments
 
 | Name  | Type        | Description |
 | :---- | :---------- | :--------------------- |
-| name | string | a human friendly alphanumeric phrase |
+| path | string | can be name of key, like you can use 'name' to set the name of the device |
+| value | string | you can provide a valid value for the field that you want to update |
 
 This method returns the following codes in response 
 
-* DEVICE-NAME-UPDATED
+* DEVICE-DETAILS-UPDATED
 
-  name has been updated
+  details has been updated
 
 * DEVICE-NOT-PAIRED
 
@@ -1625,11 +1384,11 @@ This method returns the following codes in response
 
   device id is required
 
-Use of setName method has been illustrated in the example below 
+Use of set method has been illustrated in the example below 
 
 ```javascript
 // Submit request to the server
-device.setName("Living Room Lamp").then((res) => {
+device.set("name", "Living Room Lamp").then((res) => {
   // Got the response
   switch(res.code) {
     case "DEVICE-NAME-UPDATED": 
@@ -1638,50 +1397,14 @@ device.setName("Living Room Lamp").then((res) => {
 })
 ```
 
-#### getStatus
-Grandeur maintains state of each device paired to a user account. We keep track that either a device is connect to the server at a given moment. While [onlineCount](#onlineCount) method allows you to get count of total online devices, this method gives you the utility to query status of an individual device.
-
-This method returns the following codes in response 
-
-* DEVICE-STATUS-FETCHED
-
-  status of the device has been returned
-
-* DEVICE-NOT-PAIRED
-
-  device is not paired to the account
-
-* DEVICE-ID-INVALID
-
-  device is not registered with this id
-
-* DATA-INVALID
-
-  device id is required
-
-Use of getStatus method has been illustrated in the example below 
-
-```javascript
-// Submit request to the server
-device.getStatus().then((res) => {
-  // Got the response
-  switch(res.code) {
-    case "DEVICE-STATUS-FETCHED": 
-      // Device status has been returned
-      console.log(res.status);
-  }
-})
-```
-
-#### onSummary
-The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
-
-This methods allows you to subscribe to a device's summary update event and it gets fired whenever a device's summary data object gets udpated either through the app or the device it self.
+#### device.on(path, callback)
+You can also attach a listener to device meta data. For example you can subscribe to updates on device name to automatically receive update whenever the name of device will be updated.
 
 This method accepts the following arguments
 
 | Name  | Type        | Description |
 | :---- | :---------- | :--------------------- |
+| path  | string      | an be name of key, like you can use 'status' to subscribe to status updates of device |
 | callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
 
 This method returns the following codes in the response to the promise
@@ -1702,7 +1425,7 @@ This method returns the following codes in the response to the promise
 
   device id is required
 
-It is important to note that the update will be directly sent without a response code. So for example if a client updates the summary to `{voltage: 10}` then it will be received as it is in the argument of callback.
+It is important to note that the update will be directly sent without a response code. So for example if a client updates the name of device to `New Name` then it will be received as it is in the argument of callback.
 
 The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
 
@@ -1714,7 +1437,7 @@ The use of this method has been illustrated in the example below
 
 ```javascript
 // Variable to store clear method of subscribed event
-var summaryEventListener = null;
+var listener = null;
 
 // Function to be passed as a callback
 var onUpdate = (update) {
@@ -1723,21 +1446,21 @@ var onUpdate = (update) {
   console.log(update);
 };
 
-// Subscribe to the summary update event of a device
-device.onSummary(onUpdate).then((res) => {
+// Subscribe to the device meta data update event of a device
+device.on("name", onUpdate).then((res) => {
   // Call to onDeviceSummary returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 
       // Event has been subscribed
-      summaryEventListener = res;
+      listener = res;
   }
 });
   
 
 // Then in our code we can clear the event 
 // listener whenever required with the clear method
-summaryEventListener.clear().then((res) => {
+listener.clear().then((res) => {
   // Got the response
   switch(res.code) {
     case "TOPIC-UNSUBSCRIBED": 
@@ -1746,15 +1469,109 @@ summaryEventListener.clear().then((res) => {
 });
 ```
 
-#### onParms
-The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
+#### device.data().get(path)
+Each device comes with a privileged space in which you can save data. Like suppose you have build a power meter, then you can store the voltage, current and power measured by the device in this space. This data can be be set by a device and retrived by the app to be consumed/displayed to end user. 
 
-This methods allows you to subscribe to a device's parameters update event and it gets fired whenever a device's parameters data object gets udpated either through the app or the device it self.
+This storage space is sanboxed, so only the paired users can request or update the data. You can store the data in json format and can also get/set individual key by specifying the path in dot notation. 
+
+For instance if you have stored `{voltage: { vpp: 10, vrms: 7}}, current: 1}`, then you can access the current and vpp by providing `current` and `voltage.vpp` respectively in the path argument.
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| path | string | can be empty or a path to a key in dot notation |
+
+This method returns the following codes in response 
+
+* DEVICE-DATA-FETCHED
+
+  data has been fetched
+
+* PATH-INVALID
+
+  the key is undefined
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of get method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.data().get().then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-DATA-FETCHED": 
+      // Device data has been fetched
+      console.log(res.data);
+  }
+})
+```
+
+#### device.data().set(path, value)
+Just like get, you can also set the data of the device in similar way.
 
 This method accepts the following arguments
 
 | Name  | Type        | Description |
 | :---- | :---------- | :--------------------- |
+| path | string |can be empty or a path to a key in dot notation |
+| value | string | you can provide a valid value for the field that you want to update |
+
+This method returns the following codes in response 
+
+* DEVICE-DATA-UPDATED
+
+  details has been updated
+
+* DEVICE-DATA-UPDATE-FAILED
+
+  happens when you set value to parent.child and parent is also not an object
+
+* DEVICE-NOT-PAIRED
+
+  device is not paired to the account
+
+* DEVICE-ID-INVALID
+
+  device is not registered with this id
+
+* DATA-INVALID
+
+  device id is required
+
+Use of set method has been illustrated in the example below 
+
+```javascript
+// Submit request to the server
+device.data().set("voltage").then((res) => {
+  // Got the response
+  switch(res.code) {
+    case "DEVICE-DATA-UPDATED": 
+      // Device data has been updated
+      console.log(res.update, res.path);
+  }
+})
+```
+
+#### device.data().on(path, callback)
+You can also attach a listener to device data. For example if you `{voltage: { vpp: 10, vrms: 7}}, current: 1}` is stored then you can subscribe to updates on either vpp and current by providing `voltage.vpp` and `current` in path field respectively. You can subscribe to root by providing empty path.
+
+It is important to note that it works like pattern subscription. So if you subscribed to `voltage` then you can also get an update when `voltage.vpp` will get an update. It is like the events on childs propagates to parent.
+
+This method accepts the following arguments
+
+| Name  | Type        | Description |
+| :---- | :---------- | :--------------------- |
+| path  | string      | an be empty or a path to a key in dot notation |
 | callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
 
 This method returns the following codes in the response to the promise
@@ -1775,7 +1592,7 @@ This method returns the following codes in the response to the promise
 
   device id is required
 
-It is important to note that the update will be directly sent without a response code. So for example if a client updates the parameters to `{state: 1}` then it will be received as it is in the argument of callback.
+The update will be directly sent. So for example if a client updates the vpp of device to `20` then you can get the same either you have subscribed to vpp or to the voltage. An additional path variable will also be provided to give you a context that where the update was originally occurred. For instace, in above example, the path will be `voltage.vpp` for event handlers on both voltage and vpp.
 
 The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
 
@@ -1787,175 +1604,30 @@ The use of this method has been illustrated in the example below
 
 ```javascript
 // Variable to store clear method of subscribed event
-var parmsEventListener = null;
+var listener = null;
 
 // Function to be passed as a callback
-var onUpdate = (update) {
+var onUpdate = (update, path) {
   // Will be called whenever the
   // event will be fired
   console.log(update);
 };
 
-// Subscribe to the parameters update event of a device
-device.onParms(onUpdate).then((res) => {
-  // Call to onDeviceParm returns the
+// Subscribe to the data update event of a device
+device.data().on("voltage", onUpdate).then((res) => {
+  // Call to onDeviceSummary returns the
   // clear method as a response to promise 
   switch(res.code) {
     case "TOPIC-SUBSCRIBED": 
       // Event has been subscribed
-      parmsEventListener = res;
+      listener = res;
   }
 });
   
 
 // Then in our code we can clear the event 
 // listener whenever required with the clear method
-parmsEventListener.clear().then((res) => {
-  // Got the response
-  switch(res.code) {
-    case "TOPIC-UNSUBSCRIBED": 
-      // Event has been unsubscribed
-  }
-});
-```
-
-#### onName
-The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
-
-This methods allows you to subscribe to a device's name update event and it gets fired whenever a device's name gets udpated an app.
-
-This method accepts the following arguments
-
-| Name  | Type        | Description |
-| :---- | :---------- | :--------------------- |
-| callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
-
-This method returns the following codes in the response to the promise
-
-* TOPIC-SUBSCRIBED
-
-  event has been subscribed
-
-* DEVICE-NOT-PAIRED
-
-  device is not paired to the account
-
-* DEVICE-ID-INVALID
-
-  device is not registered with this id
-
-* DATA-INVALID
-
-  device id is required
-
-It is important to note that the update will be directly sent without a response code. So for example if a client updates the name to `Living Room Lamp` then it will be received as it is in the argument of callback.
-
-The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
-
-* TOPIC-UNSUBSCRIBED
-
-  event has been unsubscribed and update won't trigger the callback provided earlier
-
-The use of this method has been illustrated in the example below
-
-```javascript
-// Variable to store clear method of subscribed event
-var nameEventListener = null;
-
-// Function to be passed as a callback
-var onUpdate = (update) {
-  // Will be called whenever the
-  // event will be fired
-  console.log(update);
-};
-
-// Subscribe to the name update event of a device
-device.onName(onUpdate).then((res) => {
-  // Call to onDeviceName returns the
-  // clear method as a response to promise 
-  switch(res.code) {
-    case "TOPIC-SUBSCRIBED": 
-      // Event has been subscribed
-      nameEventListener = res;
-  }
-});
-  
-
-// Then in our code we can clear the event 
-// listener whenever required with the clear method
-nameEventListener.clear().then((res) => {
-  // Got the response
-  switch(res.code) {
-    case "TOPIC-UNSUBSCRIBED": 
-      // Event has been unsubscribed
-  }
-});
-```
-#### onStatus
-The best thing about Grandeur is the fact that it is event driven. Means you can subscribe to events and we will automatically send you an alert whenever the subscribed even will occur. 
-
-This methods allows you to subscribe to a device's status update event and it gets fired whenever a device connects to the cloud.
-
-This method accepts the following arguments
-
-| Name  | Type        | Description |
-| :---- | :---------- | :--------------------- |
-| callback | function | a valid JS function which will be called whenever the subscribed event gets fired |
-
-This method returns the following codes in the response to the promise
-
-* TOPIC-SUBSCRIBED
-
-  event has been subscribed
-
-* DEVICE-NOT-PAIRED
-
-  device is not paired to the account
-
-* DEVICE-ID-INVALID
-
-  device is not registered with this id
-
-* DATA-INVALID
-
-  device id is required
-
-It is important to note that the update will be directly sent without a response code. So for example whenever the device will come online, the event will be fired and a boolean `true` will be received in argument of the callback and vice versa.
-
-The call to this method also returns reference to a `clear` method with which you can unsubscribe to the event. It don't accept anything in the argument and returns the following code as a response to promise
-
-* TOPIC-UNSUBSCRIBED
-
-  event has been unsubscribed and update won't trigger the callback provided earlier
-
-The use of this method has been illustrated in the example below
-
-```javascript
-// Variable to store clear method of subscribed event
-var statusEventListener = null;
-
-// Function to be passed as a callback
-var onUpdate = (update) {
-  // Will be called whenever the
-  // event will be fired
-  console.log(update);
-};
-
-// Subscribe to the status update event of a device
-device.onStatus(onUpdate).then((res) => {
-  // Call to onDeviceStatus returns the
-  // clear method as a response to promise 
-  switch(res.code) {
-    case "TOPIC-SUBSCRIBED": 
-      // Event has been subscribed
-      statusEventListener = res;
-  }
-});
-  
-
-// Then in our code we can clear the event 
-// listener whenever required with the clear method
-statusEventListener.clear().then((res) => {
+listener.clear().then((res) => {
   // Got the response
   switch(res.code) {
     case "TOPIC-UNSUBSCRIBED": 
@@ -1977,7 +1649,7 @@ Now once you got the reference to the datastore class, you can simply use all th
 
 Datastore of Grandeur is based on no-sql/document based database model. So you can store documents (as knonw as records in sql) into various collections (as known as tables in sql). The document is based on JSON datastructure. Methods of this class are documented in following sections
 
-### collection
+### datastore.collection(name)
 From the datastore class, you can get a reference to a collection in order to execute a query or insert new documents into it. 
 
 ```javascript
@@ -1987,7 +1659,7 @@ var collection = datastore.collection(name);
 
 It is important to note here that it is not required for a collection to pre exist in order to get reference to it. A collection automatically gets created when you insert first document into it. So you will get an error only if you queried a collection which don't contains any document. You can execute following operations on a collection
 
-#### insert
+#### collection.insert(documents)
 This method can be used to insert a json object/document into a collection. It accepts an array of json objects (so you can insert one or many documents into a collection with single function call). It returns the ids of inserted documents in response (we automatically assign a unique id to each document before actually inserting it into the datastore - primary key). It accepts following arguments
 
 | Name  | Type        | Description |
@@ -2029,7 +1701,7 @@ collection.insert(documents).then((res) => {
 });
 ```
 
-#### delete
+#### collection.delete(filter)
 This method can be used to delete a document from a collection. It accepts a json object which specifies the match condition and returns the count of total deleted documents. It accepts following arguments
 
 | Name  | Type        | Description |
@@ -2114,7 +1786,7 @@ collection.delete().then((res) => {
 });
 ```
 
-#### update
+#### collection.update(filter, update)
 This method can be used to update a document in a collection. It accepts a json object which specifies the match condition and returns the count of total updated documents. It accepts following arguments
 
 | Name  | Type        | Description |
@@ -2221,14 +1893,14 @@ collection.update({voltage: {$lt: 25, $gt: 30}}, update).then((res) => {
 });
 ```
 
-#### search
+#### collection.search(filter, projection, nPage)
 This method can be used to query documents in a collection. It accepts a match condition and fetches the documents. It accepts following arguments
 
 | Name  | Type        | Description |
 | :---- | :---------- | :--------------------- |
 | filter | object | a json object which specifies the match condition of documents |
 | projection | object | condition to specify the fields of a document to be returned or opted out |
-| pageNumber | integer | this method returns paginated result |
+| nPage | integer | this method returns paginated result |
 
 It is important to note here that the method is subjected to rate limiting so maximum 20 results will be returned and then you can use page number argument of the method to get the ramining. So if you have 25 documents in a collection then calling `collection.search()` will return first 20 while calling `collection.search({}, undefined, 1)` will return the remaining 5 documents. Then it is also important to note that projection condition cannot be a empty object to instead pass `undefined` if you don't want to project out fields in matched documents. Whereas the filter can be an empty object in which case all the documents will be returned.
 
@@ -2311,12 +1983,12 @@ collection.search({}, {name: 0}).then((res) => {
 });
 ```
 
-### listCollections
+### datastore.list(nPage)
 This method returns the list of collections in the datastore of your project. This method accpets the following input arguments
 
 | Name  | Type        | Description |
 | :---- | :---------- | :--------------------- |
-| pageNumber | integer | this method returns paginated result |
+| nPage | integer | this method returns paginated result |
 
 It is important to note here that the method is subjected to rate limiting so maximum 20 results will be returned and then you can use page number argument of the method to get the ramining. So if you have 25 collections then calling `datastore.listCollections()` will return first 20 while calling `datastore.listCollections(1)` will return the remaining 5 collections.
 
@@ -2334,7 +2006,7 @@ The usage of this method is illustrated in the example below
 
 ```javascript
 // Get the list of collections
-datastore.listCollections().then((res) => {
+datastore.list().then((res) => {
   // Got response from server
   switch(res.code) {
     case "DATASTORE-COLLECTIONS-FETCHED": 
@@ -2344,7 +2016,7 @@ datastore.listCollections().then((res) => {
 });
 ```
 
-### dropCollection
+### datastore.drop(name)
 This method deletes a collections and all of its documents from the datastore of your project. This method accpets the following input arguments
 
 | Name  | Type        | Description |
@@ -2371,7 +2043,7 @@ The usage of this method is illustrated in the example below
 
 ```javascript
 // Get the list of collections
-datastore.dropCollection("logs").then((res) => {
+datastore.drop("logs").then((res) => {
   // Got response from server
   switch(res.code) {
     case "DATASTORE-COLLECTION-DROPPED": 
@@ -2391,7 +2063,7 @@ var storage = project.storage();
 
 Now once you got the reference to the storage class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
 
-### uploadFile 
+### storage.upload(file, fileName) 
 This methods takes a file and upload it to the built in file storage associated with your project. It is important to note that with JS SDk the upload size is limited to 50 MB. 
 
 This method accepts the following arguments
@@ -2431,7 +2103,7 @@ var file = document.getElementById("file").files[0];
 var fileName = "displayPicture.jpg";
 
 // Upload the file
-files.uploadFile(file, fileName).then((res) => {
+files.upload(file, fileName).then((res) => {
   // Got response from server
   switch(res.code) {
     case "STORAGE-FILE-UPLOADED": 
@@ -2440,7 +2112,7 @@ files.uploadFile(file, fileName).then((res) => {
 });
 ```
 
-### getFileUrl
+### storage.getUrl(fileName)
 This method can be utilized to get a public url of a file. With the public url, the file will be accessible through GET request, or in other words the file could be downloaded by visiting the url in browser or in the image tag of html.
 
 It is important to note that the `getFileUrl` call generates a public url. Means the url could be utilized to access a file even when a user is not authenticated.
@@ -2465,7 +2137,7 @@ The usage of this method is illustrated in the example below
 
 ```javascript
 // Get the file url
-files.getFileUrl("displayPicture.jpg").then((res) => {
+files.getUrl("displayPicture.jpg").then((res) => {
   // Got response from server
   switch(res.code) {
     case "STORAGE-FILE-URL-FETCHED": 
