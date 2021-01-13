@@ -16,7 +16,7 @@ class auth {
 
     login(email, password) {
         // This function sends "login a user" request with required data to the server
-        return this.post.send("/auth/loginwithemail", {email: email, password: password});
+        return this.post.send("/auth/login", {email: email, password: password});
     }
 
     async register(email, password, displayName, phone) {

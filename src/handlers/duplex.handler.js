@@ -30,8 +30,8 @@ class duplex {
         this.queue = [];
 
         // Setup list for events
-        this.otherEvents = ["devicesList"];
-        this.deviceEvents = ["deviceSummary", "deviceParms", "deviceName", "deviceStatus"];
+        this.userEvents = ["devices"];
+        this.deviceEvents = ["deviceSummary", "deviceParms", "name", "status", "data"];
     }
 
     // To initialize the connection
@@ -136,11 +136,27 @@ class duplex {
             if (data.header.task === "update") {
                 // Got an update a subscribed topic
                 if (this.deviceEvents.includes(data.payload.event)) {
-                    // If event is of device type
-                    if (this.subscriptions.eventNames().includes(`${data.payload.event}/${data.payload.deviceID}`)) {
-                        // Handler is defined for the event type
-                        // so execute the callback
-                        this.subscriptions.emit(`${data.payload.event}/${data.payload.deviceID}`, data.payload.update);
+                    // If event is of device type then get topic
+                    var topic = `${data.payload.deviceID}/${data.payload.event}${data.payload.path ? `/${data.payload.path}` : ""}`;
+
+                    // Then check the event type
+                    if (data.payload.event === "data") {
+                        // Loop over the list of topics
+                        this.subscriptions.eventNames().forEach(sub => {
+                            // Emit event where ever there is a possible match
+                            if (topic.match(new RegExp(sub))) {
+                                // Send update on the sub 
+                                this.subscriptions.emit(sub, data.payload.update);
+                            }
+                        });
+                    }
+                    else {
+                        // Validate the event and emit
+                        if (this.subscriptions.eventNames().includes(topic)) {
+                            // Handler is defined for the event type
+                            // so execute the callback
+                            this.subscriptions.emit(topic, data.payload.update);
+                        }
                     }
                 }
                 else {
@@ -288,10 +304,10 @@ class duplex {
         });
     }
 
-    async subscribe(event, callback, deviceID) {
+    async subscribe(event, callback, deviceID, path) {
         // Method to subscribe to a particular device's data
         // Verify that the event is valid
-        if (!(this.deviceEvents.includes(event) || this.otherEvents.includes(event))) {
+        if (!(this.deviceEvents.includes(event) || this.userEvents.includes(event))) {
             // If the event is invalid
             // then return an error through callback
             callback({
@@ -319,7 +335,8 @@ class duplex {
             }, 
             payload: {
                 event: event,
-                deviceID: deviceID
+                deviceID: deviceID,
+                path: path
             }
         };
 
@@ -333,7 +350,7 @@ class duplex {
 
             if (this.deviceEvents.includes(event)) {
                 // If event is of device type
-                this.subscriptions.on(`${event}/${deviceID}`, callback);
+                this.subscriptions.on(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
             }
             else {
                 // otherwise
@@ -351,14 +368,15 @@ class duplex {
                         }, 
                         payload: {
                             event: event,
-                            deviceID: deviceID
+                            deviceID: deviceID,
+                            path: path
                         }
                     };
 
                     // Remove event listener
                     if (this.deviceEvents.includes(event)) {
                         // If event is of device type
-                        this.subscriptions.removeListener(`${event}/${deviceID}`, callback);
+                        this.subscriptions.removeListener(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
                     }
                     else {
                         // otherwise
