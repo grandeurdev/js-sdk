@@ -120,69 +120,6 @@ class device {
         // Operation is required to be performed on a device data
         return new data({post: this.post, duplex: this.duplex}, this.deviceID);
     }
-
-    getSummary() {
-        // Method to request a particular device's summary
-        return this.duplex.send( {
-            header: {    
-                task: '/device/summary/get'
-            },
-            payload: {
-                deviceID: this.deviceID
-            }
-        });
-    }
-
-    getParms() {
-        // Method to request a particular device's parms
-        return this.duplex.send( {
-            header: {    
-                task: '/device/parms/get'
-            },
-            payload: {
-                deviceID: this.deviceID
-            }
-        });
-    }
-
-    setSummary(summary) {
-        // Method to update a particular device's summary
-        return this.duplex.send( {
-            header: {    
-                task: '/device/summary/set'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                summary: summary
-            }
-        });
-    }
-
-    setParms(parms) {
-        // Method to update a particular device's parms
-        return this.duplex.send( {
-            header: {    
-                task: '/device/parms/set'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                parms: parms
-            }
-        });
-
-    }
-
-    onSummary(callback) {
-        // Method to get updates whenever summary of a 
-        // device gets updated
-        return this.duplex.subscribe("deviceSummary", callback, this.deviceID);
-    }
-
-    onParms(callback) {
-        // Method to get updates whenever parms of a 
-        // device gets updated
-        return this.duplex.subscribe("deviceParms", callback, this.deviceID);
-    }
 }
 
 class devices {

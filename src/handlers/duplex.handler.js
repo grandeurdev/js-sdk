@@ -146,7 +146,7 @@ class duplex {
                             // Emit event where ever there is a possible match
                             if (topic.match(new RegExp(sub))) {
                                 // Send update on the sub 
-                                this.subscriptions.emit(sub, data.payload.update);
+                                this.subscriptions.emit(sub, data.payload.update, data.payload.path);
                             }
                         });
                     }
