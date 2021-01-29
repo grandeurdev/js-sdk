@@ -5,6 +5,32 @@
 // Import the event emitter class
 import { EventEmitter } from 'events';
 
+// Datastructure of queue
+class queue {
+    // Constructor
+    constructor() {
+        // Define an internal object
+        this.list = {};
+    }
+
+    // Function to push a packet to queue
+    push (id, packet) {
+        // Add it to the queue
+        this.list[id] = packet; 
+    }
+
+    // Function to loop over each pakcet in queue
+    forEach (callback) {
+        // We will loop over elements in list
+        Object.keys(this.list).forEach(id => callback(this.list[id]));
+    }
+
+    // Function to remove a packet from queue
+    remove (id) {
+        delete this.list[id];
+    }
+}
+
 // Class
 class duplex {
     // Constructor
@@ -27,11 +53,11 @@ class duplex {
         this.cConnection = null;
 
         // Queue to store packets
-        this.queue = [];
+        this.queue = new queue();
 
         // Setup list for events
         this.userEvents = ["devices"];
-        this.deviceEvents = ["deviceSummary", "deviceParms", "name", "status", "data"];
+        this.deviceEvents = ["name", "status", "data"];
     }
 
     // To initialize the connection
@@ -135,6 +161,9 @@ class duplex {
             // Raise user event
             if (data.header.task === "update") {
                 // Got an update a subscribed topic
+                // Add a patch for backward compatibility
+                if (data.payload.event === "deviceParms" || data.payload.event === "deviceSummary") data.payload.event = "data";
+
                 if (this.deviceEvents.includes(data.payload.event)) {
                     // If event is of device type then get topic
                     var topic = `${data.payload.deviceID}/${data.payload.event}${data.payload.path ? `/${data.payload.path}` : ""}`;
@@ -173,6 +202,13 @@ class duplex {
                 if(this.tasks.eventNames().includes(data.header.id.toString())) {
                     // Fire event
                     this.tasks.emit(data.header.id, data.payload);
+
+                    // Since the res has been received, so we can dequeue the packet
+                    // if it was ever placed on the queue
+                    if (data.header.task !== "/topic/subscribe") {
+                        // But don't remove the subscription based packets
+                        this.queue.remove(data.header.id);
+                    }
                 }
             }
         }
@@ -239,31 +275,28 @@ class duplex {
     }
 
     handle() {
-        // This function handles all the packets
-        // queued while the duplex was connecting
+        // We will loop over the queue to send
+        // the stored packets to server
 
-        while (this.queue.length > 0) {
-            // Pop a packet
-            var packet = this.queue.pop();
-
-            // Then emit send the packet
+        this.queue.forEach(packet => {
+            // Send to server
             this.ws.send(JSON.stringify(packet));
-        }
+        });
     }
 
     flush() {
         // This function flushes the event
         // queue of the duplex. Loop over the queue
 
-        while (this.queue.length > 0) {
-            // Pop a packet
-            var packet = this.queue.pop();
-
-            // Then emit event and throw error
+        this.queue.forEach(packet => {
+            // Emit event and throw error
             this.tasks.emit(packet.header.id, undefined, {
                 code: this.status
             });
-        }
+
+            // Remove the packet from queue
+            this.queue.remove(packet.header.id);
+        });
     }
 
     send(packet) {
@@ -293,7 +326,7 @@ class duplex {
                 
                 else 
                     // Otherwise store the packet into a queue
-                    this.queue.push(packet);
+                    this.queue.push(id, packet);
             }
             else {
                 // Otherwise return a rejection
@@ -304,7 +337,7 @@ class duplex {
         });
     }
 
-    async subscribe(event, callback, deviceID, path) {
+    subscribe(event, callback, deviceID, path) {
         // Method to subscribe to a particular device's data
         // Verify that the event is valid
         if (!(this.deviceEvents.includes(event) || this.userEvents.includes(event))) {
@@ -340,59 +373,84 @@ class duplex {
             }
         };
 
-        // Send response in try catch
-        try {
-            // Send the request
-            var res = await this.send(packet);
- 
-            // Add callback to subscriptions queue
-            // depending upon type of event
+        // Add callback to subscriptions queue
+        // depending upon type of event
 
-            if (this.deviceEvents.includes(event)) {
-                // If event is of device type
-                this.subscriptions.on(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
+        if (this.deviceEvents.includes(event)) {
+            // If event is of device type
+            this.subscriptions.on(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
+        }
+        else {
+            // otherwise
+            this.subscriptions.on(event, callback);
+        }
+
+        // Return new promise
+        return new Promise((resolve, reject) => {
+            //  If the connection is not borked
+            if (this.status !== "SIGNATURE-INVALID" && this.status !== "DISPOSED") {
+                // Generate unique ID for the request
+                var id = Date.now();
+
+                // Append ID to header
+                packet.header.id = id;
+
+                // Attach an event listener
+                this.tasks.once(id, (res, err) => {
+                    // Reject if error has been returned
+                    if (err) return reject(err);
+
+                    // Resolve the promise
+                    resolve({
+                        ...res, 
+                        clear: () => {
+                            // Packet
+                            var packet = {
+                                header: {
+                                    task: '/topic/unsubscribe'
+                                }, 
+                                payload: {
+                                    event: event,
+                                    deviceID: deviceID,
+                                    path: path
+                                }
+                            };
+        
+                            // Remove event listener
+                            if (this.deviceEvents.includes(event)) {
+                                // If event is of device type
+                                this.subscriptions.removeListener(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
+                            }
+                            else {
+                                // otherwise
+                                this.subscriptions.removeListener(event, callback);
+                            }
+
+                            // Remove the subscription packet from queue
+                            this.queue.remove(id);
+                            
+                            // Send request
+                            return this.send(packet);
+                        }
+                    });
+                });
+
+                // Always queue the packet because
+                // we want these packets to later restore control
+                this.queue.push(id, packet);
+
+                // If Connected to server
+                if (this.status === "CONNECTED")
+                    // Then send packet right away 
+                    this.ws.send(JSON.stringify(packet));
             }
             else {
-                // otherwise
-                this.subscriptions.on(event, callback);
+                // Otherwise return a rejection
+                reject({
+                    code: this.status
+                });
             }
-            
-            // Return the response
-            return {
-                ...res, 
-                clear: () => {
-                    // Packet
-                    var packet = {
-                        header: {
-                            task: '/topic/unsubscribe'
-                        }, 
-                        payload: {
-                            event: event,
-                            deviceID: deviceID,
-                            path: path
-                        }
-                    };
-
-                    // Remove event listener
-                    if (this.deviceEvents.includes(event)) {
-                        // If event is of device type
-                        this.subscriptions.removeListener(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
-                    }
-                    else {
-                        // otherwise
-                        this.subscriptions.removeListener(event, callback);
-                    }
-
-                    // Send request
-                    return this.send(packet);
-                }
-            }
-        }
-        catch(error) {
-            // Failed to send the request
-            // return an error in the callback
-            throw error;
-        }
+        });
     }
 
 }
