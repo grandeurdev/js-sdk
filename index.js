@@ -11,8 +11,8 @@ import duplex from "./src/handlers/duplex.handler";
 // The main config object to stores the
 // base urls of the Grandeur Server
 const config = {
-    url: "https://trex.dev.api.grandeur.tech",
-    node: "wss://trex.dev.api.grandeur.tech"
+    url: "https://api.grandeur.tech",
+    node: "wss://api.grandeur.tech"
 }
 
 // Function that initializes 
