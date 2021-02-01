@@ -13,7 +13,7 @@ class storage{
         this.post = handlers.post
     }
     
-    uploadFile(file, filename) {
+    upload(file, filename) {
         // Method to upload a file to the server's file system
         // Post request
         var data = {};
@@ -22,12 +22,12 @@ class storage{
         if (filename) data.filename = filename;
 
         // Submit 
-        return this.post.send("/storage/uploadFile", data, [file]);
+        return this.post.send("/storage/upload", data, [file]);
     }
 
-    getFileUrl(filename) {
+    getUrl(filename) {
         // Method to fetch a file from the server's file system
-        return this.post.send("/storage/getFileUrl", {filename: filename});
+        return this.post.send("/storage/getUrl", {filename: filename});
     }
 }
 export default storage;

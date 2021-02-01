@@ -3,6 +3,51 @@
 // features of Grandeur Apollo i.e
 // To pair device
 
+class data {
+    // Constructor
+    constructor(handlers, deviceID) {
+        // Configuration
+        this.post = handlers.post;
+        this.duplex = handlers.duplex;
+
+        // Setup device ID to context
+        this.deviceID = deviceID;
+    }
+
+    get(path) {
+        // Method to list all devices paired to user ID
+        return this.duplex.send( {
+            header: {    
+                task: '/device/data/get'
+            },
+            payload: {
+                deviceID: this.deviceID,
+                path: path
+            }
+        });
+    }
+
+    set(path, data) {
+        // Method to count all online devices paired to user ID
+        return this.duplex.send( {
+            header: {    
+                task: '/device/data/set'
+            },
+            payload: {
+                deviceID: this.deviceID,
+                path: path,
+                data: data
+            }
+        });
+    }
+
+    on(path, callback) {
+        // Method to get updates whenever a devices
+        // paired or unpaired
+        return this.duplex.subscribe("data", callback, this.deviceID, path);
+    }
+}
+
 //Class
 class device {
     // Constructor
@@ -39,116 +84,41 @@ class device {
         });
     }
 
-    getSummary() {
-        // Method to request a particular device's summary
-        return this.duplex.send( {
-            header: {    
-                task: '/device/summary/get'
-            },
-            payload: {
-                deviceID: this.deviceID
-            }
-        });
-    }
-
-    getParms() {
-        // Method to request a particular device's parms
-        return this.duplex.send( {
-            header: {    
-                task: '/device/parms/get'
-            },
-            payload: {
-                deviceID: this.deviceID
-            }
-        });
-    }
-
-    setSummary(summary) {
-        // Method to update a particular device's summary
-        return this.duplex.send( {
-            header: {    
-                task: '/device/summary/set'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                summary: summary
-            }
-        });
-    }
-
-    setParms(parms) {
-        // Method to update a particular device's parms
-        return this.duplex.send( {
-            header: {    
-                task: '/device/parms/set'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                parms: parms
-            }
-        });
-
-    }
-
-    getDetails() {
+    get(path) {
         // Method to request a particular device's details
         return this.duplex.send( {
             header: {    
-                task: '/device/details/get'
-            },
-            payload: {
-                deviceID: this.deviceID
-            }
-        });
-    }
-
-    setName(deviceName) {
-        // Method to update a particular device's name
-        return this.duplex.send( {
-            header: {    
-                task: '/device/name/set'
+                task: '/device/get'
             },
             payload: {
                 deviceID: this.deviceID,
-                deviceName: deviceName
+                path: path
             }
         });
     }
 
-    getStatus() {
-        // Method to request a particular device's online status
+    set(path, data) {
+        // Method to update a particular device's name
         return this.duplex.send( {
             header: {    
-                task: '/device/status/get'
+                task: '/device/set'
             },
             payload: {
-                deviceID: this.deviceID
+                deviceID: this.deviceID,
+                path: path,
+                data: data
             }
         });
     }
 
-    onSummary(callback) {
-        // Method to get updates whenever summary of a 
-        // device gets updated
-        return this.duplex.subscribe("deviceSummary", callback, this.deviceID);
+    on(event, callback) {
+        // Method to get updates whenever device name or data gets a change
+        return this.duplex.subscribe(event, callback, this.deviceID);
     }
 
-    onParms(callback) {
-        // Method to get updates whenever parms of a 
-        // device gets updated
-        return this.duplex.subscribe("deviceParms", callback, this.deviceID);
-    }
-
-    onName(callback) {
-        // Method to get updates whenever name of a 
-        // device gets updated
-        return this.duplex.subscribe("deviceName", callback, this.deviceID);
-    }
-
-    onStatus(callback) {
-        // Method to get updates whenever status of a 
-        // device gets updated
-        return this.duplex.subscribe("deviceStatus", callback, this.deviceID);
+    data() {
+        // Operation is required to be performed on a device data
+        return new data({post: this.post, duplex: this.duplex}, this.deviceID);
     }
 }
 
@@ -160,28 +130,34 @@ class devices {
         this.duplex = handlers.duplex;
     }
 
-    list() {
+    get(filter) {
         // Method to list all devices paired to user ID
         return this.duplex.send( {
             header: {    
-                task: '/devices/list/get'
+                task: '/devices/get'
+            },
+            payload: {
+                filter: filter
             }
         });
     }
 
-    onlineCount() {
+    count(filter) {
         // Method to count all online devices paired to user ID
         return this.duplex.send( {
             header: {    
-                task: '/devices/onlineCount/get'
+                task: '/devices/count'
+            },
+            payload: {
+                filter: filter
             }
         });
     }
 
-    onList(callback) {
+    on(callback) {
         // Method to get updates whenever a devices
         // paired or unpaired
-        return this.duplex.subscribe("devicesList", callback);
+        return this.duplex.subscribe("devices", callback);
     }
 
     device(deviceID) {
