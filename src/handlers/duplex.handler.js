@@ -5,6 +5,22 @@
 // Import the event emitter class
 import { EventEmitter } from 'events';
 
+// Extend the event emitter class
+class BaseEventEmitter extends EventEmitter {
+
+    // Function to emit an event based on pattern matching
+    pEmit(topic, ...args) {
+        // Loop over the event namaes
+        this.eventNames().forEach(sub => {
+            // Emit event where ever there is a possible match
+            if (topic.match(new RegExp(sub))) {
+                // Send update on the sub 
+                this.emit(sub, ...args);
+            }
+        });
+    }
+}
+
 // Datastructure of queue
 class queue {
     // Constructor
@@ -40,11 +56,11 @@ class duplex {
         
         // Event queue object to handle callbacks
         // on Response
-        this.tasks = new EventEmitter();
+        this.tasks = new BaseEventEmitter();
 
         // User subscriptions object to handle
         // user subscriptions
-        this.subscriptions = new EventEmitter();
+        this.subscriptions = new BaseEventEmitter();
         
         // To check the status of Connection
         this.status = "CONNECTING";
@@ -170,14 +186,8 @@ class duplex {
 
                     // Then check the event type
                     if (data.payload.event === "data") {
-                        // Loop over the list of topics
-                        this.subscriptions.eventNames().forEach(sub => {
-                            // Emit event where ever there is a possible match
-                            if (topic.match(new RegExp(sub))) {
-                                // Send update on the sub 
-                                this.subscriptions.emit(sub, data.payload.path, data.payload.update);
-                            }
-                        });
+                        // Emit event
+                        this.subscriptions.pEmit(topic, data.payload.path, data.payload.update);
                     }
                     else {
                         // Handler is defined for the event type
