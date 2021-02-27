@@ -175,40 +175,36 @@ class duplex {
                             // Emit event where ever there is a possible match
                             if (topic.match(new RegExp(sub))) {
                                 // Send update on the sub 
-                                this.subscriptions.emit(sub, data.payload.update, data.payload.path);
+                                this.subscriptions.emit(sub, data.payload.path, data.payload.update);
                             }
                         });
                     }
                     else {
-                        // Validate the event and emit
-                        if (this.subscriptions.eventNames().includes(topic)) {
-                            // Handler is defined for the event type
-                            // so execute the callback
-                            this.subscriptions.emit(topic, data.payload.update);
-                        }
+                        // Handler is defined for the event type
+                        // so execute the callback
+                        this.subscriptions.emit(topic, data.payload.update);
                     }
                 }
                 else {
-                    // otherwise
-                    if (this.subscriptions.eventNames().includes(data.payload.event)) {
-                        // Handler is defined for the event type
-                        // so execute the callback
-                        this.subscriptions.emit(data.payload.event, data.payload.update);
-                    }
+                    // Handler is defined for the event type
+                    // so execute the callback
+                    this.subscriptions.emit(data.payload.event, data.payload.update);
                 }
             }
             else {
                 // Got response for a task
-                if(this.tasks.eventNames().includes(data.header.id.toString())) {
-                    // Fire event
-                    this.tasks.emit(data.header.id, data.payload);
+                if (data.payload)
+                    // Strip message from payload
+                    delete data.payload.message;
 
-                    // Since the res has been received, so we can dequeue the packet
-                    // if it was ever placed on the queue
-                    if (data.header.task !== "/topic/subscribe") {
-                        // But don't remove the subscription based packets
-                        this.queue.remove(data.header.id);
-                    }
+                // Fire event
+                this.tasks.emit(data.header.id, data.payload);
+
+                // Since the res has been received, so we can dequeue the packet
+                // if it was ever placed on the queue
+                if (data.header.task !== "/topic/subscribe") {
+                    // But don't remove the subscription based packets
+                    this.queue.remove(data.header.id);
                 }
             }
         }
@@ -299,7 +295,7 @@ class duplex {
         });
     }
 
-    send(packet) {
+    send(event, payload) {
         // Create promise 
         return new Promise((resolve, reject) => {
             //  If the connection is not borked
@@ -307,8 +303,14 @@ class duplex {
                 // Generate unique ID for the request
                 var id = Date.now();
 
-                // Append ID to header
-                packet.header.id = id;
+                // Setup packet
+                var packet = {
+                    header: {
+                        id: id,
+                        task: event
+                    },
+                    payload: payload
+                }
 
                 // Attach an event listener
                 this.tasks.once(id, (res, err) => {
@@ -337,7 +339,7 @@ class duplex {
         });
     }
 
-    subscribe(event, callback, deviceID, path) {
+    subscribe(event, payload, callback) {
         // Method to subscribe to a particular device's data
         // Verify that the event is valid
         if (!(this.deviceEvents.includes(event) || this.userEvents.includes(event))) {
@@ -352,37 +354,13 @@ class duplex {
 
         // Verify that if it is a device event
         // then device id is provided
-        if (this.deviceEvents.includes(event) && !deviceID) {
+        if (this.deviceEvents.includes(event) && !payload.deviceID) {
             // device id is not specified
             callback({
                 code: "DATA-INVALID"
             });
 
             return;
-        }
-
-        // Packet
-        var packet = {
-            header: {
-                task: '/topic/subscribe'
-            }, 
-            payload: {
-                event: event,
-                deviceID: deviceID,
-                path: path
-            }
-        };
-
-        // Add callback to subscriptions queue
-        // depending upon type of event
-
-        if (this.deviceEvents.includes(event)) {
-            // If event is of device type
-            this.subscriptions.on(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
-        }
-        else {
-            // otherwise
-            this.subscriptions.on(event, callback);
         }
 
         // Return new promise
@@ -392,34 +370,39 @@ class duplex {
                 // Generate unique ID for the request
                 var id = Date.now();
 
-                // Append ID to header
-                packet.header.id = id;
+                var packet = {
+                    header: {
+                        id: id,
+                        task: '/topic/subscribe'
+                    }, 
+                    payload: payload
+                };
 
                 // Attach an event listener
                 this.tasks.once(id, (res, err) => {
                     // Reject if error has been returned
                     if (err) return reject(err);
 
+                    // Add callback to subscriptions queue
+                    // depending upon type of event
+
+                    if (this.deviceEvents.includes(event)) {
+                        // If event is of device type
+                        this.subscriptions.on(`${payload.deviceID}/${event}${payload.path ? `/${payload.path}` : ""}`, callback);
+                    }
+                    else {
+                        // otherwise
+                        this.subscriptions.on(event, callback);
+                    }
+
                     // Resolve the promise
                     resolve({
                         ...res, 
                         clear: () => {
-                            // Packet
-                            var packet = {
-                                header: {
-                                    task: '/topic/unsubscribe'
-                                }, 
-                                payload: {
-                                    event: event,
-                                    deviceID: deviceID,
-                                    path: path
-                                }
-                            };
-        
                             // Remove event listener
                             if (this.deviceEvents.includes(event)) {
                                 // If event is of device type
-                                this.subscriptions.removeListener(`${deviceID}/${event}${path ? `/${path}` : ""}`, callback);
+                                this.subscriptions.removeListener(`${payload.deviceID}/${event}${payload.path ? `/${payload.path}` : ""}`, callback);
                             }
                             else {
                                 // otherwise
@@ -430,7 +413,7 @@ class duplex {
                             this.queue.remove(id);
                             
                             // Send request
-                            return this.send(packet);
+                            return this.send('/topic/unsubscribe', payload);
                         }
                     });
                 });

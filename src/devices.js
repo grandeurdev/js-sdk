@@ -16,35 +16,40 @@ class data {
 
     get(path) {
         // Method to list all devices paired to user ID
-        return this.duplex.send( {
-            header: {    
-                task: '/device/data/get'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                path: path
-            }
-        });
+        // Setup payload
+        var payload = {
+            deviceID: this.deviceID,
+            path: path
+        }
+
+        // Place request
+        return this.duplex.send('/device/data/get', payload);
     }
 
     set(path, data) {
         // Method to count all online devices paired to user ID
-        return this.duplex.send( {
-            header: {    
-                task: '/device/data/set'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                path: path,
-                data: data
-            }
-        });
+        // Setup payload
+        var payload = {
+            deviceID: this.deviceID,
+            path: path,
+            data: data
+        }
+
+        // Place request
+        return this.duplex.send('/device/data/set', payload);
     }
 
     on(path, callback) {
-        // Method to get updates whenever a devices
-        // paired or unpaired
-        return this.duplex.subscribe("data", callback, this.deviceID, path);
+        // Method to get updates whenever a devices data changes
+        // Setup payload
+        var payload = {
+            event: "data",
+            path: path,
+            deviceID: this.deviceID
+        }
+
+        // Place request
+        return this.duplex.subscribe("data", payload, callback);
     }
 }
 
@@ -62,58 +67,61 @@ class device {
 
     pair() {
         // Method to send request for pairing a device with this User ID
-        return this.duplex.send( {
-            header: {
-                task: "/device/pair"
-            },
-            payload: {
-                deviceID: this.deviceID
-            }
-        });
+        // Setup payload
+        var payload = {
+            deviceID: this.deviceID
+        }
+
+        // Place request
+        return this.duplex.send('/device/pair', payload);
     }
 
     unpair() {
         // Method to unpair a device from the user ID
-        return this.duplex.send( {
-            header: {
-                task: "/device/unpair"
-            },
-            payload: {
-                deviceID: this.deviceID
-            }
-        });
+        // Setup payload
+        var payload = {
+            deviceID: this.deviceID
+        }
+
+        // Place request
+        return this.duplex.send('/device/unpair', payload);
     }
 
     get(path) {
         // Method to request a particular device's details
-        return this.duplex.send( {
-            header: {    
-                task: '/device/get'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                path: path
-            }
-        });
+        // Setup payload
+        var payload = {
+            deviceID: this.deviceID,
+            path: path
+        }
+
+        // Place request
+        return this.duplex.send('/device/get', payload);
     }
 
     set(path, data) {
         // Method to update a particular device's name
-        return this.duplex.send( {
-            header: {    
-                task: '/device/set'
-            },
-            payload: {
-                deviceID: this.deviceID,
-                path: path,
-                data: data
-            }
-        });
+        // Setup payload
+        var payload = {
+            deviceID: this.deviceID,
+            path: path,
+            data: data
+        }
+
+        // Place request
+        return this.duplex.send('/device/set', payload);
     }
 
     on(event, callback) {
         // Method to get updates whenever device name or data gets a change
-        return this.duplex.subscribe(event, callback, this.deviceID);
+        // Setup payload
+        var payload = {
+            event: event,
+            deviceID: this.deviceID
+        }
+
+        // Place request
+        return this.duplex.subscribe(event, payload, callback);
     }
 
     data() {
@@ -132,32 +140,36 @@ class devices {
 
     get(filter) {
         // Method to list all devices paired to user ID
-        return this.duplex.send( {
-            header: {    
-                task: '/devices/get'
-            },
-            payload: {
-                filter: filter
-            }
-        });
+        // Setup payload
+        var payload = {
+            filter: filter
+        }
+
+        // Place request
+        return this.duplex.send('/devices/get', payload);
     }
 
     count(filter) {
         // Method to count all online devices paired to user ID
-        return this.duplex.send( {
-            header: {    
-                task: '/devices/count'
-            },
-            payload: {
-                filter: filter
-            }
-        });
+        // Setup payload
+        var payload = {
+            filter: filter
+        }
+
+        // Place request
+        return this.duplex.send('/devices/count', payload);
     }
 
     on(callback) {
         // Method to get updates whenever a devices
         // paired or unpaired
-        return this.duplex.subscribe("devices", callback);
+        // Setup payload
+        var payload = {
+            event: "devices"
+        }
+
+        // Place request
+        return this.duplex.subscribe("devices", payload, callback);
     }
 
     device(deviceID) {
