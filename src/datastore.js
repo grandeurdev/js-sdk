@@ -69,17 +69,16 @@ class pipeline{
     execute(nPage) {
         // Method to finally send request
         // to execute the pipeline
-        return this.duplex.send( {
-            header: {
-                task: "/datastore/pipeline"
-            },
-            payload: {
-                collection: this.collection,
-                index: this.index,
-                pipeline: this.query,
-                nPage: nPage
-            }
-        });
+        // Setup payload
+        var payload = {
+            collection: this.collection,
+            index: this.index,
+            pipeline: this.query,
+            nPage: nPage
+        }
+
+        // Place request
+        return this.duplex.send("/datastore/pipeline", payload);
     }
 }
 
@@ -95,42 +94,39 @@ class collection{
 
     insert(documents) {
         // Method to insert documents to datastore
-        return this.duplex.send( {
-            header: {
-                task: "/datastore/insert"
-            },
-            payload: {
-                collection: this.collection,
-                documents: documents
-            }
-        });
+        // Setup payload
+        var payload = {
+            collection: this.collection,
+            documents: documents
+        }
+
+        // Place request
+        return this.duplex.send("/datastore/insert", payload);
     }
 
     delete(filter) {
         // Method to delete documents from datastore
-        return this.duplex.send( {
-            header: {
-                task: "/datastore/delete"
-            },
-            payload: {
-                collection: this.collection,
-                filter: filter
-            }
-        });
+        // Setup payload
+        var payload = {
+            collection: this.collection,
+            filter: filter
+        }
+
+        // Place request
+        return this.duplex.send("/datastore/delete", payload);
     }
 
     update(filter, update) {
         // Method to delete documents from datastore
-        return this.duplex.send( {
-            header: {
-                task: "/datastore/update"
-            },
-            payload: {
-                collection: this.collection,
-                filter: filter,
-                update: update
-            }
-        });
+        // Setup payload
+        var payload = {
+            collection: this.collection,
+            filter: filter,
+            update: update
+        }
+
+        // Place request
+        return this.duplex.send("/datastore/update", payload);
     }
 
     search(filter, projection, nPage) {
@@ -171,26 +167,24 @@ class datastore{
 
     list(nPage) {
         // Method to list all collections
-        return this.duplex.send( {
-            header: {
-                task: "/datastore/list"
-            },
-            payload: {
-                nPage: nPage
-            }
-        });
+        // Setup payload
+        var payload = {
+            nPage: nPage
+        }
+
+        // Place request
+        return this.duplex.send("/datastore/list", payload);
     }
 
     drop(name) {
         // Method to drop a collection
-        return this.duplex.send( {
-            header: {
-                task: "/datastore/drop"
-            },
-            payload: {
-                collection: name
-            }
-        });
+        // Setup payload
+        var payload = {
+            collection: name
+        }
+
+        // Place request
+        return this.duplex.send("/datastore/drop", payload);
     }
 }
 
