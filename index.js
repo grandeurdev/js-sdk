@@ -15,6 +15,10 @@ const config = {
     node: "wss://api.grandeur.tech"
 }
 
+// Object will store the extensions which
+// be then included in the init
+var extensions = {}
+
 // Function that initializes 
 // the object
 export function init(apiKey, accessKey, accessToken) {
@@ -38,6 +42,12 @@ export function init(apiKey, accessKey, accessToken) {
     // to the Server
     duplexHandler.init(new auth(handlers));
 
+    // Forumlate the plugins
+    var plugins = {}
+
+    // Loop over the provided extensions and add to plugins
+    Object.keys(extensions).map( extension => plugins[extension] = () => new extensions[extension](handlers) )
+
     // Return reference to the classes
     return {
         // Helper Method
@@ -52,6 +62,15 @@ export function init(apiKey, accessKey, accessToken) {
         auth: () => new auth(handlers),
         storage: () => new storage(handlers),
         devices: () => new devices(handlers),
-        datastore: () => new datastore(handlers)
+        datastore: () => new datastore(handlers),
+        
+        // Include plugins
+        ...plugins
     }
+}
+
+// Function can be used to add extensions to the SDK
+export function extend(plugins) {
+    // Include the extensions in the global object
+    extensions = plugins;
 }
