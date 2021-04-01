@@ -2103,7 +2103,7 @@ var file = document.getElementById("file").files[0];
 var fileName = "displayPicture.jpg";
 
 // Upload the file
-files.upload(file, fileName).then((res) => {
+storage.upload(file, fileName).then((res) => {
   // Got response from server
   switch(res.code) {
     case "STORAGE-FILE-UPLOADED": 
@@ -2137,7 +2137,7 @@ The usage of this method is illustrated in the example below
 
 ```javascript
 // Get the file url
-files.getUrl("displayPicture.jpg").then((res) => {
+storage.getUrl("displayPicture.jpg").then((res) => {
   // Got response from server
   switch(res.code) {
     case "STORAGE-FILE-URL-FETCHED": 

@@ -23,7 +23,8 @@
   "author": "Grandeur Technologies <hi@grandeur.tech>",
   "license": "MIT",
   "dependencies": {
-    "createhmac-chaintor": "^1.0.0"
+    "createhmac-chaintor": "^1.0.0",
+    "cuid": "^2.1.8"
   },
   "devDependencies": {
     "webpack": "^4.41.6",
