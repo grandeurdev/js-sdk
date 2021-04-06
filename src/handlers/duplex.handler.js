@@ -6,7 +6,7 @@
 import { EventEmitter } from 'events';
 
 // Import cuid because we will use it to generate packet ids
-import cuid from 'cuid';
+import cuid from './utils/cuid';
 
 // Extend the event emitter class
 class BaseEventEmitter extends EventEmitter {
@@ -55,7 +55,7 @@ class duplex {
     // Constructor
     constructor(config){
         // Server URL to send upgrade requests
-        this.node = config.node + "?apiKey=" + config.apiKey;
+        this.config = config;
         
         // Event queue object to handle callbacks
         // on Response
@@ -94,7 +94,18 @@ class duplex {
                 case "AUTH-AUTHORIZED": 
                     // User is authenticated
                     // so try to connect to the duplex
-                    this.ws  = new WebSocket(this.node , "node");
+
+                    // Setup cookie
+                    var cookie = "";
+
+                    // Get cookie
+                    if (typeof window !== "undefined") cookie = localStorage.getItem(`grandeur-auth-${this.config.apiKey}`) || "";
+                    
+                    // Setup url
+                    const url = `${this.config.node}?apiKey=${this.config.apiKey}&token=${cookie}`;
+
+                    // Connect to the server
+                    this.ws  = new WebSocket(url , "node");
                     break;
 
                 case "AUTH-UNAUTHORIZED": 

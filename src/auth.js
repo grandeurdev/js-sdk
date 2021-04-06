@@ -14,9 +14,19 @@ class auth {
         this.post = handlers.post
     }
 
-    login(email, password) {
+    async login(email, password) {
         // This function sends "login a user" request with required data to the server
-        return this.post.send("/auth/login", {email: email, password: password});
+        // Submit the request and wait for request to be processed
+        var res = await this.post.send("/auth/login", {email: email, password: password});
+
+        // then if the login process completed successfully
+        if (res.code === "AUTH-ACCOUNT-LOGGEDIN") {
+            // Then we will set the token to the local storage
+            localStorage.setItem(`grandeur-auth-${this.post.config.apiKey}`, res.token);
+        }
+
+        // Resolve promise
+        return res;
     }
 
     async register(email, password, displayName, phone) {
@@ -33,12 +43,21 @@ class auth {
                     message: res.message,
 
                     // Append confirm function
-                    confirm : (verificationCode) => {
+                    confirm : async (verificationCode) => {
                         // Confirmation function will get the token from the response object received
                         // earlier as a result of register request with user data and will get code from
                         // the user via the argument and then using the post handler function will submit
                         // the request again
-                        return this.post.send("/auth/register", {token: res.token, verificationCode: verificationCode});
+                        var response = await this.post.send("/auth/register", {token: res.token, verificationCode: verificationCode});
+
+                        // Check for response code
+                        if (response.code === "AUTH-ACCOUNT-REGISTERED") {
+                            // Then we will set the token to the local storage
+                            localStorage.setItem(`grandeur-auth-${this.post.config.apiKey}`, response.token);
+                        }
+
+                        // Resolve promise
+                        return response;
                     }
                 }
             else
