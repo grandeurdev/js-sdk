@@ -112,10 +112,17 @@ class post{
             // Get the URL
             const url = `${this.config.url}${path? path: "/"}?apiKey=${this.config.apiKey}`;
 
+            // Setup cookie
+            var cookie = "";
+
+            // Get cookie
+            if (typeof window !== "undefined") cookie = localStorage.getItem(`grandeur-auth-${this.config.apiKey}`) || "";
+
             // Set default headers
             var headers = {
                 'gt-date': Date.now().toString(),
-                'gt-access-token': this.config.accessToken
+                'gt-access-token': this.config.accessToken,
+                'authorization': cookie
             };
 
             var body = "";

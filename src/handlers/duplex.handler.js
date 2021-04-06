@@ -5,6 +5,9 @@
 // Import the event emitter class
 import { EventEmitter } from 'events';
 
+// Import cuid because we will use it to generate packet ids
+import cuid from './utils/cuid';
+
 // Extend the event emitter class
 class BaseEventEmitter extends EventEmitter {
 
@@ -21,27 +24,27 @@ class BaseEventEmitter extends EventEmitter {
     }
 }
 
-// Datastructure of queue
-class queue {
+// Datastructure of buffer
+class buffer {
     // Constructor
     constructor() {
         // Define an internal object
         this.list = {};
     }
 
-    // Function to push a packet to queue
+    // Function to push a packet to buffer
     push (id, packet) {
-        // Add it to the queue
+        // Add it to the buffer
         this.list[id] = packet; 
     }
 
-    // Function to loop over each pakcet in queue
+    // Function to loop over each pakcet in buffer
     forEach (callback) {
         // We will loop over elements in list
         Object.keys(this.list).forEach(id => callback(this.list[id]));
     }
 
-    // Function to remove a packet from queue
+    // Function to remove a packet from buffer
     remove (id) {
         delete this.list[id];
     }
@@ -52,7 +55,7 @@ class duplex {
     // Constructor
     constructor(config){
         // Server URL to send upgrade requests
-        this.node = config.node + "?apiKey=" + config.apiKey;
+        this.config = config;
         
         // Event queue object to handle callbacks
         // on Response
@@ -68,8 +71,8 @@ class duplex {
         // To store the connection callback
         this.cConnection = null;
 
-        // Queue to store packets
-        this.queue = new queue();
+        // Buffer to store packets
+        this.buffer = new buffer();
 
         // Setup list for events
         this.userEvents = ["devices"];
@@ -91,7 +94,18 @@ class duplex {
                 case "AUTH-AUTHORIZED": 
                     // User is authenticated
                     // so try to connect to the duplex
-                    this.ws  = new WebSocket(this.node , "node");
+
+                    // Setup cookie
+                    var cookie = "";
+
+                    // Get cookie
+                    if (typeof window !== "undefined") cookie = localStorage.getItem(`grandeur-auth-${this.config.apiKey}`) || "";
+                    
+                    // Setup url
+                    const url = `${this.config.node}?apiKey=${this.config.apiKey}&token=${cookie}`;
+
+                    // Connect to the server
+                    this.ws  = new WebSocket(url , "node");
                     break;
 
                 case "AUTH-UNAUTHORIZED": 
@@ -102,7 +116,7 @@ class duplex {
                     // Setup error response
                     this.setStatus("AUTH-UNAUTHORIZED");
 
-                    // Flush queue
+                    // Flush buffer
                     this.flush();
 
                     return; 
@@ -114,7 +128,7 @@ class duplex {
                     // Setup error response
                     this.setStatus("SIGNATURE-INVALID");
 
-                    // Flush queue
+                    // Flush buffer
                     this.flush();
 
                     return; 
@@ -128,7 +142,7 @@ class duplex {
             // Setup default error
             this.setStatus("CONNECTION-REFUSED");
 
-            // Flush queue
+            // Flush buffer
             this.flush();
 
             return;
@@ -150,7 +164,7 @@ class duplex {
                 this.ws.send(JSON.stringify(packet));
             }, 25000);
 
-            // Handle queued packets
+            // Handle bufferd packets
             this.handle();
         }
 
@@ -210,11 +224,11 @@ class duplex {
                 // Fire event
                 this.tasks.emit(data.header.id, data.payload);
 
-                // Since the res has been received, so we can dequeue the packet
-                // if it was ever placed on the queue
+                // Since the res has been received, so we can debuffer the packet
+                // if it was ever placed on the buffer
                 if (data.header.task !== "/topic/subscribe") {
                     // But don't remove the subscription based packets
-                    this.queue.remove(data.header.id);
+                    this.buffer.remove(data.header.id);
                 }
             }
         }
@@ -281,10 +295,10 @@ class duplex {
     }
 
     handle() {
-        // We will loop over the queue to send
+        // We will loop over the buffer to send
         // the stored packets to server
 
-        this.queue.forEach(packet => {
+        this.buffer.forEach(packet => {
             // Send to server
             this.ws.send(JSON.stringify(packet));
         });
@@ -292,16 +306,16 @@ class duplex {
 
     flush() {
         // This function flushes the event
-        // queue of the duplex. Loop over the queue
+        // buffer of the duplex. Loop over the buffer
 
-        this.queue.forEach(packet => {
+        this.buffer.forEach(packet => {
             // Emit event and throw error
             this.tasks.emit(packet.header.id, undefined, {
                 code: this.status
             });
 
-            // Remove the packet from queue
-            this.queue.remove(packet.header.id);
+            // Remove the packet from buffer
+            this.buffer.remove(packet.header.id);
         });
     }
 
@@ -311,7 +325,7 @@ class duplex {
             //  If the connection is not borked
             if (this.status !== "SIGNATURE-INVALID" && this.status !== "DISPOSED") {
                 // Generate unique ID for the request
-                var id = Date.now();
+                var id = cuid();
 
                 // Setup packet
                 var packet = {
@@ -337,8 +351,8 @@ class duplex {
                     this.ws.send(JSON.stringify(packet));
                 
                 else 
-                    // Otherwise store the packet into a queue
-                    this.queue.push(id, packet);
+                    // Otherwise store the packet into a buffer
+                    this.buffer.push(id, packet);
             }
             else {
                 // Otherwise return a rejection
@@ -378,7 +392,7 @@ class duplex {
             //  If the connection is not borked
             if (this.status !== "SIGNATURE-INVALID" && this.status !== "DISPOSED") {
                 // Generate unique ID for the request
-                var id = Date.now();
+                var id = cuid();
 
                 var packet = {
                     header: {
@@ -393,7 +407,7 @@ class duplex {
                     // Reject if error has been returned
                     if (err) return reject(err);
 
-                    // Add callback to subscriptions queue
+                    // Add callback to subscriptions buffer
                     // depending upon type of event
 
                     if (this.deviceEvents.includes(event)) {
@@ -419,8 +433,8 @@ class duplex {
                                 this.subscriptions.removeListener(event, callback);
                             }
 
-                            // Remove the subscription packet from queue
-                            this.queue.remove(id);
+                            // Remove the subscription packet from buffer
+                            this.buffer.remove(id);
                             
                             // Send request
                             return this.send('/topic/unsubscribe', payload);
@@ -428,9 +442,9 @@ class duplex {
                     });
                 });
 
-                // Always queue the packet because
+                // Always buffer the packet because
                 // we want these packets to later restore control
-                this.queue.push(id, packet);
+                this.buffer.push(id, packet);
 
                 // If Connected to server
                 if (this.status === "CONNECTED")
