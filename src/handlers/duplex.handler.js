@@ -75,8 +75,10 @@ class duplex {
         this.buffer = new buffer();
 
         // Setup list for events
-        this.userEvents = ["devices"];
-        this.deviceEvents = ["name", "status", "data"];
+        this.topics = {
+            user: ["devices"],
+            device: ["name", "status", "data"]
+        }
     }
 
     // To initialize the connection
@@ -194,7 +196,7 @@ class duplex {
                 // Add a patch for backward compatibility
                 if (data.payload.event === "deviceParms" || data.payload.event === "deviceSummary") data.payload.event = "data";
 
-                if (this.deviceEvents.includes(data.payload.event)) {
+                if (this.topics.device.includes(data.payload.event)) {
                     // If event is of device type then get topic
                     var topic = `${data.payload.deviceID}/${data.payload.event}${data.payload.path ? `/${data.payload.path}` : ""}`;
 
@@ -366,7 +368,7 @@ class duplex {
     subscribe(event, payload, callback) {
         // Method to subscribe to a particular device's data
         // Verify that the event is valid
-        if (!(this.deviceEvents.includes(event) || this.userEvents.includes(event))) {
+        if (!(this.topics.device.includes(event) || this.topics.user.includes(event))) {
             // If the event is invalid
             // then return an error through callback
             callback({
@@ -378,7 +380,7 @@ class duplex {
 
         // Verify that if it is a device event
         // then device id is provided
-        if (this.deviceEvents.includes(event) && !payload.deviceID) {
+        if (this.topics.device.includes(event) && !payload.deviceID) {
             // device id is not specified
             callback({
                 code: "DATA-INVALID"
@@ -402,54 +404,73 @@ class duplex {
                     payload: payload
                 };
 
-                // Attach an event listener
-                this.tasks.once(id, (res, err) => {
-                    // Reject if error has been returned
-                    if (err) return reject(err);
+                // Formulate topic
+                var topic = event;
 
-                    // Add callback to subscriptions buffer
-                    // depending upon type of event
+                // If it is a device event then setup topic
+                if (this.topics.device.includes(event)) {
+                    // Based on deviceID, event and path
+                    topic = `${payload.deviceID}/${event}${payload.path ? `/${payload.path}` : ""}`;
+                }
 
-                    if (this.deviceEvents.includes(event)) {
-                        // If event is of device type
-                        this.subscriptions.on(`${payload.deviceID}/${event}${payload.path ? `/${payload.path}` : ""}`, callback);
+                // Create unsub function
+                const clear = () => {
+                    // Remove event listener
+                    this.subscriptions.removeListener(topic, callback);
+
+                    // Return if other subscribers are also attached to the topic
+                    // as in, we only want to unsub the topic for current callback
+                    if (this.subscriptions.listenerCount(topic) > 0) {
+                        // Return promise
+                        return new Promise((resolve, reject) => resolve({
+                            code: "TOPIC-UNSUBSCRIBED"
+                        }));
                     }
-                    else {
-                        // otherwise
-                        this.subscriptions.on(event, callback);
-                    }
 
-                    // Resolve the promise
+                    // Remove the subscription packet from buffer
+                    this.buffer.remove(id);
+                    
+                    // Send request
+                    return this.send('/topic/unsubscribe', payload);
+                }
+
+                // Now if a subscriber is already listening to this topic
+                if (this.subscriptions.listenerCount(topic) > 0) {
+                    // Then add another subscriber but don't send another request to server
+                    this.subscriptions.on(topic, callback);
+
+                    // Resolve request and return
                     resolve({
-                        ...res, 
-                        clear: () => {
-                            // Remove event listener
-                            if (this.deviceEvents.includes(event)) {
-                                // If event is of device type
-                                this.subscriptions.removeListener(`${payload.deviceID}/${event}${payload.path ? `/${payload.path}` : ""}`, callback);
-                            }
-                            else {
-                                // otherwise
-                                this.subscriptions.removeListener(event, callback);
-                            }
-
-                            // Remove the subscription packet from buffer
-                            this.buffer.remove(id);
-                            
-                            // Send request
-                            return this.send('/topic/unsubscribe', payload);
-                        }
+                        code: "TOPIC-SUBSCRIBED",
+                        clear: clear
                     });
-                });
+                }
+                else {
+                    // Attach an event listener
+                    this.tasks.once(id, (res, err) => {
+                        // Reject if error has been returned
+                        if (err) return reject(err);
 
-                // Always buffer the packet because
-                // we want these packets to later restore control
-                this.buffer.push(id, packet);
+                        // Add callback to subscriptions buffer
+                        this.subscriptions.on(topic, callback);
 
-                // If Connected to server
-                if (this.status === "CONNECTED")
-                    // Then send packet right away 
-                    this.ws.send(JSON.stringify(packet));
+                        // Resolve the promise
+                        resolve({
+                            ...res, 
+                            clear: clear
+                        });
+                    });
+
+                    // Always buffer the packet because
+                    // we want these packets to later restore control
+                    this.buffer.push(id, packet);
+
+                    // If Connected to server
+                    if (this.status === "CONNECTED")
+                        // Then send packet right away 
+                        this.ws.send(JSON.stringify(packet));
+
+                }
             }
             else {
                 // Otherwise return a rejection

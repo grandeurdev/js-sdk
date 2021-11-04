@@ -1,6 +1,5 @@
 // Support classes
 import auth from "./src/auth";
-import storage from "./src/storage";
 import devices from "./src/devices";
 import datastore from "./src/datastore";
 
@@ -60,7 +59,6 @@ export function init(apiKey, accessKey, accessToken) {
 
         // Classes
         auth: () => new auth(handlers),
-        storage: () => new storage(handlers),
         devices: () => new devices(handlers),
         datastore: () => new datastore(handlers),
         

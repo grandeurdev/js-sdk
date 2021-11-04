@@ -62,9 +62,6 @@ Now to get a deep insight into our SDK and platform capabilities, you can follow
             + [search](#collectionsearchfilter-projection-npage)
         + [list](#datastorelistnpage)
         + [drop](#datastoredropname)
-    * [storage](#storage)
-        + [upload](#storageuploadfile-filename)
-        + [getUrl](#storagegetUrlfilename)
 
 
 # Get Started
@@ -2048,102 +2045,6 @@ datastore.drop("logs").then((res) => {
   switch(res.code) {
     case "DATASTORE-COLLECTION-DROPPED": 
       // Collection has been dropped
-  }
-});
-```
-
-## storage
-This class provides access to the features associated to built in file storage of Grandeur. Simply get a reference to the storage class by calling `storage()` method with the project object. This is illustrated as below
-
-```javascript
-// Get reference to the storage class
-// by calling the storage method
-var storage = project.storage();
-```
-
-Now once you got the reference to the storage class, you can simply use all the features by calling the respective methods. Each of the method of auth class is documented in the sections below
-
-### storage.upload(file, fileName) 
-This methods takes a file and upload it to the built in file storage associated with your project. It is important to note that with JS SDk the upload size is limited to 50 MB. 
-
-This method accepts the following arguments
-
-| Name  | Type        | Description |
-| :---- | :---------- | :--------------------- |
-| file | file object | a file object returned through classic DOM selector |
-| fileName | string | optional name to be used on upload. The orignal file name will be utilized if not provided |
-
-This method returns the following codes in the response to the promise
-
-* STORAGE-FILE-UPLOADED
-
-  file has been uplaoded
-
-* STORAGE-FILE-EMPTY
-
-  valid file object is not provided
-
-* STORAGE-FILE-ALREADY-EXISTS
-
-  a file already exists with the name
-
-The usage of this method is illustrated in the example below
-
-```html
-<!-- Get file from user using input tag -->
-<input type="file" id="file" name="file">
-```
-
-```javascript
-// Then in JS use the classic
-// DOM selector to get the file user selected
-var file = document.getElementById("file").files[0];
-
-// File name
-var fileName = "displayPicture.jpg";
-
-// Upload the file
-storage.upload(file, fileName).then((res) => {
-  // Got response from server
-  switch(res.code) {
-    case "STORAGE-FILE-UPLOADED": 
-      // File has been uploaded
-  }
-});
-```
-
-### storage.getUrl(fileName)
-This method can be utilized to get a public url of a file. With the public url, the file will be accessible through GET request, or in other words the file could be downloaded by visiting the url in browser or in the image tag of html.
-
-It is important to note that the `getFileUrl` call generates a public url. Means the url could be utilized to access a file even when a user is not authenticated.
-
-This method accepts the following arguments
-
-| Name  | Type        | Description |
-| :---- | :---------- | :--------------------- |
-| fileName | string | provided on the file upload operation |
-
-This method returns the following codes in the response to the promise
-
-* STORAGE-FILE-URL-FETCHED
-
-  file url has been fetched
-
-* STORAGE-FILE-NOT-FOUND
-
-  file not found with the provided name
-
-The usage of this method is illustrated in the example below
-
-```javascript
-// Get the file url
-storage.getUrl("displayPicture.jpg").then((res) => {
-  // Got response from server
-  switch(res.code) {
-    case "STORAGE-FILE-URL-FETCHED": 
-      // File public url has been generated
-      // open a new tab to download the file
-      window.open(res.fileUrl);
   }
 });
 ```
