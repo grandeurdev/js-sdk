@@ -1,6 +1,8 @@
 const path = require("path");
 
-module.exports = {
+// Function to generate configurations
+const config = (bundle, target) => ({
+    target: target,
     entry: "./index.js",
     mode: "production",
     devServer: {
@@ -14,9 +16,13 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "grandeur.js",
+        filename: bundle,
         library: "grandeur",
-        libraryTarget: "umd",
-        globalObject: 'this'
+        globalObject: "this"
     }
-}
+})
+
+module.exports = [
+    config("grandeur-node.js", "node"),
+    config("grandeur.js", "web")
+]
