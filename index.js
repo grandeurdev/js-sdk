@@ -52,6 +52,7 @@ export function init(apiKey, accessKey, accessToken) {
         // Helper Method
         isConnected: () => handlers.duplex.status === "CONNECTED",
         onConnection: (callback) => handlers.duplex.onConnection(callback),
+        on: (callback) => handlers.duplex.onConnection(callback),
         dispose: () => {
             handlers.duplex.dispose();
             handlers.post.dispose();

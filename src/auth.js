@@ -11,7 +11,9 @@ class auth {
     // Constructor
     constructor(handlers) {
         // Configuration
-        this.post = handlers.post
+        this.handlers = handlers;
+        this.post = handlers.post;
+        this.duplex = handlers.duplex;
     }
 
     async login(email, password) {
@@ -177,21 +179,32 @@ class auth {
         return this.post.send("/auth/logout", {});
     }
 
-    async oauth(integrationID) {
-        // This function redirects the client to OAuth redirect
-        const res = await this.post.send("/auth/getOAuthUrl", {integrationID: integrationID});
+    async token(token) {
+        // And run this in try catch
+        try {
+            // Send ping request to the server with this token
+            var res = await this.post.send("/auth/ping", {}, null, token);
 
-        // Redirect if request has been processed successfully
-        if (res.redirectUrl)
-            window.location = res.redirectUrl;
-        
-        // Otherwise send response
-        else return res;
-    }
+            // If the token is valid
+            if (res.code === "AUTH-AUTHORIZED") {
+                // Then we will set the token to the local storage
+                localStorage.setItem(`grandeur-auth-${this.post.config.apiKey}`, token);
 
-    oauthAccessToken(integrationID) {
-        // This function to get oauth token
-        return this.post.send("/auth/getOAuthToken", {integrationID: integrationID});
+                // And technically, we should reconnect
+                this.duplex.disconnect(new auth(this.handlers));
+
+                // Return response
+                return res;
+            }
+            else throw {
+                code: "TOKEN-INVALID"
+            }
+
+        } 
+        catch (error) {
+            // Send invalid token error
+            throw error
+        }
     }
 }
 

@@ -279,6 +279,21 @@ class duplex {
         clearTimeout(this.recon);
     }
 
+    disconnect() {
+        // Function will just close the connection
+        if (this.status === "CONNECTED") {
+            // Trigger close event
+            // So that we could trigger a reconnect loop
+            this.ws.close();
+        }
+
+        // Set status to disposed
+        this.setStatus("DISCONNECTED");
+
+        // Clear timeout
+        clearTimeout(this.recon);
+    }
+
     onConnection(callback) {
         // This function will take the 
         // callback from use and will set

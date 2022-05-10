@@ -99,7 +99,7 @@ class post{
         this.status = "DISPOSED";
     }
 
-    send(path, data, attachments) {
+    send(path, data, attachments, token) {
         // Function to send a post request to the server
 
         // Return new Promise
@@ -116,7 +116,7 @@ class post{
             var cookie = "";
 
             // Get cookie
-            if (typeof window !== "undefined") cookie = localStorage.getItem(`grandeur-auth-${this.config.apiKey}`) || "";
+            if (typeof window !== "undefined") cookie = token || localStorage.getItem(`grandeur-auth-${this.config.apiKey}`) || "";
 
             // Set default headers
             var headers = {
