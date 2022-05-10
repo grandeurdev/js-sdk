@@ -4,7 +4,13 @@ module.exports = {
     entry: "./index.js",
     mode: "production",
     devServer: {
-        contentBase: './dist',
+        static: './dist',
+    },
+    resolve: {
+        fallback: {
+            "Buffer": require.resolve('buffer/'),
+            "stream": require.resolve("stream-browserify")
+        }
     },
     output: {
         path: path.resolve(__dirname, "dist"),

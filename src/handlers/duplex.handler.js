@@ -6,7 +6,7 @@
 import { EventEmitter } from 'events';
 
 // Import cuid because we will use it to generate packet ids
-import cuid from './utils/cuid';
+import { cuid } from './utils/cuid';
 
 // Extend the event emitter class
 class BaseEventEmitter extends EventEmitter {
