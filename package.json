@@ -3,7 +3,7 @@
   "version": "1.0.12",
   "description": "Grandeur SDK from JavaScript. It can be utilized to integrate Grandeur features into web apps.",
   "main": "dist/grandeur.js",
-  "browser": "dist/grandeur-umd.js",
+  "browser": "dist/grandeur.umd.js",
   "module": "dist/grandeur.js",
   "bugs": "https://github.com/grandeurtech/js-sdk/issues",
   "repository": "grandeurtech/js-sdk",
