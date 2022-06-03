@@ -4,7 +4,7 @@ const path = require("path");
 const config = (bundle, target) => ({
     target: "web",
     entry: "./index.js",
-    mode: "development",
+    mode: "production",
     devServer: {
         static: './dist',
     },
