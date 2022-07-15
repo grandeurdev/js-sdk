@@ -6,7 +6,7 @@
 import { EventEmitter } from 'events';
 
 // Import cuid because we will use it to generate packet ids
-import cuid from './utils/cuid';
+import { cuid } from './utils/cuid';
 
 // Extend the event emitter class
 class BaseEventEmitter extends EventEmitter {
@@ -274,6 +274,21 @@ class duplex {
 
         // Set status to disposed
         this.setStatus("DISPOSED");
+
+        // Clear timeout
+        clearTimeout(this.recon);
+    }
+
+    disconnect() {
+        // Function will just close the connection
+        if (this.status === "CONNECTED") {
+            // Trigger close event
+            // So that we could trigger a reconnect loop
+            this.ws.close();
+        }
+
+        // Set status to disposed
+        this.setStatus("DISCONNECTED");
 
         // Clear timeout
         clearTimeout(this.recon);

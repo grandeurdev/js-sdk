@@ -1,16 +1,30 @@
 const path = require("path");
 
-module.exports = {
+// Function to generate configurations
+const config = (bundle, target) => ({
+    target: "web",
     entry: "./index.js",
     mode: "production",
     devServer: {
-        contentBase: './dist',
+        static: './dist',
+    },
+    resolve: {
+        fallback: {
+            "Buffer": require.resolve('buffer'),
+            "stream": require.resolve("stream-browserify"),
+            "crypto": require.resolve("crypto-browserify")
+        }
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "grandeur.js",
+        filename: bundle,
         library: "grandeur",
-        libraryTarget: "umd",
-        globalObject: 'this'
+        libraryTarget: target,
+        globalObject: "this"
     }
-}
+})
+
+module.exports = [
+    config("grandeur.js", "commonjs2"),
+    config("grandeur.umd.js", "umd")
+]
