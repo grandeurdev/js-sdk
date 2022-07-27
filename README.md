@@ -82,7 +82,7 @@ This will give you access to the global ` Grandeur ` object, through which you c
 // you can simply initialize the SDK 
 // with your API key and get reference 
 // to your project
-var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+var project = grandeur.init("API-KEY", "SECRET-KEY");
 ```
 
 Go change the world. You can now access all the amazing features of Grandeur with the reference object of your project that you just got.  Take a look at the [example](#example) to learn how to quickly build an app to get a list of devices paired to the user account.
@@ -166,10 +166,10 @@ Now when you know how to get started with Grandeur, it is time to dive into bit 
 
     // Initialize the SDK and get
     // a reference to the project
-    var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+    var project = grandeur.init("API-KEY", "SECRET-KEY");
     ```
     
-    You can get your accessKey and accessToken from security section of the [settings](https://cloud.grandeur.tech/settings) page.
+    You can get your secret key from security section of the [settings](https://cloud.grandeur.tech/settings) page.
 
     At this step, you will probably also have to allow the domain `localhost:8080` in the cross-origin access policy. You can do this by visiting [settings](https://cloud.grandeur.tech/settings) page at the cloud dashboard. Without following this step, your application will not be allowed to communicate to the cloud.
 
@@ -222,7 +222,7 @@ Now when you know how to get started with Grandeur, it is time to dive into bit 
     
     // Initialize the SDK and get
     // a reference to the project
-    var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+    var project = grandeur.init("API-KEY", "SECRET-KEY");
 
     // Function to login user
     var loginUser = async () => {
@@ -326,12 +326,12 @@ Now when you know how to get started with Grandeur, it is time to dive into bit 
     // main.js
 
     // Device ID and state
-    var deviceID = "YOUR-DEVICE-ID";
+    var deviceID = "DEVICE-ID";
     var deviceState = null;
     
     // Initialize the SDK and get
     // a reference to the project
-    var project = grandeur.init("YOUR-APIKEY", "ACCESS-KEY", "ACCESS-TOKEN");
+    var project = grandeur.init("API-KEY", "SECRET-KEY");
     
     // Function to login user
     var loginUser = async () => {
@@ -542,14 +542,14 @@ The device is very special entities and we have powered it with data driven inte
 In this section, we will present references to each and every feature that our SDK supports. We have divided our SDK in group of functions called classes. Each class represents a feature of Grandeur. So in this section, we will also document that how can you use each and every function of Grandeur SDK.
 
 ## init
-First and foremost thing that you are required to do in order to access our platform is initialization. When you drop in the link of the CDN in your app, we create a global object accessible through JS. This object can be then utilized to init the SDK with your API key and access credential. Upon init, the SDK returns you a reference to your project, through which you can access all the features of Grandeur. To understand it in depth please refer to [Projects](#projects) topic in the concepts section. To generate access key and token please visit [settings](https://cloud.grandeur.tech/settings) page. It is important to note that access key is a secret so please store it with absolute care in your application code. 
+First and foremost thing that you are required to do in order to access our platform is initialization. When you drop in the link of the CDN in your app, we create a global object accessible through JS. This object can be then utilized to init the SDK with your API key and access credential. Upon init, the SDK returns you a reference to your project, through which you can access all the features of Grandeur. To understand it in depth please refer to [Projects](#projects) topic in the concepts section. To generate secret key and token please visit [settings](https://cloud.grandeur.tech/settings) page.
 
 This is how you can init the SDK and can get a reference to your project
 
 ```javascript
 // Get reference to the project by initializing the SDK
 // with your API key
-var project = grandeur.init("YOUR-APIKEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
+var project = grandeur.init("API-KEY", "SECRET-KEY");
 ```
 
 ## isConnected
