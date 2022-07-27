@@ -5,11 +5,11 @@
   "main": "dist/grandeur.js",
   "browser": "dist/grandeur.umd.js",
   "module": "dist/grandeur.js",
-  "bugs": "https://github.com/grandeurtech/js-sdk/issues",
-  "repository": "grandeurtech/js-sdk",
-  "homepage": "https://grandeur.tech",
+  "bugs": "https://github.com/grandeurdev/js-sdk/issues",
+  "repository": "grandeurdev/js-sdk",
+  "homepage": "https://grandeur.dev",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "webpack --profile --json > debug/stats.json &&  webpack-bundle-analyzer debug/stats.json dist/",
     "build": "webpack --config webpack.config.js",
     "start": "webpack server --open --config webpack.config.js"
   },
@@ -21,19 +21,18 @@
     "backend",
     "database"
   ],
-  "author": "Grandeur Technologies <hi@grandeur.tech>",
+  "author": "Grandeur Technologies <hi@grandeur.dev>",
   "license": "MIT",
   "dependencies": {
-    "buffer": "^6.0.3",
-    "createhmac-chaintor": "^1.0.0",
-    "crypto-browserify": "^3.12.0",
-    "stream-browserify": "^3.0.0"
+    "hi-base32": "^0.5.1",
+    "totp-generator": "^0.0.13"
   },
   "files": [
     "dist"
   ],
   "devDependencies": {
     "webpack": "^5.72.0",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.9.0"
   }

@@ -20,10 +20,10 @@ var extensions = {}
 
 // Function that initializes 
 // the object
-export function init(apiKey, accessKey, accessToken) {
+export function init(apiKey, secretKey) {
     // Returns a Object with a refernce to
     // Grandeur Supported Classes
-    const grandeurConfig = {...config, apiKey, accessKey, accessToken}
+    const grandeurConfig = {...config, apiKey, secretKey}
 
     // Post Handler
     const postHandler = new post(grandeurConfig);

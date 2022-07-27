@@ -5,7 +5,8 @@
 // in every class.
 
 // Imports
-import createHmac from 'createhmac-chaintor';
+import totp from 'totp-generator';
+import { encode } from 'hi-base32';
 
 // Class
 class post{
@@ -17,41 +18,6 @@ class post{
         this.status = "ACTIVE";
     }
     
-    generateSignature(path, url, headers, body) {
-        // Function to generate the signature of request
-        // Start with path and generate normalized
-        const canonicalPath = encodeURI(path);
-
-        // Then normalize the query
-        const canonicalQuery = encodeURIComponent(url.split("?")[1]);
-
-        // Then normalize the headers
-        // only one we need
-        const requiredHeaders = ['gt-date', 'gt-access-token', 'content-type']
-
-        // Convert each header into canonical form and then
-        // form the overall headers string
-        const canonicalHeaders = requiredHeaders.reduce((accumulator, name) => {
-            // Get value and trim spaces
-            var value = headers[name].replace(/\s/g, '');
-
-            // Return accumulated
-            return `${accumulator}${name}:${value}`
-        }, "");
-
-        // Convert the body in the canocial form
-        const canonicalBody = encodeURIComponent(JSON.stringify(body));
-
-        // Build the sign string
-        const signString = `${canonicalPath}\n${canonicalQuery}\n${canonicalHeaders}\n${canonicalBody}`;
-
-        // Generate signature
-        const signature = createHmac('sha256', this.config.accessKey).update(signString).digest('hex');
-
-        // Return
-        return signature;
-    }
-
     toFormData(obj, form, namespace) {
         // Create a new form if form isn't
         // provided
@@ -120,8 +86,6 @@ class post{
 
             // Set default headers
             var headers = {
-                'gt-date': Date.now().toString(),
-                'gt-access-token': this.config.accessToken,
                 'authorization': cookie
             };
 
@@ -138,7 +102,7 @@ class post{
                 headers['content-type'] = 'application/json'
 
                 // Generate signature
-                headers['gt-signature'] = this.generateSignature(path, url, headers, data);
+                headers['gt-otp'] = totp(encode(this.config.secretKey));
             }
             else {
                 // Create a new form data
