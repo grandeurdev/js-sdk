@@ -123,7 +123,8 @@ class duplex {
 
                     return; 
 
-                case "SIGNATURE-INVALID": 
+                case "SIGNATURE-INVALID":
+                case "TOTP-INVALID": 
                     // Signature is invalid
                     // Don't reconnect
                     
