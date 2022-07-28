@@ -183,7 +183,7 @@ class auth {
         // And run this in try catch
         try {
             // Send ping request to the server with this token
-            var res = await this.post.send("/auth/ping", {}, null, token);
+            var res = await this.post.send("/auth/ping", {}, token);
 
             // If the token is valid
             if (res.code === "AUTH-AUTHORIZED") {
