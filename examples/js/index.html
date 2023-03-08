@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <!-- Head block of our page-->
+  <head>
+    <!-- Let's give our page a title-->
+    <title>Pi Switch</title>
+
+    <!-- Important meta tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Link SDK with CDN -->
+    <script src="https://unpkg.com/grandeur-js"></script>
+
+    <!-- Add CSS styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <!-- Body block of our page-->
+  <body class="m-0 p-0 absolute h-full w-full inset-0">
+    <!-- The loader page, will be displayed while we will verify the user auth status -->
+    <div
+      id="loader"
+      class="w-full h-full bg-gray-200 items-center justify-center"
+      style="display: flex"
+    >
+      <!-- We are using a svg -->
+      <div class="w-20 h-auto">
+        <svg
+          version="1.1"
+          id="L9"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          viewBox="0 0 100 100"
+          enable-background="new 0 0 0 0"
+          xml:space="preserve"
+        >
+          <path
+            fill="#111827"
+            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+          >
+            <animateTransform
+              attributeName="transform"
+              attributeType="XML"
+              type="rotate"
+              dur="1s"
+              from="0 50 50"
+              to="360 50 50"
+              repeatCount="indefinite"
+            />
+          </path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- The login page of our app -->
+    <div
+      id="login"
+      class="w-full h-full bg-gray-200 items-center justify-center"
+      style="display: none"
+    >
+      <!-- Card holds the form -->
+      <div class="flex flex-col w-1/3">
+        <!-- The form to get email and passwordfrom users -->
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email"
+          class="h-12 w-full mb-5 px-5 bg-gray-100 drop-shadow-lg rounded-md font-sans text-gray-900 text-sm outline-0"
+        />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+          class="h-12 w-full mb-5 px-5 bg-gray-100 drop-shadow-lg rounded-md font-sans text-gray-900 text-sm outline-0"
+        />
+
+        <!-- Button to submit the form-->
+        <button
+          id="submitLogin"
+          class="h-12 w-full mb-5 bg-gray-900 drop-shadow-lg rounded-md font-sans text-gray-100 text-medium text-sm outline-0"
+        >
+          Login
+        </button>
+      </div>
+    </div>
+
+    <!-- Main screen of the app -->
+    <div
+      id="device"
+      class="w-full h-full bg-gray-200 items-center justify-center"
+      style="display: none"
+    >
+      <!-- The header of the page -->
+      <div
+        class="absolute inset-0 flex w-full h-12 items-center justify-between px-6 bg-gray-300 drop-shadow-md border-box"
+      >
+        <!-- Add title of the page -->
+        <div class="text-gray-600 font-sans text-md font-bold">
+          Internet Switch
+        </div>
+
+        <!-- Add logout icon -->
+        <button
+          id="logout"
+          class="h-8 text-gray-600 bg-gray-200 rounded-md px-5 text-sm font-sans font-bold cursor-pointer"
+        >
+          Logout
+        </button>
+      </div>
+
+      <!--Device loading -->
+      <div id="device-loading" class="w-20 h-auto">
+        <svg
+          version="1.1"
+          id="L9"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          viewBox="0 0 100 100"
+          enable-background="new 0 0 0 0"
+          xml:space="preserve"
+        >
+          <path
+            fill="#111827"
+            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+          >
+            <animateTransform
+              attributeName="transform"
+              attributeType="XML"
+              type="rotate"
+              dur="1s"
+              from="0 50 50"
+              to="360 50 50"
+              repeatCount="indefinite"
+            />
+          </path>
+        </svg>
+      </div>
+
+      <div id="device-button" style="display: none">
+        <!-- The button -->
+        <div
+          class="h-44 w-44 bg-gray-100 drop-shadow-lg rounded-2xl flex items-center justify-center cursor-pointer"
+          onclick="updateState()"
+        >
+          <!-- Image -->
+          <svg
+            class="w-1/4 h-auto"
+            stroke="#556382"
+            id="device-button-state"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+          </svg>
+        </div>
+
+        <!-- The title -->
+        <div
+          class="text-gray-600 font-sans text-md font-bold mt-10 text-center"
+          id="device-name"
+        >
+          Device
+        </div>
+      </div>
+    </div>
+
+    <!-- Main script file -->
+    <script src="main.js"></script>
+  </body>
+</html>

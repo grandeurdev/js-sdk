@@ -10,66 +10,69 @@ import duplex from "./src/handlers/duplex.handler";
 // The main config object to stores the
 // base urls of the Grandeur Server
 const config = {
-    url: "https://api.grandeur.tech",
-    node: "wss://api.grandeur.tech"
-}
+  url: "https://api.grandeur.tech",
+  node: "wss://api.grandeur.tech",
+};
 
 // Object will store the extensions which
 // be then included in the init
-var extensions = {}
+var extensions = {};
 
-// Function that initializes 
+// Function that initializes
 // the object
 export function init(apiKey, secretKey) {
-    // Returns a Object with a refernce to
-    // Grandeur Supported Classes
-    const grandeurConfig = {...config, apiKey, secretKey}
+  // Returns a Object with a refernce to
+  // Grandeur Supported Classes
+  const grandeurConfig = { ...config, apiKey, secretKey };
 
-    // Post Handler
-    const postHandler = new post(grandeurConfig);
+  // Post Handler
+  const postHandler = new post(grandeurConfig);
 
-    // Duplex Handler
-    const duplexHandler = new duplex(grandeurConfig);
-    
-    // Handlers
-    const handlers = {
-        post: postHandler,
-        duplex: duplexHandler
-    };
+  // Duplex Handler
+  const duplexHandler = new duplex(grandeurConfig);
 
-    // Initialize the Connection
-    // to the Server
-    duplexHandler.init(new auth(handlers));
+  // Handlers
+  const handlers = {
+    post: postHandler,
+    duplex: duplexHandler,
+  };
 
-    // Forumlate the plugins
-    var plugins = {}
+  // Initialize the Connection
+  // to the Server
+  duplexHandler.init(new auth(handlers));
 
-    // Loop over the provided extensions and add to plugins
-    Object.keys(extensions).map( extension => plugins[extension] = () => new extensions[extension](handlers) )
+  // Forumlate the plugins
+  var plugins = {};
 
-    // Return reference to the classes
-    return {
-        // Helper Method
-        isConnected: () => handlers.duplex.status === "CONNECTED",
-        onConnection: (callback) => handlers.duplex.onConnection(callback),
-        on: (callback) => handlers.duplex.onConnection(callback),
-        dispose: () => {
-            handlers.duplex.dispose();
-            handlers.post.dispose();
-        },
+  // Loop over the provided extensions and add to plugins
+  Object.keys(extensions).map(
+    (extension) =>
+      (plugins[extension] = () => new extensions[extension](handlers))
+  );
 
-        // Classes
-        auth: () => new auth(handlers),
-        devices: () => new devices(handlers),
-        datastore: () => new datastore(handlers),
-        
-        // Include plugins
-        ...plugins
-    }
+  // Return reference to the classes
+  return {
+    // Helper Method
+    isConnected: () => handlers.duplex.status === "CONNECTED",
+    onConnection: (callback) => handlers.duplex.onConnection(callback),
+    on: (callback) => handlers.duplex.onConnection(callback),
+    dispose: () => {
+      handlers.duplex.dispose();
+      handlers.post.dispose();
+    },
+
+    // Classes
+    auth: () => new auth(handlers),
+    devices: () => new devices(handlers),
+    datastore: () => new datastore(handlers),
+
+    // Include plugins
+    ...plugins,
+  };
 }
 
 // Function can be used to add extensions to the SDK
 export function extend(plugins) {
-    // Include the extensions in the global object
-    extensions = plugins;
+  // Include the extensions in the global object
+  extensions = plugins;
 }
