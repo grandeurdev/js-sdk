@@ -17,10 +17,6 @@
 // Then to access the context in a component, the
 // consumer component is required to be utilized which
 // returns a function with args as the context.
-// To make it look cleaner. We have developed a new
-// component around the Provider and a HOC around the
-// wrapper. The main grandeur component is implemented
-// in this file.
 
 // Imports
 import React from "react";
