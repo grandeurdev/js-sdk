@@ -1,166 +1,146 @@
-/**
- * @file: main.js
- * Initialize the SDK and get
- * a reference to the project
- */
+//   @file: main.js: Initialize the SDK and get a reference to the project
 
-var project = grandeur.init(
-  "grandeurlemun7a206ln0jfy719ce9bn",
-  "8476d264831a131260b344f78b2604b4764c96798906e54bee2054ed9460a29a"
-);
+var project = grandeur.init("ApiKey", "SecretKey");
 
-/** Device ID */
-var deviceID = "devicelemun7sb06lp0jfy43k32een";
+// Device ID
+var deviceID = "DeviceId";
 
-/**
- * This function uses the sdk to validate
- * that if the user is authenticated or not
- */
+let buttonState = 0;
+
+//  This function uses the sdk to validate that if the user is authenticated or not
+
 async function start() {
-  /** Use sdk auth class to check auth status */
+  // Use sdk auth class to check auth status
   var res = await project.auth().isAuthenticated();
 
-  /** Then if the user isn't authorized then show the login screen */
+  //  Then if the user isn't authorized then show the login screen
   if (res.code === "AUTH-UNAUTHORIZED") {
     return displayLogin();
   }
 
-  /** Display device screen */
+  //  Display device screen
   displayDevice();
 }
 
-/** Listener on login form button to authenticate a user */
+//  Listener on login form button to authenticate a user
 document.getElementById("submitLogin").addEventListener("click", async () => {
-  /** Get email and password from inputs */
+  //  Get email and password from inputs
   var email = document.getElementById("email").value;
   var password = document.getElementById("password").value;
 
-  /** Display laoder */
+  //  Display laoder
   displayLoader();
 
-  /** Use the sdk auth class to login the user */
+  //  Use the sdk auth class to login the user
   var res = await project.auth().login(email, password);
 
-  /** If the operation was successful */
+  //  If the operation was successful
   if (res.code === "AUTH-ACCOUNT-LOGGEDIN") {
-    /** Reset the login page */
+    //  Reset the login page
     document.getElementById("email").value = "";
     document.getElementById("password").value = "";
 
-    /** Display device screen */
+    //  Display device screen
     return displayDevice();
   }
 
-  /** otherwise display the login screen again */
+  //  otherwise display the login screen again
   displayLogin();
 });
 
-/** Add event handler on logout icon */
+//  Add event handler on logout icon
 document.getElementById("logout").addEventListener("click", async () => {
-  /** Show the loader */
+  //  Show the loader
   displayLoader();
 
-  /** and use the auth class of sdk to logout the user */
+  //  and use the auth class of sdk to logout the user
   await project.auth().logout();
 
-  /** Then call start again */
+  //  Then call start again
   start();
 });
 
-/** Function to show laoder screen */
+//  Function to show laoder screen
 function displayLoader() {
-  /** Display loader */
+  //  Display loader
   document.getElementById("loader").style.display = "flex";
 
-  /** Hide login screen */
+  //  Hide login screen
   document.getElementById("login").style.display = "none";
 
-  /** Hide device screen */
+  //  Hide device screen
   document.getElementById("device").style.display = "none";
   document.getElementById("device-button").style.display = "none";
 }
 
-/** Function to show login screen */
+//  Function to show login screen
 function displayLogin() {
-  /** Hide loader */
+  //  Hide loader
   document.getElementById("loader").style.display = "none";
 
-  /** Display login screen */
+  //  Display login screen
   document.getElementById("login").style.display = "flex";
 }
 
-/** Function to show device screen */
+//  Function to show device screen
 async function displayDevice() {
-  /** Hide loader */
+  //  Hide loader
   document.getElementById("loader").style.display = "none";
 
-  /** Display button screen */
+  //  Display button screen
   document.getElementById("device").style.display = "flex";
 
-  /** Start loader on deivce */
+  //  Start loader on deivce
   document.getElementById("device-loading").style.display = "block";
 
-  /** Use sdk devices class */
+  //  Use sdk devices class
   var devices = project.devices();
 
-  console.log(
-    await devices
-      .device(deviceID)
-      .data()
-      .on("led", (path, res) => {
-        console.log(path, res);
-      })
-  );
-
-  /** Get device name */
+  //  Get device name
   var { device } = await devices.device(deviceID).get("name");
 
-  /** And get device data */
-  var { data } = await devices.device(deviceID).data().get("led");
+  //  And get device data
+  var { data } = await devices
+    .device(deviceID)
+    .data()
+    .get("led");
 
-  /** Set device name */
+  buttonState = data ? data : 0;
+  console.log(buttonState);
+
+  //  Set device name
   document.getElementById("device-name").innerHTML = device.name;
 
-  /** Set button style */
-  document
-    .getElementById("device-button-state")
-    .setAttribute("stroke", data ? "#74C365" : "#556382");
-  document
-    .getElementById("device-button-state")
-    .setAttribute("data-state", data);
+  document.getElementById("buttonSvgElem").src = data
+    ? "./assets/buttonOff.svg"
+    : "./assets/buttonOn.svg";
 
   // Display button
   document.getElementById("device-loading").style.display = "none";
   document.getElementById("device-button").style.display = "block";
 
-  /** Then also subscribe to the state update event of the device */
+  //  Then also subscribe to the state update event of the device
   devices
     .device(deviceID)
     .data()
     .on("led", (path, state) => {
-      /** Update ui */
-      document
-        .getElementById("device-button-state")
-        .setAttribute("stroke", state ? "#74C365" : "#556382");
-      document
-        .getElementById("device-button-state")
-        .setAttribute("data-state", state);
+      //  Update ui
+      buttonState = state;
+      document.getElementById("buttonSvgElem").src = state
+        ? "./assets/buttonOff.svg"
+        : "./assets/buttonOn.svg";
     });
 }
 
-/** Function to update the state of a device */
+//  Function to update the state of a device
 async function updateState() {
-  /** Create new state */
-  var newState =
-    document
-      .getElementById("device-button-state")
-      .getAttribute("data-state") === "1"
-      ? 0
-      : 1;
-
-  /** Use the devices class of sdk to report the upgrade */
-  await project.devices().device(deviceID).data().set("led", newState);
+  //  Use the devices class of sdk to report the upgrade
+  await project
+    .devices()
+    .device(deviceID)
+    .data()
+    .set("led", buttonState ? 0 : 1);
 }
 
-/** Start the app */
+//  Start the app
 start();

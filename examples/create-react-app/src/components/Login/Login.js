@@ -13,7 +13,7 @@ function Login(props) {
 
     /** Then if the user isn't authorized then show the login screen */
     if (res.code === "AUTH-AUTHORIZED") {
-      navigate("/devices", { replace: true });
+      navigate("/device", { replace: true });
     }
   }
 
@@ -26,7 +26,7 @@ function Login(props) {
     var res = await props.grandeur.auth().login(email, password);
 
     if (res.code === "AUTH-ACCOUNT-LOGGEDIN") {
-      navigate("/devices", { replace: true });
+      navigate("/device", { replace: true });
     }
   }
 

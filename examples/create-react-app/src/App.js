@@ -7,7 +7,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/devices" element={<Devices />} />
+        <Route path="/device" element={<Devices />} />
       </Routes>
     </>
   );

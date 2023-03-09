@@ -16,15 +16,13 @@ function Header(props) {
       <div className="text-gray-600 font-sans text-md font-bold">
         Internet Switch
       </div>
-      <Link href={"/"}>
-        <button
-          id="logout"
-          onClick={logout}
-          className="h-8 text-gray-600 bg-gray-200 rounded-md px-5 text-sm font-sans font-bold cursor-pointer"
-        >
-          Logout
-        </button>
-      </Link>
+      <button
+        id="logout"
+        onClick={logout}
+        className="h-8 text-gray-600 bg-gray-200 rounded-md px-5 text-sm font-sans font-bold cursor-pointer"
+      >
+        Logout
+      </button>
     </div>
   );
 }

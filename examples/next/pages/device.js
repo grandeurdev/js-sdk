@@ -1,14 +1,15 @@
 import { withGrandeur } from "grandeur-js/react";
 import { useEffect, useState } from "react";
-import Header from "../Header/Header";
-import Loading from "../../loading.svg";
-import ButtonOff from "../../buttonOff.svg";
-import ButtonOn from "../../buttonOn.svg";
-import { useNavigate } from "react-router-dom";
+import Header from "../components/Header/Header";
+import Loading from "../public/loading.svg";
+import ButtonOff from "../public/buttonOff.svg";
+import ButtonOn from "../public/buttonOn.svg";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 function Device(props) {
   const deviceID = "DeviceID";
-  const navigate = useNavigate();
+  const router = useRouter();
   const [deviceNameState, setDeviceNameState] = useState("");
   const [buttonState, setButtonState] = useState(0);
 
@@ -18,14 +19,14 @@ function Device(props) {
     async function displayDevice() {
       var res = await props.grandeur.auth().isAuthenticated();
 
-      //  Then if the user isn't authorized then show the login screen
+      //  if the user isn't authorized then show the login screen
       if (res.code === "AUTH-UNAUTHORIZED") {
-        navigate("/", { replace: true });
+        router.push("/");
       }
 
       var devices = props.grandeur.devices();
 
-      //  Get device name
+      /** Get device name */
       var { device } = await devices.device(deviceID).get("name");
 
       if (device.name) setDeviceNameState(device.name);
@@ -47,14 +48,13 @@ function Device(props) {
   });
 
   async function updateState() {
-    //  Use the devices class of sdk to report the upgrade
+    // Use the devices class of sdk to report the upgrade
     await props.grandeur
       .devices()
       .device(deviceID)
       .data()
       .set("led", buttonState ? 0 : 1);
   }
-
   return (
     <>
       <Header></Header>
@@ -65,12 +65,12 @@ function Device(props) {
         >
           {!deviceNameState ? (
             <div id="device-loading" className="w-20 h-auto">
-              <img src={Loading} alt="ReactLogo" />
+              <Image src={Loading} alt="ReactLogo" />
             </div>
           ) : (
             <div id="device-button" onClick={updateState}>
               <div className="h-44 w-44 bg-gray-400 drop-shadow-lg rounded-2xl flex items-center justify-center cursor-pointer">
-                <img src={!buttonState ? ButtonOff : ButtonOn} alt="" />
+                <Image src={!buttonState ? ButtonOff : ButtonOn} alt="" />
               </div>
 
               <div

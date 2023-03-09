@@ -25,32 +25,7 @@
     >
       <!-- We are using a svg -->
       <div class="w-20 h-auto">
-        <svg
-          version="1.1"
-          id="L9"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 0 0"
-          xml:space="preserve"
-        >
-          <path
-            fill="#111827"
-            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
-            <animateTransform
-              attributeName="transform"
-              attributeType="XML"
-              type="rotate"
-              dur="1s"
-              from="0 50 50"
-              to="360 50 50"
-              repeatCount="indefinite"
-            />
-          </path>
-        </svg>
+        <img src="./assets/loading.svg" alt="loading" />
       </div>
     </div>
 
@@ -114,32 +89,7 @@
 
       <!--Device loading -->
       <div id="device-loading" class="w-20 h-auto">
-        <svg
-          version="1.1"
-          id="L9"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 0 0"
-          xml:space="preserve"
-        >
-          <path
-            fill="#111827"
-            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
-            <animateTransform
-              attributeName="transform"
-              attributeType="XML"
-              type="rotate"
-              dur="1s"
-              from="0 50 50"
-              to="360 50 50"
-              repeatCount="indefinite"
-            />
-          </path>
-        </svg>
+        <img src="./assets/loading.svg" alt="loading" />
       </div>
 
       <div id="device-button" style="display: none">
@@ -149,22 +99,7 @@
           onclick="updateState()"
         >
           <!-- Image -->
-          <svg
-            class="w-1/4 h-auto"
-            stroke="#556382"
-            id="device-button-state"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-            <line x1="12" y1="2" x2="12" y2="12"></line>
-          </svg>
+          <img id="buttonSvgElem" src="./assets/buttonOff.svg" alt="loading" />
         </div>
 
         <!-- The title -->
