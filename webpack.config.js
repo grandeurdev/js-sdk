@@ -1,26 +1,36 @@
 const path = require("path");
 
 // Function to generate configurations
-const config = (bundle, target) => ({
-    target: "web",
-    entry: "./index.js",
-    mode: "production",
-    devServer: {
-        static: './dist',
-    },
-    resolve: {
-        
-    },
-    output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: bundle,
-        library: "grandeur",
-        libraryTarget: target,
-        globalObject: "this"
-    }
-})
-
-module.exports = [
-    config("grandeur.js", "commonjs2"),
-    config("grandeur.umd.js", "umd")
-]
+module.exports = {
+  entry: {
+    grandeur: "./index.js",
+    "grandeur-react": "./distributions/react.js",
+  },
+  mode: "production",
+  devServer: {
+    static: "./",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
+      },
+    ],
+  },
+  resolve: {},
+  target: "web",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].js",
+    library: "grandeur",
+    libraryTarget: "umd",
+    globalObject: "this",
+  },
+};
