@@ -4,12 +4,9 @@ Grandeur client for browsers. Check full docs at https://docs.grandeur.dev
 [![Downloads/week](https://img.shields.io/npm/dw/grandeur-js.svg)](https://npmjs.org/package/grandeur-js.svg)
 [![License](https://img.shields.io/npm/l/grandeur-js.svg)](https://github.com/grandeurtech/js-sdk/blob/master/package.json)
 
-# Get Started
+Here is how you can integrate Grandeur in your project.
 
-Let us get to the point straight. You are all motivated and ready to dive in. So quickly go to [Grandeur](https://cloud.grandeur.tech/), create a new project or select a project to get the API key.
-
-# React
-
+### React
 Just simply download the package from npm and use it in your react project
 
 ```bash
@@ -34,11 +31,7 @@ import { Grandeur } from "grandeur-js/react";
 
 // Render app
 const page = (
-  <Grandeur
-    apiKey="YOUR-APIKEY"
-    secretKey="SECRET-KEY"
-    credentials={credentials}
-  >
+  <Grandeur apiKey="YOUR-APIKEY" secretKey="SECRET-KEY" credentials={credentials}>
     {/* Your app code*/}
     <App />
   </Grandeur>
@@ -89,8 +82,7 @@ class App extends Component {
 export default withGrandeur(App);
 ```
 
-# Browser
-
+### Browser
 Just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://unpkg.com/grandeur-js).
 
 ```html
@@ -108,6 +100,4 @@ This will give you access to the global `Grandeur` object, through which you can
 var project = grandeur.init("API-KEY", "SECRET-KEY");
 ```
 
-Go change the world. You can now access all the amazing features of Grandeur with the reference object of your project that you just got. Take a look at the [example](#example) to learn how to quickly build an app to get a list of devices paired to the user account.
-
-In the end, it is important to note it comes with CORS protection in it by default. So to start communicating with the cloud platform, simply visit [settings](https://cloud.grandeur.tech/settings) page at cloud dashboard and whitelist the domain that your web app is using (if you are testing it locally and haven't deployed it to a domain yet, just add localhost:[port] to the allowed domains list but don't forget to remove it from a list before shipping you app in production).
+Check full sdk references from [documentation](https://docs.grandeur.dev/references/client-sdk/installation). Or check full [examples](https://github.com/grandeurdev/js-sdk/tree/master/examples).
