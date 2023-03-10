@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 function Device(props) {
   const deviceID = "DeviceID";
   const navigate = useNavigate();
-  const [deviceNameState, setDeviceNameState] = useState("");
-  const [buttonState, setButtonState] = useState(0);
+  const [deviceName, setDeviceNameState] = useState("");
+  const [data, setButtonState] = useState(0);
 
   useEffect(() => {
     displayDevice();
@@ -52,7 +52,7 @@ function Device(props) {
       .devices()
       .device(deviceID)
       .data()
-      .set("led", buttonState ? 0 : 1);
+      .set("led", data ? 0 : 1);
   }
 
   return (
@@ -63,21 +63,21 @@ function Device(props) {
           id="device"
           className="h-96 w-96 flex flex-col justify-center items-center content-around"
         >
-          {!deviceNameState ? (
+          {!deviceName ? (
             <div id="device-loading" className="w-20 h-auto">
               <img src={Loading} alt="ReactLogo" />
             </div>
           ) : (
             <div id="device-button" onClick={updateState}>
               <div className="h-44 w-44 bg-gray-400 drop-shadow-lg rounded-2xl flex items-center justify-center cursor-pointer">
-                <img src={!buttonState ? ButtonOff : ButtonOn} alt="" />
+                <img src={!data ? ButtonOff : ButtonOn} alt="" />
               </div>
 
               <div
                 className="text-gray-900 font-sans text-md font-bold mt-10 text-center"
                 id="device-name"
               >
-                {!deviceNameState ? "Device" : deviceNameState}
+                {!deviceName ? "Device" : deviceName}
               </div>
             </div>
           )}
