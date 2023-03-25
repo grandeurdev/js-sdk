@@ -45,10 +45,7 @@ export function init(apiKey, secretKey) {
   var plugins = {};
 
   // Loop over the provided extensions and add to plugins
-  Object.keys(extensions).map(
-    (extension) =>
-      (plugins[extension] = () => new extensions[extension](handlers))
-  );
+  Object.keys(extensions).map((extension) => (plugins[extension] = () => new extensions[extension](handlers)));
 
   // Return reference to the classes
   return {

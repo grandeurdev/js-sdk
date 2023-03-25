@@ -7,7 +7,7 @@ import ButtonOn from "../../buttonOn.svg";
 import { useNavigate } from "react-router-dom";
 
 function Device(props) {
-  const deviceID = "DeviceID";
+  const deviceID = "devicelesd875d7mgp0jjp6wic58io";
   const navigate = useNavigate();
   const [deviceName, setDeviceNameState] = useState("");
   const [data, setButtonState] = useState(0);
@@ -59,10 +59,7 @@ function Device(props) {
     <>
       <Header></Header>
       <div className="flex w-screen h-screen bg-gray-50  justify-center items-center">
-        <div
-          id="device"
-          className="h-96 w-96 flex flex-col justify-center items-center content-around"
-        >
+        <div id="device" className="h-96 w-96 flex flex-col justify-center items-center content-around">
           {!deviceName ? (
             <div id="device-loading" className="w-20 h-auto">
               <img src={Loading} alt="ReactLogo" />
@@ -73,10 +70,7 @@ function Device(props) {
                 <img src={!data ? ButtonOff : ButtonOn} alt="" />
               </div>
 
-              <div
-                className="text-gray-900 font-sans text-md font-bold mt-10 text-center"
-                id="device-name"
-              >
+              <div className="text-gray-900 font-sans text-md font-bold mt-10 text-center" id="device-name">
                 {!deviceName ? "Device" : deviceName}
               </div>
             </div>
