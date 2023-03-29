@@ -1,5 +1,4 @@
 const path = require("path");
-const Dotenv = require("dotenv-webpack");
 
 const generalConfig = {
   module: {
@@ -16,7 +15,7 @@ const generalConfig = {
       },
     ],
   },
-  plugins: [new Dotenv()],
+
   devtool: "source-map",
   mode: "production",
 };

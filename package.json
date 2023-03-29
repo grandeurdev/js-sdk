@@ -38,8 +38,10 @@
     "fetch-ponyfill": "^7.1.0",
     "hi-base32": "^0.5.1",
     "isomorphic-ws": "^5.0.0",
+    "localStorage": "^1.0.4",
     "node-navigator": "^1.0.1",
     "totp-generator": "^0.0.13",
+    "util": "^0.12.5",
     "ws": "^8.13.0"
   },
   "files": [

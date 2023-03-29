@@ -100,11 +100,8 @@ class duplex {
           var cookie = "";
 
           // Get cookie
-          if (typeof window !== "undefined") {
-            cookie = localStorage.getItem(`grandeur-auth-${this.config.apiKey}`) || "";
-          } else {
-            cookie = process.env.TOKEN_VALUE;
-          }
+
+          cookie = this.config.token || "";
 
           // Setup url
           const url = `${this.config.node}?apiKey=${this.config.apiKey}&token=${cookie}`;

@@ -8,6 +8,7 @@
 import totp from "totp-generator";
 import { encode } from "hi-base32";
 import fetchPonyfill from "fetch-ponyfill";
+const localStorage = require("localStorage");
 
 // Class
 class post {
@@ -26,6 +27,7 @@ class post {
 
   send(path, data, token) {
     // Function to send a post request to the server
+    console.log("post handler", this.config);
 
     // Return new Promise
     return new Promise(async (resolve, reject) => {
@@ -42,11 +44,7 @@ class post {
       var cookie = "";
 
       // Get cookie
-      if (typeof window !== "undefined") {
-        cookie = localStorage.getItem(`grandeur-auth-${this.config.apiKey}`) || "";
-      } else {
-        cookie = process.env.TOKEN_VALUE;
-      }
+      cookie = token || this.config.token || "";
 
       // Set default headers
       var headers = {
