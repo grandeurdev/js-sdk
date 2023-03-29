@@ -1,15 +1,18 @@
 {
   "name": "grandeur-js",
   "exports": {
+    ".": {
+      "import": "./dist/grandeur-cjs.js"
+    },
     "./react": {
       "import": "./dist/grandeur-react.js"
     }
   },
   "version": "1.1.0",
   "description": "Grandeur SDK from JavaScript. It can be utilized to integrate Grandeur features into web apps.",
-  "main": "index.js",
+  "main": "./dist/grandeur-cjs.js",
+  "module": "./dist/grandeur-cjs.js",
   "browser": "dist/grandeur.js",
-  "module": "index.js",
   "bugs": "https://github.com/grandeurdev/js-sdk/issues",
   "repository": "grandeurdev/js-sdk",
   "homepage": "https://grandeur.dev",
@@ -29,8 +32,17 @@
   "author": "Grandeur Technologies <hi@grandeur.dev>",
   "license": "MIT",
   "dependencies": {
+    "cuid": "^3.0.0",
+    "dotenv": "^16.0.3",
+    "dotenv-webpack": "^8.0.1",
+    "fetch-ponyfill": "^7.1.0",
     "hi-base32": "^0.5.1",
-    "totp-generator": "^0.0.13"
+    "isomorphic-ws": "^5.0.0",
+    "localStorage": "^1.0.4",
+    "node-navigator": "^1.0.1",
+    "totp-generator": "^0.0.13",
+    "util": "^0.12.5",
+    "ws": "^8.13.0"
   },
   "files": [
     "dist"
@@ -40,11 +52,11 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "babel-loader": "^9.1.2",
-    "webpack": "^5.75.0",
-    "webpack-bundle-analyzer": "^4.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^2.1.3",
+    "webpack": "^5.75.0",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.9.0"
   }

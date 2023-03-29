@@ -23,7 +23,7 @@ var extensions = {};
 export function init(apiKey, secretKey) {
   // Returns a Object with a refernce to
   // Grandeur Supported Classes
-  const grandeurConfig = { ...config, apiKey, secretKey };
+  const grandeurConfig = { ...config, apiKey, secretKey, token: "" };
 
   // Post Handler
   const postHandler = new post(grandeurConfig);
@@ -45,10 +45,7 @@ export function init(apiKey, secretKey) {
   var plugins = {};
 
   // Loop over the provided extensions and add to plugins
-  Object.keys(extensions).map(
-    (extension) =>
-      (plugins[extension] = () => new extensions[extension](handlers))
-  );
+  Object.keys(extensions).map((extension) => (plugins[extension] = () => new extensions[extension](handlers)));
 
   // Return reference to the classes
   return {

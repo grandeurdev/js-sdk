@@ -1,15 +1,6 @@
 const path = require("path");
 
-// Function to generate configurations
-module.exports = {
-  entry: {
-    grandeur: "./index.js",
-    "grandeur-react": "./distributions/react.js",
-  },
-  mode: "production",
-  devServer: {
-    static: "./",
-  },
+const generalConfig = {
   module: {
     rules: [
       {
@@ -24,7 +15,30 @@ module.exports = {
       },
     ],
   },
-  resolve: {},
+
+  devtool: "source-map",
+  mode: "production",
+};
+
+const nodeConfig = {
+  entry: {
+    "grandeur-cjs": "./index.js",
+  },
+  target: "node",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].js",
+    library: "grandeur",
+    libraryTarget: "umd",
+    globalObject: "this",
+  },
+};
+
+const browserConfig = {
+  entry: {
+    grandeur: "./index.js",
+    "grandeur-react": "./distributions/react.js",
+  },
   target: "web",
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -33,4 +47,12 @@ module.exports = {
     libraryTarget: "umd",
     globalObject: "this",
   },
+};
+
+// Function to generate configurations
+module.exports = () => {
+  Object.assign(nodeConfig, generalConfig);
+  Object.assign(browserConfig, generalConfig);
+
+  return [nodeConfig, browserConfig];
 };
