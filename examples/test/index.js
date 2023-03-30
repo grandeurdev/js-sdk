@@ -20,5 +20,4 @@ var devices = project.devices();
 // project.onConnection((update) => console.log(update));
 
 // console.log(res);
-
-// console.log(await devices.device(deviceID).get(""));
+console.log(await devices.device(deviceID).get(""));

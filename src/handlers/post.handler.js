@@ -8,88 +8,102 @@
 import totp from "totp-generator";
 import { encode } from "hi-base32";
 import fetchPonyfill from "fetch-ponyfill";
-const localStorage = require("localStorage");
 
 // Class
 class post {
-  constructor(config) {
-    // Default configuration
-    this.config = config;
 
-    // Status of the handler
-    this.status = "ACTIVE";
-  }
+	constructor(config) {
 
-  dispose() {
-    // Set the status to dispose
-    this.status = "DISPOSED";
-  }
+		// Default configuration
+		this.config = config;
 
-  send(path, data, token) {
-    // Function to send a post request to the server
-    console.log("post handler", this.config);
+		// Status of the handler
+		this.status = "ACTIVE";
 
-    // Return new Promise
-    return new Promise(async (resolve, reject) => {
-      // If the object is disposed then reject
-      if (this.status === "DISPOSED")
-        return reject({
-          code: "DISPOSED",
-        });
+  	}
 
-      // Get the URL
-      const url = `${this.config.url}${path ? path : "/"}?apiKey=${this.config.apiKey}`;
+	dispose() {
 
-      // Setup cookie
-      var cookie = "";
+		// Set the status to dispose
+		this.status = "DISPOSED";
 
-      // Get cookie
-      cookie = token || this.config.token || "";
+	}
 
-      // Set default headers
-      var headers = {
-        authorization: cookie,
-      };
+	send(path, data, token) {
 
-      // Stringify Data and attach to body
-      var body = JSON.stringify(data);
+		// Function to send a post request to the server
+		// console.trace(this.config);
 
-      // Set Appropriate headers
-      // to represent data type
-      headers["content-type"] = "application/json";
+		// Return new Promise
+		return new Promise(async (resolve, reject) => {
 
-      // Generate signature
-      headers["gt-otp"] = totp(encode(this.config.secretKey));
+			// If the object is disposed then reject
+			if (this.status === "DISPOSED")
+				
+				return reject({
+					code: "DISPOSED",
+				});
 
-      // const options = { Promise, XMLHttpRequest };
+			// Get the URL
+			const url = `${this.config.url}${path ? path : "/"}?apiKey=${this.config.apiKey}`;
 
-      const { fetch, Request, Response, Headers } = fetchPonyfill();
+			// Setup cookie
+			var cookie = "";
 
-      // In a try catch
-      try {
-        // Send Request
-        var res = await fetch(url, {
-          method: "POST", // Request is of Type Post
-          mode: "cors", // Cross Origin is the Type
-          body: body, // Data
-          credentials: "include", // Do Send the Credentials
-          SameSite: "none",
-          headers: headers,
-        });
+			// Get cookie
+			cookie = token || this.config.token || "";
 
-        // Then convert the response
-        // to json
-        res = await res.json();
+			// Set default headers
+			var headers = {
+				authorization: cookie,
+			};
 
-        // Resolve
-        resolve(res);
-      } catch (error) {
-        // Error
-        reject({
-          code: "CONNECTION-REFUSED",
-        });
-      }
-    });
-  }
+			// Stringify Data and attach to body
+			var body = JSON.stringify(data);
+
+			// Set Appropriate headers
+			// to represent data type
+			headers["content-type"] = "application/json";
+
+			// Generate signature
+			headers["gt-otp"] = totp(encode(this.config.secretKey));
+
+			// const options = { Promise, XMLHttpRequest };
+
+			const { fetch } = fetchPonyfill();
+
+			// In a try catch
+			try {
+				// Send Request
+				var res = await fetch(url, {
+
+					method: "POST", // Request is of Type Post
+					mode: "cors", // Cross Origin is the Type
+					body: body, // Data
+					credentials: "include", // Do Send the Credentials
+					SameSite: "none",
+					headers: headers,
+
+				});
+
+				// Then convert the response
+				// to json
+				res = await res.json();
+
+				// Resolve
+				resolve(res);
+			} 
+			catch (error) {
+
+				// Error
+				reject({
+					code: "CONNECTION-REFUSED",
+				});
+
+			}
+
+		});
+	}
 }
+
 export default post;

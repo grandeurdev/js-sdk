@@ -8,212 +8,249 @@
 
 // Class
 class auth {
-  // Constructor
-  constructor(handlers) {
-    // Configuration
-    this.handlers = handlers;
-    this.post = handlers.post;
-    this.duplex = handlers.duplex;
-  }
 
-  async login(email, password) {
-    if (typeof window === "undefined") {
-      // DEPRECATION WARNING
-      console.warn("The Login function is deprecated and will be removed in a future version. Get auth token from Grandeur Dashboard and use the token() function.");
-    } else {
-      // This function sends "login a user" request with required data to the server
-      // Submit the request and wait for request to be processed
-      var res = await this.post.send("/auth/login", { email: email, password: password });
+	// Constructor
+	constructor(handlers) {
 
-      // then if the login process completed successfully
-      if (res.code === "AUTH-ACCOUNT-LOGGEDIN") {
-        // Then we will set the token to the local storage
-        if (typeof window !== "undefined") {
-          localStorage.setItem(`grandeur-auth-${this.post.config.apiKey}`, res.token);
-        }
+		// Configuration
+		this.post = handlers.post;
+		this.duplex = handlers.duplex;
 
-        this.post.config.token = res.token;
-      }
+	}
 
-      // Resolve promise
-      return res;
-    }
-  }
+	async login(email, password) {
 
-  async register(email, password, displayName, phone) {
-    if (typeof window === "undefined") {
-      // DEPRECATION WARNING
-      console.warn("The Register function is deprecated and will be removed in a future version. Get auth token from Grandeur Dashboard and use the token() function.");
-    } else {
-      // This function sends "register" request with provided data to the server
-      // submit the request
-      try {
-        // Get the response
-        var res = await this.post.send("/auth/register", { email: email, password: password, displayName: displayName, phone: phone });
+		if (typeof window === "undefined")
 
-        // and return a confirmation function if token sent
-        if (res.code === "PHONE-CODE-SENT")
-          return {
-            code: res.code,
-            message: res.message,
+			// Not supported warning
+			return console.warn("The login feature is not available in node. Get auth token from Grandeur Dashboard and use the token() function.");
 
-            // Append confirm function
-            confirm: async (verificationCode) => {
-              // Confirmation function will get the token from the response object received
-              // earlier as a result of register request with user data and will get code from
-              // the user via the argument and then using the post handler function will submit
-              // the request again
-              var response = await this.post.send("/auth/register", { token: res.token, verificationCode: verificationCode });
 
-              // Check for response code
-              if (response.code === "AUTH-ACCOUNT-REGISTERED") {
-                if (typeof window !== "undefined") {
-                  localStorage.setItem(`grandeur-auth-${this.post.config.apiKey}`, res.token);
-                }
-                this.post.config.token = res.token;
-              }
+		// This function sends "login a user" request with required data to the server
+		// Submit the request and wait for request to be processed
+		var res = await this.post.send("/auth/login", { email: email, password: password });
 
-              // Resolve promise
-              return response;
-            },
-          };
-        else return res;
-      } catch (err) {
-        // Got an error then just throw it
-        throw err;
-      }
-    }
-  }
+		// then if the login process completed successfully
+		if (res.code === "AUTH-ACCOUNT-LOGGEDIN") {
 
-  async updateProfile(displayName, displayPicture, phone) {
-    // This function sends "updateProfile" request with provided data to the server
-    // submit the request
-    try {
-      // Get the response
-      var res = await this.post.send("/auth/updateProfile", { displayName: displayName, phone: phone, displayPicture: displayPicture });
+			// Then we will set the token to the local storage
+			if (typeof window !== "undefined") localStorage.setItem(`grandeur-auth-${this.post.config.apiKey}`, res.token);
 
-      // and return a confirmation function if token sent
-      if (res.code === "PHONE-CODE-SENT")
-        return {
-          code: res.code,
-          message: res.message,
+			// Update the configuration
+			this.post.config.token = res.token;
+		}
 
-          // Append confirm function
-          confirm: (verificationCode) => {
-            // Confirmation function will get the token from the response object received
-            // earlier as a result of register request with user data and will get code from
-            // the user via the argument and then using the post handler function will submit
-            // the request again
-            return this.post.send("/auth/updateProfile", { token: res.token, verificationCode: verificationCode });
-          },
-        };
-      else return res;
-    } catch (err) {
-      // Got an error then just throw it
-      throw err;
-    }
-  }
+		// Resolve promise
+		return res;
+	}
 
-  async forgotPassword(email) {
-    // This function sends "forgotPassword" request with provided data to the server
-    // submit the request
-    try {
-      // Get the response
-      var res = await this.post.send("/auth/forgotPassword", { email: email });
+	async register(email, password, displayName, phone) {
+		
+		if (typeof window === "undefined")
 
-      // and return a confirmation function if token sent
-      if (res.code === "PHONE-CODE-SENT")
-        return {
-          code: res.code,
-          message: res.message,
+			// Not supported warning
+			return console.warn("The login feature is not available in node. Get auth token from Grandeur Dashboard and use the token() function.");
 
-          // Append confirm function
-          confirm: (verificationCode, password) => {
-            // Confirmation function will get the token from the response object received
-            // earlier as a result of register request with user data and will get code from
-            // the user via the argument and then using the post handler function will submit
-            // the request again
-            return this.post.send("/auth/forgotPassword", { token: res.token, verificationCode: verificationCode, password: password });
-          },
-        };
-      else return res;
-    } catch (err) {
-      // Got an error then just throw it
-      throw err;
-    }
-  }
+		// This function sends "register" request with provided data to the server
+		// submit the request
+		try {
+			// Get the response
+			var res = await this.post.send("/auth/register", { email: email, password: password, displayName: displayName, phone: phone });
 
-  async changePassword(password) {
-    // This function sends "changePassword" request with provided data to the server
-    // submit the request
-    try {
-      // Get the response
-      var res = await this.post.send("/auth/changePassword", { password: password });
+			// and return a confirmation function if token sent
+			if (res.code === "PHONE-CODE-SENT")
 
-      // and return a confirmation function if token sent
-      if (res.code === "PHONE-CODE-SENT")
-        return {
-          code: res.code,
-          message: res.message,
+				return {
+					code: res.code,
+					message: res.message,
 
-          // Append confirm function
-          confirm: (verificationCode) => {
-            // Confirmation function will get the token from the response object received
-            // earlier as a result of register request with user data and will get code from
-            // the user via the argument and then using the post handler function will submit
-            // the request again
-            return this.post.send("/auth/changePassword", { token: res.token, verificationCode: verificationCode });
-          },
-        };
-      else return res;
-    } catch (err) {
-      // Got an error then just throw it
-      throw err;
-    }
-  }
+					// Append confirm function
+					confirm: async (verificationCode) => {
 
-  isAuthenticated() {
-    // This function sends "check if a user's logged in" request with required data to the server
-    return this.post.send("/auth/protectedpage", {});
-  }
+						// Confirmation function will get the token from the response object received
+						// earlier as a result of register request with user data and will get code from
+						// the user via the argument and then using the post handler function will submit
+						// the request again
+						var response = await this.post.send("/auth/register", { token: res.token, verificationCode: verificationCode });
 
-  ping() {
-    // This function sends "check if a user's logged in" request with required data to the server
-    return this.post.send("/auth/ping", {});
-  }
+						// Check for response code
+						if (response.code === "AUTH-ACCOUNT-REGISTERED") {
+							
+							// Set the token in localstorage for future use
+							if (typeof window !== "undefined") localStorage.setItem(`grandeur-auth-${this.post.config.apiKey}`, res.token);
 
-  logout() {
-    // This function sends "logout the user" request to the server
-    return this.post.send("/auth/logout", {});
-  }
+							// Load configuration
+							this.post.config.token = res.token;
+						}
 
-  async token(token) {
-    // And run this in try catch
-    try {
+						// Resolve promise
+						return response;
 
-      // Send ping request to the server with this token
-      var res = await this.post.send("/auth/ping", {}, token);
+					}
+				};
 
-      // If the token is valid
-      if (res.code === "AUTH-AUTHORIZED") {
+			else return res;
 
-      
-        this.post.config.token = token;
+		} 
+		catch (err) {
+			// Got an error then just throw it
+			throw err;
+		}
+  	}
 
-        // And technically, we should reconnect
-        this.duplex.disconnect(new auth(this.handlers));
+	async updateProfile(displayName, displayPicture, phone) {
 
-        // Return response
-        return res;
-      } else
-        throw {
-          code: "TOKEN-INVALID",
-        };
-    } catch (error) {
-      // Send invalid token error
-      throw error;
-    }
-  }
+		// This function sends "updateProfile" request with provided data to the server
+		// submit the request
+		try {
+
+			// Get the response
+			var res = await this.post.send("/auth/updateProfile", { displayName: displayName, phone: phone, displayPicture: displayPicture });
+
+			// and return a confirmation function if token sent
+			if (res.code === "PHONE-CODE-SENT")
+
+				return {
+					code: res.code,
+					message: res.message,
+
+					// Append confirm function
+					confirm: (verificationCode) => {
+						// Confirmation function will get the token from the response object received
+						// earlier as a result of register request with user data and will get code from
+						// the user via the argument and then using the post handler function will submit
+						// the request again
+						return this.post.send("/auth/updateProfile", { token: res.token, verificationCode: verificationCode });
+					}
+				};
+
+			else return res;
+
+		} 
+		catch (err) {
+			// Got an error then just throw it
+			throw err;
+		}
+	}
+
+	async forgotPassword(email) {
+
+		// This function sends "forgotPassword" request with provided data to the server
+		// submit the request
+		try {
+
+			// Get the response
+			var res = await this.post.send("/auth/forgotPassword", { email: email });
+
+			// and return a confirmation function if token sent
+			if (res.code === "PHONE-CODE-SENT")
+
+				return {
+					code: res.code,
+					message: res.message,
+
+					// Append confirm function
+					confirm: (verificationCode, password) => {
+						// Confirmation function will get the token from the response object received
+						// earlier as a result of register request with user data and will get code from
+						// the user via the argument and then using the post handler function will submit
+						// the request again
+						return this.post.send("/auth/forgotPassword", { token: res.token, verificationCode: verificationCode, password: password });
+					}
+				};
+
+			else return res;
+
+		} 
+		catch (err) {
+			// Got an error then just throw it
+			throw err;
+		}
+
+	}
+
+	async changePassword(password) {
+
+		// This function sends "changePassword" request with provided data to the server
+		// submit the request
+		try {
+
+			// Get the response
+			var res = await this.post.send("/auth/changePassword", { password: password });
+
+			// and return a confirmation function if token sent
+			if (res.code === "PHONE-CODE-SENT")
+
+				return {
+					code: res.code,
+					message: res.message,
+
+					// Append confirm function
+					confirm: (verificationCode) => {
+						// Confirmation function will get the token from the response object received
+						// earlier as a result of register request with user data and will get code from
+						// the user via the argument and then using the post handler function will submit
+						// the request again
+						return this.post.send("/auth/changePassword", { token: res.token, verificationCode: verificationCode });
+					}
+				};
+
+			else return res;
+
+		} 
+		catch (err) {
+			// Got an error then just throw it
+			throw err;
+		}
+	}
+
+	isAuthenticated() {
+		// This function sends "check if a user's logged in" request with required data to the server
+		return this.post.send("/auth/protectedpage", {});
+	}
+
+	ping() {
+		// This function sends "check if a user's logged in" request with required data to the server
+		return this.post.send("/auth/ping", {});
+	}
+
+	logout() {
+		// This function sends "logout the user" request to the server
+		return this.post.send("/auth/logout", {});
+	}
+
+	async token(token) {
+
+		// And run this in try catch
+		try {
+
+			// Send ping request to the server with this token
+			var res = await this.post.send("/auth/ping", {}, token);
+
+			// If the token is valid
+			if (res.code === "AUTH-AUTHORIZED") {
+
+				// Update configuration
+				this.post.config.token = token;
+
+				// And technically, we should reconnect
+				this.duplex.reconnect();
+
+				// Return response
+				return res;
+			} 
+				
+			// Or return error
+			throw {
+				code: "TOKEN-INVALID",
+			}
+
+		} 
+		catch (error) {
+			// Send invalid token error
+			throw error;
+		}
+	}
 }
 
 export default auth;
