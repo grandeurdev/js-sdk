@@ -1,23 +1,27 @@
 import grandeur from "grandeur-js";
 
-var project = grandeur.init("grandeurlesd86lu7mgj0jjpb3uw0cbb", "80a923adb1ab257fd51d388a34fe5e03351bd44c2e239bc621d2b064846b43c0");
+const apiKey = "grandeurlemun7a206ln0jfy719ce9bn";
+const secretKey = "8476d264831a131260b344f78b2604b4764c96798906e54bee2054ed9460a29a";
+const token = "67f8e78dd380a3c41395159440775a344d437a8400dcb7f3790528431ec17195";
 
-var deviceID = "devicelesd875d7mgp0jjp6wic58io";
+// Initialization of the project
+var project = grandeur.init(apiKey, secretKey);
 
-// let email = "ahmadbutt4260@gmail.com";
-// let password = "pakistan606";
+var deviceID = "devicelemun7sb06lp0jfy43k32een";
 
-var res = await project.auth().token("7ac7e18b7ecd7440fb70db6b731a736274ca0f976add7f697296d07d5f8376c4");
-
-// var res = await project.auth().login(email, password);
-
-// var res = await project.auth().register(email, password, "displayName", "phone");
+// Authenticating the user via token
+var res = await project.auth().token(token);
 
 var devices = project.devices();
 
-// console.log(process.env);
+if (res.code === "AUTH-AUTHORIZED") {
+	// To get Device Data
+	await devices.device(deviceID).get("");
 
-// project.onConnection((update) => console.log(update));
-
-// console.log(res);
-console.log(await devices.device(deviceID).get(""));
+	// To Set Device Data
+	await project
+		.devices()
+		.device(deviceID)
+		.data()
+		.set("");
+}
