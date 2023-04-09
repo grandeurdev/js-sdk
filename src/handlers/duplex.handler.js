@@ -7,7 +7,7 @@ import { EventEmitter } from "events";
 import WebSocket from "isomorphic-ws";
 
 // Import cuid because we will use it to generate packet ids
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 
 // Extend the event emitter class
 class BaseEventEmitter extends EventEmitter {
@@ -449,7 +449,7 @@ class duplex {
 			if (this.status !== "SIGNATURE-INVALID" && this.status !== "DISPOSED") {
 
 				// Generate unique ID for the request
-				var id = cuid();
+				var id = createId();
 
 				// Setup packet
 				var packet = {
@@ -529,7 +529,7 @@ class duplex {
 			if (this.status !== "SIGNATURE-INVALID" && this.status !== "DISPOSED") {
 
 				// Generate unique ID for the request
-				var id = cuid();
+				var id = createId();
 
 				var packet = {
 					header: {

@@ -113,10 +113,8 @@ import grandeur from "grandeur-js";
 This will give you access to the global `Grandeur` object, through which you can initialize the SDK and get a reference to your project as shown below
 
 ```javascript
-// With global Grandeur object,
-// you can simply initialize the SDK
-// with your API key and get reference
-// to your project
+// The init the SDK with API key 
+// and get reference to your project
 var project = grandeur.init("API-KEY", "SECRET-KEY");
 ```
 
@@ -124,16 +122,4 @@ For User Authorization, generate a token from Grandeur Dahsboard and use as show
 
 ```js
 var response = await project.auth().token("AUTH_TOKEN");
-```
-
-To Fetch device information:
-
-```js
-var {device} = await devices.device(deviceID).get("");
-```
-
-To Set device information:
-
-```js
-await project.devices().device(deviceID).data().set("");
 ```

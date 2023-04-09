@@ -6,11 +6,11 @@ import { Grandeur } from "grandeur-js/react";
 import { BrowserRouter } from "react-router-dom";
 
 const apiKey = "ApiKey";
-const token = "SecretKey";
+const secretKey = "SecretKey";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-	<Grandeur apiKey={apiKey} secretKey={token}>
+	<Grandeur apiKey={apiKey} secretKey={secretKey}>
 		<BrowserRouter>
 			<App />
 		</BrowserRouter>

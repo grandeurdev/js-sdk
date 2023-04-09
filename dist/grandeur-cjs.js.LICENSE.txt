@@ -6,3 +6,5 @@
  * @copyright Chen, Yi-Cyuan 2015-2018
  * @license MIT
  */
+
+/*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
