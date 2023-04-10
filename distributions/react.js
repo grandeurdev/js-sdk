@@ -27,9 +27,7 @@ const GrandeurContext = React.createContext(null);
 // Default Grandeur Provider Component
 export function Grandeur(props) {
   // Pass the plugins to sdk
-  grandeur.extend
-    ? grandeur.extend(props.extensions ? props.extensions : {})
-    : null;
+  grandeur.extend ? grandeur.extend(props.extensions ? props.extensions : {}) : null;
 
   // init
   var project = grandeur.init(props.apiKey, props.secretKey);
@@ -39,15 +37,7 @@ export function Grandeur(props) {
     grandeur: project,
   };
 
-  return (
-    <GrandeurContext.Provider value={state.grandeur}>
-      {props.children}
-    </GrandeurContext.Provider>
-  );
+  return <GrandeurContext.Provider value={state.grandeur}>{props.children}</GrandeurContext.Provider>;
 }
 
-export const withGrandeur = (Component) => (props) => (
-  <GrandeurContext.Consumer>
-    {(grandeur) => <Component {...props} grandeur={grandeur} />}
-  </GrandeurContext.Consumer>
-);
+export const withGrandeur = (Component) => (props) => <GrandeurContext.Consumer>{(grandeur) => <Component {...props} grandeur={grandeur} />}</GrandeurContext.Consumer>;

@@ -3,10 +3,10 @@ import { Grandeur } from "grandeur-js/react";
 
 export default function App({ Component, pageProps }) {
   const apiKey = "ApiKey";
-  const token = "SecretKey";
+  const secretKey = "SecretKey";
 
   return (
-    <Grandeur apiKey={apiKey} secretKey={token}>
+    <Grandeur apiKey={apiKey} secretKey={secretKey}>
       <Component {...pageProps} />
     </Grandeur>
   );

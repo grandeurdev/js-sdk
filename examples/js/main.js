@@ -1,6 +1,6 @@
 //   @file: main.js: Initialize the SDK and get a reference to the project
 
-var project = grandeur.init("ApiKey", "SecretKey");
+var project = grandeur.init("APIKey", "SecretKey");
 
 // Device ID
 var deviceID = "DeviceId";

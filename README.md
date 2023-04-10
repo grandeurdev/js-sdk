@@ -1,12 +1,11 @@
 Grandeur client for browsers. Check full docs at https://docs.grandeur.dev
 
-[![NPM](https://img.shields.io/npm/v/grandeur-js.svg)](https://www.npmjs.com/package/grandeur-js)
-[![Downloads/week](https://img.shields.io/npm/dw/grandeur-js.svg)](https://npmjs.org/package/grandeur-js.svg)
-[![License](https://img.shields.io/npm/l/grandeur-js.svg)](https://github.com/grandeurtech/js-sdk/blob/master/package.json)
+[![NPM](https://img.shields.io/npm/v/grandeur-js.svg)](https://www.npmjs.com/package/grandeur-js) [![Downloads/week](https://img.shields.io/npm/dw/grandeur-js.svg)](https://npmjs.org/package/grandeur-js.svg) [![License](https://img.shields.io/npm/l/grandeur-js.svg)](https://github.com/grandeurtech/js-sdk/blob/master/package.json)
 
 Here is how you can integrate Grandeur in your project.
 
-### React
+## React
+
 Just simply download the package from npm and use it in your react project
 
 ```bash
@@ -27,14 +26,14 @@ import ReactDOM from "react-dom";
 import App from "./app";
 
 // and Import Grandeur Component
-import { Grandeur } from "grandeur-js/react";
+import {Grandeur} from "grandeur-js/react";
 
 // Render app
 const page = (
-  <Grandeur apiKey="YOUR-APIKEY" secretKey="SECRET-KEY" credentials={credentials}>
-    {/* Your app code*/}
-    <App />
-  </Grandeur>
+	<Grandeur apiKey="YOUR-APIKEY" secretKey="SECRET-KEY" credentials={credentials}>
+		{/* Your app code*/}
+		<App />
+	</Grandeur>
 );
 
 // Finally render
@@ -48,41 +47,42 @@ Then inside your `app.js`
 // The App Component
 
 // Libraries
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 // Import Grandeur HOC
-import { withGrandeur } from "grandeur-js/react";
+import {withGrandeur} from "grandeur-js/react";
 
 // Component
 class App extends Component {
-  // Constructor
-  constructor(props) {
-    super(props);
+	// Constructor
+	constructor(props) {
+		super(props);
 
-    // State of the Component
-    this.state = {};
-  }
+		// State of the Component
+		this.state = {};
+	}
 
-  componentDidMount() {
-    // Component is Mounted
-    // get reference to the grandeur
-    // through props. Which can be used to
-    // access all the features of Grandeur
-    var project = this.props.grandeur;
-  }
+	componentDidMount() {
+		// Component is Mounted
+		// get reference to the grandeur
+		// through props. Which can be used to
+		// access all the features of Grandeur
+		var project = this.props.grandeur;
+	}
 
-  // Render
-  render() {
-    // Render the Component
-    return <p>Hello World</p>;
-  }
+	// Render
+	render() {
+		// Render the Component
+		return <p>Hello World</p>;
+	}
 }
 
 // Export the Component after wrapping in HOC
 export default withGrandeur(App);
 ```
 
-### Browser
+## Browser
+
 Just simply drop the link of JavaScript SDK in a script tag inside your web app using our [CDN](https://unpkg.com/grandeur-js).
 
 ```html
@@ -101,3 +101,25 @@ var project = grandeur.init("API-KEY", "SECRET-KEY");
 ```
 
 Check full sdk references from [documentation](https://docs.grandeur.dev/references/client-sdk/installation). Or check full [examples](https://github.com/grandeurdev/js-sdk/tree/master/examples).
+
+## Node.js
+
+After downloading the package from npm, you can use it in your node project.
+
+```js
+import grandeur from "grandeur-js";
+```
+
+This will give you access to the global `Grandeur` object, through which you can initialize the SDK and get a reference to your project as shown below
+
+```javascript
+// The init the SDK with API key 
+// and get reference to your project
+var project = grandeur.init("API-KEY", "SECRET-KEY");
+```
+
+For User Authorization, generate a token from Grandeur Dahsboard and use as shown below.
+
+```js
+var response = await project.auth().token("AUTH_TOKEN");
+```
