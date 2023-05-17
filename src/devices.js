@@ -53,6 +53,139 @@ class data {
   }
 }
 
+class stream {
+  // Constructor
+  constructor(handlers, deviceID, query) {
+    // Configuration
+    this.post = handlers.post;
+    this.duplex = handlers.duplex;
+
+    // Store the deviceID and query
+    this.deviceID = deviceID;
+    this.query = query;
+  }
+
+  get(path) {
+    // Push path property to the 'query' array
+    this.query.push({
+      path: path
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  to(condition) {
+    // Method to add "to" filter to
+    // the query and return a new pipeline
+    this.query.push({
+      type: "to",
+      condition: condition,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  from(condition) {
+    // Method to add "from" filter to
+    // the query and return a new pipeline
+    this.query.push({
+      type: "from",
+      condition: condition,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  gt(condition) {
+    // Method to add "gt" filter to
+    // the query and return a new pipeline
+    this.query.push({
+      type: "gt",
+      condition: condition,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  lt(condition) {
+    // Method to add "lt" filter to
+    // the query and return a new pipeline
+    this.query.push({
+      type: "lt",
+      condition: condition,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  gte(condition) {
+    // Method to add "gte" filter to
+    // the query and return a new pipeline
+    this.query.push({
+      type: "gte",
+      condition: condition,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  lte(condition) {
+    // Method to add "lte" filter to
+    // the query and return a new pipeline
+    this.query.push({
+      type: "lte",
+      condition: condition,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  eq(condition) {
+    // Method to add "eq" filter to
+    // the query and return a new pipeline
+    this.query.push({
+      type: "eq",
+      condition: condition,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  sort(specs) {
+    // Method to add sort stage to
+    // the query and return a new stream
+    this.query.push({
+      type: "sort",
+      specs: specs,
+    });
+
+    // Return a new instance of the 'stream' class
+    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.query);
+  }
+
+  execute(nPage) {
+    // Method to finally send request
+    // to execute the stream
+    // Setup payload
+    var payload = {
+      deviceID: this.deviceID,
+      nPage: nPage,
+      query: this.query,
+    };
+
+    // Place request
+    return this.duplex.send("/device/data/stream", payload);
+  }
+}
+
 //Class
 class device {
   // Constructor
@@ -176,5 +309,11 @@ class devices {
     // Operation is required to be performed on a device
     return new device({ post: this.post, duplex: this.duplex }, deviceID);
   }
+
+  stream(deviceID) {
+    // Operation is required to be performed on a device
+    return new stream({ post: this.post, duplex: this.duplex }, deviceID, []);
+  }
+
 }
 export default devices;
