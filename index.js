@@ -10,8 +10,8 @@ import duplex from "./src/handlers/duplex.handler";
 // The main config object to stores the
 // base urls of the Grandeur Server
 const options = {
-	url: "https://api.grandeur.tech",
-	node: "wss://api.grandeur.tech",
+	url: "https://butt.dev.api.grandeur.tech",
+	node: "wss://butt.dev.api.grandeur.tech",
 };
 
 // Object will store the extensions which

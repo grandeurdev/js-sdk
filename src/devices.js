@@ -14,18 +14,6 @@ class data {
     this.deviceID = deviceID;
   }
 
-  get(path) {
-    // Method to list all devices paired to user ID
-    // Setup payload
-    var payload = {
-      deviceID: this.deviceID,
-      path: path,
-    };
-
-    // Place request
-    return this.duplex.send("/device/data/get", payload);
-  }
-
   set(path, data) {
     // Method to count all online devices paired to user ID
     // Setup payload
@@ -52,170 +40,111 @@ class data {
     return this.duplex.subscribe("data", payload, callback);
   }
 
-  stream(path) {
-    // Operation is required to be performed on a device
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, path, []);
+  get(path) {
+    if (path) {
+      const send = (query, nPage) => {
+        const payload = {
+          deviceID: this.deviceID,
+          path: path,
+          nPage: nPage,
+          query: query,
+        };
+
+
+
+        // Send the request and return a promise
+        return this.duplex.send("/device/data/get", payload);
+      }
+
+      return new pipeline(send, [], 1);
+    }
+    // else {
+
+    //   // If no path is provided, perform the default get operation
+    //   var payload = {
+    //     deviceID: this.deviceID,
+    //     path: path,
+    //   };
+
+    //   // Place the request and return the result
+    //   return this.duplex.send("/device/data/get", payload);
+    // }
   }
 }
 
-class stream {
+class pipeline {
   // Constructor
-  constructor(handlers, deviceID, path, query) {
+  constructor(execute, query, nPage) {
     // Configuration
-    this.post = handlers.post;
-    this.duplex = handlers.duplex;
-
-    // Store the deviceID, path and query
-    this.deviceID = deviceID;
-    this.path = path;
-    this.query = query;
+    this.query = query || [];
+    this.nPage = nPage;
+    this.execute = execute;
   }
 
   to(condition) {
-    // Method to add "to" filter to
-    // the query and return a new pipeline
-    this.query.push(
-      {
-        type: "to",
-        condition: condition,
-      }
-    );
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add "to" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "to", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
   from(condition) {
-    // Method to add "from" filter to
-    // the query and return a new pipeline
-    this.query.push(
-      {
-        type: "from",
-        condition: condition,
-      }
-    );
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add "from" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "from", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
   gt(condition) {
-    // Method to add "gt" filter to
-    // the query and return a new pipeline
-    this.query.push({
-      type: "gt",
-      condition: condition,
-    });
-
-    // console.log(this.query);
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add "gt" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "gt", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
   lt(condition) {
-    // Method to add "lt" filter to
-    // the query and return a new pipeline
-    this.query.push(
-      {
-        type: "lt",
-        condition: condition,
-      }
-    );
-
-    console.log(this.query);
-
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add "lt" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "lt", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
   gte(condition) {
-    // Method to add "gte" filter to
-    // the query and return a new pipeline
-    this.query.push(
-      {
-        type: "gte",
-        condition: condition,
-      }
-    );
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add "gte" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "gte", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
   lte(condition) {
-    // Method to add "lte" filter to
-    // the query and return a new pipeline
-    this.query.push(
-      {
-        type: "lte",
-        condition: condition,
-      }
-    );
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add "lte" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "lte", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
   eq(condition) {
-    // Method to add "eq" filter to
-    // the query and return a new pipeline
-    this.query.push(
-      {
-        type: "eq",
-        condition: condition,
-      }
-    );
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add "eq" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "eq", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
   sort(specs) {
-    // Method to add sort stage to
-    // the query and return a new stream
-    this.query.push(
-      {
-        type: "sort",
-        specs: specs,
-      }
-    );
-
-    // Return a new instance of the 'stream' class
-    return new stream({ post: this.post, duplex: this.duplex }, this.deviceID, this.path, this.query);
+    // Method to add sort stage to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "sort", specs }];
+    return new pipeline(this.execute, newQuery, this.nPage);
   }
 
-  get(nPage) {
-    // Method to finally send request
-    // to execute the stream
-    // Setup payload
-    var payload = {
-      deviceID: this.deviceID,
-      path: this.path,
-      nPage: nPage,
-      query: this.query,
-    };
-
-    // Place request
-    return this.duplex.send("/device/data/stream", payload);
+  page(nPage) {
+    // Method to set the page number for pagination and return a new pipeline
+    return new pipeline(this.execute, this.query, nPage);
   }
 
-  delete(nPage) {
-    // Method to finally send request
-    // to execute the stream
-    // Setup payload
-    var payload = {
-      deviceID: this.deviceID,
-      path: this.path,
-      nPage: nPage,
-      query: this.query,
-    };
+  then() {
+    // Setup the payload
+    return new Promise(async (resolve, reject) => {
 
-    // Place request
-    return this.duplex.send("/device/data/deletestream", payload);
+      var res = await this.execute(this.query, this.nPage);
+      resolve(res);
+
+    })
   }
 }
+
 
 //Class
 class device {

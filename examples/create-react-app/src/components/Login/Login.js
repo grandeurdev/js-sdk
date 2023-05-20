@@ -20,8 +20,8 @@ function Login(props) {
   async function login(event) {
     event.preventDefault();
 
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
+    const email = "ahmadbutt4260@gmail.com";
+    const password = "pakistan";
 
     var res = await props.grandeur.auth().login(email, password);
 

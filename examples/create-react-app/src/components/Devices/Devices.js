@@ -7,7 +7,7 @@ import ButtonOn from "../../buttonOn.svg";
 import { useNavigate } from "react-router-dom";
 
 function Device(props) {
-	const deviceID = "DeviceID";
+	const deviceID = "devicelhujid1lhxud0jfq2qc8a78e";
 	const navigate = useNavigate();
 	const [deviceName, setDeviceNameState] = useState("");
 	const [data, setButtonState] = useState(0);
@@ -30,21 +30,26 @@ function Device(props) {
 
 			if (device.name) setDeviceNameState(device.name);
 
-			var { data } = await devices
+			var data = await devices
 				.device(deviceID)
 				.data()
-				.get("led");
+				.get("led").gte(1);
+
+
+			console.log(data);
+			return
+			// debugger
 
 			data ? setButtonState(data) : setButtonState(0);
 
-			devices
-				.device(deviceID)
-				.data()
-				.on("led", (path, state) => {
-					setButtonState(state);
-				});
+			// devices
+			// 	.device(deviceID)
+			// 	.data()
+			// 	.on("led", (path, state) => {
+			// 		setButtonState(state);
+			// 	});
 		}
-	});
+	}, []);
 
 	async function updateState() {
 		//  Use the devices class of sdk to report the upgrade
