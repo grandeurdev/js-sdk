@@ -7,7 +7,7 @@ import ButtonOn from "../../buttonOn.svg";
 import { useNavigate } from "react-router-dom";
 
 function Device(props) {
-	const deviceID = "devicelhujid1lhxud0jfq2qc8a78e";
+	const deviceID = "DeviceID";
 	const navigate = useNavigate();
 	const [deviceName, setDeviceNameState] = useState("");
 	const [data, setButtonState] = useState(0);
