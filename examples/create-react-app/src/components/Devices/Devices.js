@@ -36,18 +36,14 @@ function Device(props) {
 				.get("led").gte(1);
 
 
-			console.log(data);
-			return
-			// debugger
-
 			data ? setButtonState(data) : setButtonState(0);
 
-			// devices
-			// 	.device(deviceID)
-			// 	.data()
-			// 	.on("led", (path, state) => {
-			// 		setButtonState(state);
-			// 	});
+			devices
+				.device(deviceID)
+				.data()
+				.on("led", (path, state) => {
+					setButtonState(state);
+				});
 		}
 	}, []);
 

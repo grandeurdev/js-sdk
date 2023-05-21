@@ -58,17 +58,33 @@ class data {
 
       return new pipeline(send, [], 1);
     }
-    // else {
+    else {
 
-    //   // If no path is provided, perform the default get operation
-    //   var payload = {
-    //     deviceID: this.deviceID,
-    //     path: path,
-    //   };
+      // If no path is provided, perform the default get operation
+      var payload = {
+        deviceID: this.deviceID,
+        path: path,
+      };
 
-    //   // Place the request and return the result
-    //   return this.duplex.send("/device/data/get", payload);
-    // }
+      // Place the request and return the result
+      return this.duplex.send("/device/data/get", payload);
+    }
+  }
+
+  delete(path) {
+    const send = (query, nPage) => {
+      const payload = {
+        deviceID: this.deviceID,
+        path: path,
+        nPage: nPage,
+        query: query,
+      };
+
+      // Send the request and return a promise
+      return this.duplex.send("/device/data/delete", payload);
+    }
+
+    return new pipeline(send, [], 1);
   }
 }
 
@@ -134,14 +150,21 @@ class pipeline {
     return new pipeline(this.execute, this.query, nPage);
   }
 
-  then() {
-    // Setup the payload
+  then(onFulfilled, onRejected) {
     return new Promise(async (resolve, reject) => {
-
-      var res = await this.execute(this.query, this.nPage);
-      resolve(res);
-
-    })
+      try {
+        const result = await this.execute(this.query, this.nPage);
+        resolve(result);
+        if (onFulfilled) {
+          onFulfilled(result);
+        }
+      } catch (error) {
+        reject(error);
+        if (onRejected) {
+          onRejected(error);
+        }
+      }
+    });
   }
 }
 
