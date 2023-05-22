@@ -1,7 +1,6 @@
 // Support classes
 import auth from "./src/auth";
 import devices from "./src/devices";
-import datastore from "./src/datastore";
 
 // Handlers
 import post from "./src/handlers/post.handler";
@@ -65,7 +64,6 @@ export function init(apiKey, secretKey, overrides) {
 		// Classes
 		auth: () => new auth(handlers),
 		devices: () => new devices(handlers),
-		datastore: () => new datastore(handlers),
 
 		// Include plugins
 		...plugins,

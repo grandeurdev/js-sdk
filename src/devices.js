@@ -14,18 +14,6 @@ class data {
     this.deviceID = deviceID;
   }
 
-  get(path) {
-    // Method to list all devices paired to user ID
-    // Setup payload
-    var payload = {
-      deviceID: this.deviceID,
-      path: path,
-    };
-
-    // Place request
-    return this.duplex.send("/device/data/get", payload);
-  }
-
   set(path, data) {
     // Method to count all online devices paired to user ID
     // Setup payload
@@ -51,7 +39,162 @@ class data {
     // Place request
     return this.duplex.subscribe("data", payload, callback);
   }
+
+  get(path) {
+    // Method to get device data from server
+
+    // If user want data on a specific path
+    // Then return query builder interface
+    if (path) {
+
+      // Function to send request to cloud
+      const send = (query, nPage) => {
+        const payload = {
+          deviceID: this.deviceID,
+          path: path,
+          nPage: nPage,
+          query: query,
+        };
+
+        // Send the request and return a promise
+        return this.duplex.send("/device/data/get", payload);
+      }
+
+      // Return query builder
+      return new pipeline(send, [], 1);
+    }
+    else {
+
+      // If no path is provided, perform the default get operation
+      var payload = {
+        deviceID: this.deviceID,
+        path: path,
+      };
+
+      // Place the request and return the result
+      return this.duplex.send("/device/data/get", payload);
+    }
+  }
+
+  delete(path) {
+    // Method to delete data on from server
+
+    // Function to handle excution of pipeline
+    const send = (query, nPage) => {
+      const payload = {
+        deviceID: this.deviceID,
+        path: path,
+        nPage: nPage,
+        query: query,
+      };
+
+      // Send the request and return a promise
+      return this.duplex.send("/device/data/delete", payload);
+    }
+
+    // Return new pipeline by default
+    return new pipeline(send, [], 1);
+
+  }
 }
+
+class pipeline {
+
+  // Constructor
+  constructor(execute, query, nPage) {
+
+    // Configuration
+    this.query = query || [];
+    this.nPage = nPage;
+    this.execute = execute;
+
+  }
+
+  to(condition) {
+    // Method to add "to" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "to", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  from(condition) {
+    // Method to add "from" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "from", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  gt(condition) {
+    // Method to add "gt" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "gt", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  lt(condition) {
+    // Method to add "lt" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "lt", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  gte(condition) {
+    // Method to add "gte" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "gte", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  lte(condition) {
+    // Method to add "lte" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "lte", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  eq(condition) {
+    // Method to add "eq" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "eq", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  sort(specs) {
+    // Method to add sort stage to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "sort", specs }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  page(nPage) {
+    // Method to set the page number for pagination and return a new pipeline
+    return new pipeline(this.execute, this.query, nPage);
+  }
+  
+  then(onFulfilled, onRejected) {
+    // Wrapper
+    // The pipeline will be automatically executed when
+    // promise will be handled
+    return new Promise(async (resolve, reject) => {
+
+      // Call the execute function
+      try {
+
+        // Send request to cloud
+        const result = await this.execute(this.query, this.nPage);
+
+        // Rsolve 
+        resolve(result);
+
+        if (onFulfilled) onFulfilled(result);
+        
+      } 
+      catch (error) {
+
+        // In case of execution failure
+        // Reject
+        reject(error);
+        
+        if (onRejected) onRejected(error);
+
+      }
+      
+    });
+  }
+}
+
 
 //Class
 class device {
