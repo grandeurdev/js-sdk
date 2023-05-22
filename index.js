@@ -22,11 +22,13 @@ var extensions = {};
 // the object
 export function init(apiKey, secretKey, overrides) {
 
+	// Fetch token from storage and add it to context
 	if (typeof window !== "undefined") var token = localStorage.getItem(`grandeur-auth-${apiKey}`);
 
 	// Returns a Object with a refernce to
 	// Grandeur Supported Classes
 	const config = { apiKey, secretKey, token: overrides?.token || token, url: overrides?.url || options.url, node: overrides?.node || options.node };
+	
 	// Post Handler
 	const postHandler = new post(config);
 

@@ -276,11 +276,6 @@ class duplex {
 
 			} 
 			else {
-				// Got response for a task
-				if (data.payload)
-
-					// Strip message from payload
-					delete data.payload.message;
 
 				// Fire event
 				this.tasks.emit(data.header.id, data.payload);
