@@ -20,7 +20,7 @@ class post {
 		// Status of the handler
 		this.status = "ACTIVE";
 
-  	}
+	}
 
 	dispose() {
 
@@ -39,7 +39,7 @@ class post {
 
 			// If the object is disposed then reject
 			if (this.status === "DISPOSED")
-				
+
 				return reject({
 					code: "DISPOSED",
 				});
@@ -92,7 +92,7 @@ class post {
 
 				// Resolve
 				resolve(res);
-			} 
+			}
 			catch (error) {
 
 				// Error

@@ -30,7 +30,6 @@ function Device(props) {
 
 			if (device.name) setDeviceNameState(device.name);
 
-
 			//Setting the device data
 			await devices
 				.device(deviceID)
@@ -44,6 +43,7 @@ function Device(props) {
 				.data()
 				.get();
 
+
 			data ? setButtonState(data) : setButtonState(0);
 
 			devices
@@ -53,7 +53,7 @@ function Device(props) {
 					setButtonState(state);
 				});
 		}
-	});
+	}, []);
 
 	async function updateState() {
 		//  Use the devices class of sdk to report the upgrade

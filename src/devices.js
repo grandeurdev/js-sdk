@@ -35,6 +35,7 @@ class data {
           data: dataArr,
         };
 
+
         // Place request
         return this.duplex.send("/device/data/set", payload);
       }
@@ -83,6 +84,7 @@ class data {
         return this.duplex.send("/device/data/get", payload);
       }
 
+      // Return query builder
       return new pipeline(send, [], 1);
     }
     else {
@@ -91,6 +93,7 @@ class data {
       var payload = {
         deviceID: this.deviceID,
         path: '',
+
       };
 
       // Place the request and return the result
@@ -99,6 +102,9 @@ class data {
   }
 
   delete(path) {
+    // Method to delete data on from server
+
+    // Function to handle excution of pipeline
     const send = (query, nPage) => {
       const payload = {
         deviceID: this.deviceID,
@@ -111,17 +117,24 @@ class data {
       return this.duplex.send("/device/data/delete", payload);
     }
 
+
+    // Return new pipeline by default
     return new pipeline(send, [], 1);
   }
 }
 
 class pipeline {
+
+
   // Constructor
   constructor(execute, query, nPage) {
+
+
     // Configuration
     this.query = query || [];
     this.nPage = nPage;
     this.execute = execute;
+
   }
 
   to(condition) {
@@ -197,28 +210,45 @@ class pipeline {
   }
 
 
+
   page(nPage) {
     // Method to set the page number for pagination and return a new pipeline
     return new pipeline(this.execute, this.query, nPage);
   }
 
+  
   then(onFulfilled, onRejected) {
+    // Wrapper
+    // The pipeline will be automatically executed when
+    // promise will be handled
     return new Promise(async (resolve, reject) => {
+
+      // Call the execute function
       try {
+
+        // Send request to cloud
         const result = await this.execute(this.query, this.nPage);
+
+        // Rsolve 
         resolve(result);
-        if (onFulfilled) {
-          onFulfilled(result);
-        }
-      } catch (error) {
+
+        if (onFulfilled) onFulfilled(result);
+        
+      } 
+      catch (error) {
+
+        // In case of execution failure
+        // Reject
         reject(error);
-        if (onRejected) {
-          onRejected(error);
-        }
+        
+        if (onRejected) onRejected(error);
+
       }
+      
     });
   }
 }
+
 
 //Class
 class device {

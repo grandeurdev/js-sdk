@@ -1,7 +1,6 @@
 // Support classes
 import auth from "./src/auth";
 import devices from "./src/devices";
-import datastore from "./src/datastore";
 
 // Handlers
 import post from "./src/handlers/post.handler";
@@ -22,12 +21,13 @@ var extensions = {};
 // the object
 export function init(apiKey, secretKey, overrides) {
 
-
+	// Fetch token from storage and add it to context
 	if (typeof window !== "undefined") var token = localStorage.getItem(`grandeur-auth-${apiKey}`);
 
 	// Returns a Object with a refernce to
 	// Grandeur Supported Classes
 	const config = { apiKey, secretKey, token: overrides?.token || token, url: overrides?.url || options.url, node: overrides?.node || options.node };
+
 	// Post Handler
 	const postHandler = new post(config);
 
@@ -64,7 +64,6 @@ export function init(apiKey, secretKey, overrides) {
 		// Classes
 		auth: () => new auth(handlers),
 		devices: () => new devices(handlers),
-		datastore: () => new datastore(handlers),
 
 		// Include plugins
 		...plugins,
