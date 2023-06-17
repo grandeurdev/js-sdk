@@ -30,10 +30,12 @@ function Device(props) {
 
 			if (device.name) setDeviceNameState(device.name);
 
+			await devices.device(deviceID).data().set("voltage", 1, "temperature", 1, "power", 1, "led", 1, "current", 1)
+
 			var data = await devices
 				.device(deviceID)
 				.data()
-				.get("led").gte(1);
+				.get();
 
 
 			data ? setButtonState(data) : setButtonState(0);

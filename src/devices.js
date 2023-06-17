@@ -14,18 +14,49 @@ class data {
     this.deviceID = deviceID;
   }
 
-  set(path, data) {
-    // Method to count all online devices paired to user ID
-    // Setup payload
-    var payload = {
-      deviceID: this.deviceID,
-      path: path,
-      data: data,
-    };
+  set(...args) {
+    // Check the number of arguments
+    if (args.length > 2) {
+      if (args.length % 2 === 0) {
 
-    // Place request
-    return this.duplex.send("/device/data/set", payload);
+
+        // Multiple paths and data
+        const paths = [];
+        const dataArr = [];
+
+        // Extract paths and data into separate arrays
+        for (let i = 0; i < args.length; i += 2) {
+          paths.push(args[i]);
+          dataArr.push(args[i + 1]);
+        }
+
+        // Setup payload
+        const payload = {
+          deviceID: this.deviceID,
+          path: paths,
+          data: dataArr,
+        };
+
+        // Place request
+        return this.duplex.send("/device/data/set", payload);
+      }
+    } else {
+      // Single path and data
+      const path = args[0];
+      const data = args[1];
+
+      // Setup payload
+      const payload = {
+        deviceID: this.deviceID,
+        path: path,
+        data: data,
+      };
+
+      // Place request
+      return this.duplex.send("/device/data/set", payload);
+    }
   }
+
 
   on(path, callback) {
     // Method to get updates whenever a devices data changes
@@ -68,7 +99,7 @@ class data {
       // If no path is provided, perform the default get operation
       var payload = {
         deviceID: this.deviceID,
-        path: path,
+        path: "",
       };
 
       // Place the request and return the result
@@ -152,6 +183,30 @@ class pipeline {
     return new pipeline(this.execute, newQuery, this.nPage);
   }
 
+  min(condition) {
+    // Method to add "eq" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "min", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  max(condition) {
+    // Method to add "eq" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "max", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  sum(condition) {
+    // Method to add "eq" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "sum", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
+  avg(condition) {
+    // Method to add "eq" filter to the query and return a new pipeline
+    const newQuery = [...this.query, { type: "avg", condition }];
+    return new pipeline(this.execute, newQuery, this.nPage);
+  }
+
   sort(specs) {
     // Method to add sort stage to the query and return a new pipeline
     const newQuery = [...this.query, { type: "sort", specs }];
@@ -162,7 +217,7 @@ class pipeline {
     // Method to set the page number for pagination and return a new pipeline
     return new pipeline(this.execute, this.query, nPage);
   }
-  
+
   then(onFulfilled, onRejected) {
     // Wrapper
     // The pipeline will be automatically executed when
@@ -179,18 +234,18 @@ class pipeline {
         resolve(result);
 
         if (onFulfilled) onFulfilled(result);
-        
-      } 
+
+      }
       catch (error) {
 
         // In case of execution failure
         // Reject
         reject(error);
-        
+
         if (onRejected) onRejected(error);
 
       }
-      
+
     });
   }
 }
