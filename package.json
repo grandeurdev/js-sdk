@@ -8,7 +8,7 @@
       "import": "./dist/grandeur-react.js"
     }
   },
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Grandeur SDK from JavaScript. It can be utilized to integrate Grandeur features into web apps.",
   "main": "./dist/grandeur-cjs.js",
   "module": "./dist/grandeur-cjs.js",
