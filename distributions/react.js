@@ -25,19 +25,38 @@ import * as grandeur from "../index";
 const GrandeurContext = React.createContext(null);
 
 // Default Grandeur Provider Component
-export function Grandeur(props) {
-  // Pass the plugins to sdk
-  grandeur.extend ? grandeur.extend(props.extensions ? props.extensions : {}) : null;
+export class Grandeur extends React.Component {
 
-  // init
-  var project = grandeur.init(props.apiKey, props.secretKey);
+  // The constructor of our custom component
+  constructor(props) {
 
-  // set State
-  var state = {
-    grandeur: project,
-  };
+    // Create component
+    super(props);
 
-  return <GrandeurContext.Provider value={state.grandeur}>{props.children}</GrandeurContext.Provider>;
+    // Pass the plugins to sdk
+    grandeur.extend ? grandeur.extend(props.extensions ? props.extensions : {}) : null;
+
+    // Create state to store project
+    var project = grandeur.init(props.apiKey, props.secretKey);
+
+    // Pass to state
+    this.state = {
+
+      grandeur: project
+
+    }
+
+  }
+
+  // Render the custom component
+  render() {
+
+    // Return the user component wrapped in our context
+    return <GrandeurContext.Provider value={this.state.grandeur}>{this.props.children}</GrandeurContext.Provider>;
+
+  }
+  
 }
 
+// Export the Grandeur higher order component
 export const withGrandeur = (Component) => (props) => <GrandeurContext.Consumer>{(grandeur) => <Component {...props} grandeur={grandeur} />}</GrandeurContext.Consumer>;
