@@ -11,7 +11,7 @@ let buttonState = 0;
 
 async function start() {
   // Use sdk auth class to check auth status
-  var res = await project.auth().isAuthenticated();
+  var res = await project.user().get();
 
   //  Then if the user isn't authorized then show the login screen
   if (res.code === "AUTH-UNAUTHORIZED") {
@@ -32,7 +32,7 @@ document.getElementById("submitLogin").addEventListener("click", async () => {
   displayLoader();
 
   //  Use the sdk auth class to login the user
-  var res = await project.auth().login(email, password);
+  var res = await project.auth().login(email, { password, passwordless: false, create: false });
 
   //  If the operation was successful
   if (res.code === "AUTH-ACCOUNT-LOGGEDIN") {

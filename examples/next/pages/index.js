@@ -9,7 +9,7 @@ function Home(props) {
 
   async function start() {
     //  Use sdk auth class to check auth status
-    var res = await props.grandeur.auth().isAuthenticated();
+    var res = await props.grandeur.user().get();
 
     // Then if the user is authorized then show the Device screen
     if (res.code === "AUTH-AUTHORIZED") {

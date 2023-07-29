@@ -1,5 +1,6 @@
 // Support classes
 import auth from "./src/auth";
+import user from "./src/user";
 import devices from "./src/devices";
 
 // Handlers
@@ -54,7 +55,6 @@ export function init(apiKey, secretKey, overrides) {
 	return {
 		// Helper Method
 		isConnected: () => handlers.duplex.status === "CONNECTED",
-		onConnection: (callback) => handlers.duplex.onConnection(callback),
 		on: (callback) => handlers.duplex.onConnection(callback),
 		dispose: () => {
 			handlers.duplex.dispose();
@@ -63,6 +63,7 @@ export function init(apiKey, secretKey, overrides) {
 
 		// Classes
 		auth: () => new auth(handlers),
+		user: () => new user(handlers),
 		devices: () => new devices(handlers),
 
 		// Include plugins
