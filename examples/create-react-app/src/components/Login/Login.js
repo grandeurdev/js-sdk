@@ -9,7 +9,7 @@ function Login(props) {
 
   async function start() {
     /** Use sdk auth class to check auth status */
-    var res = await props.grandeur.auth().isAuthenticated();
+    var res = await props.grandeur.user().get();
 
     /** Then if the user isn't authorized then show the login screen */
     if (res.code === "AUTH-AUTHORIZED") {

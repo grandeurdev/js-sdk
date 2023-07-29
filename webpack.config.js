@@ -13,6 +13,11 @@ const node = {
 	// Target is node enviroments
 	target: "node",
 
+	externals: {
+		bufferutil: "bufferutil",
+      	"utf-8-validate": "utf-8-validate"
+	},
+
 	// Configuration about output
 	output: {
 		path: path.resolve(__dirname, "dist"),

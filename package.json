@@ -8,7 +8,7 @@
       "import": "./dist/grandeur-react.js"
     }
   },
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Grandeur SDK from JavaScript. It can be utilized to integrate Grandeur features into web apps.",
   "main": "./dist/grandeur-cjs.js",
   "module": "./dist/grandeur-cjs.js",
@@ -36,9 +36,7 @@
     "fetch-ponyfill": "^7.1.0",
     "hi-base32": "^0.5.1",
     "isomorphic-ws": "^5.0.0",
-    "localStorage": "^1.0.4",
-    "totp-generator": "^0.0.13",
-    "ws": "^8.13.0"
+    "totp-generator": "^0.0.13"
   },
   "files": [
     "dist"

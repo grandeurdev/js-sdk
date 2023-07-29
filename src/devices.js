@@ -14,8 +14,24 @@ class data {
     this.deviceID = deviceID;
   }
 
-  set(path, data) {
+  set(path, data, ...args) {
     // Method to count all online devices paired to user ID
+
+    // Now there can be multiple path, data pairs
+    if (args.length > 0) {
+
+      // If there are additional variables required to be updated
+      var path = [path];
+      var data = [data];
+
+      // Loop over arguments and get seperate path and data array from args
+      args.forEach( (arg, index) => index % 2 === 0 ? path.push(arg) : data.push(arg) );
+
+      // Then validate that these are valid key value pairs
+      if (path.length !== data.length) return { code: "DATA-INVALID", message: "Invalid number of path and data arguments" };
+
+    }
+    
     // Setup payload
     var payload = {
       deviceID: this.deviceID,
@@ -111,59 +127,98 @@ class pipeline {
   }
 
   to(condition) {
+
     // Method to add "to" filter to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "to", condition }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "to", condition }], this.nPage);
+
   }
 
   from(condition) {
+
     // Method to add "from" filter to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "from", condition }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "from", condition }], this.nPage);
+
   }
 
   gt(condition) {
+
     // Method to add "gt" filter to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "gt", condition }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "gt", condition }], this.nPage);
+
   }
 
   lt(condition) {
+
     // Method to add "lt" filter to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "lt", condition }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "lt", condition }], this.nPage);
+
   }
 
   gte(condition) {
+
     // Method to add "gte" filter to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "gte", condition }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "gte", condition }], this.nPage);
+
   }
 
   lte(condition) {
+
     // Method to add "lte" filter to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "lte", condition }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "lte", condition }], this.nPage);
+
   }
 
   eq(condition) {
+
     // Method to add "eq" filter to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "eq", condition }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "eq", condition }], this.nPage);
+
   }
 
   sort(specs) {
+
     // Method to add sort stage to the query and return a new pipeline
-    const newQuery = [...this.query, { type: "sort", specs }];
-    return new pipeline(this.execute, newQuery, this.nPage);
+    return new pipeline(this.execute, [...this.query, { type: "sort", specs }], this.nPage);
+
+  }
+
+  min(condition) {
+
+    // Method to add "min" filter to the query and return a new pipeline
+    return new pipeline(this.execute, [...this.query, { type: "min", condition }], this.nPage);
+
+  }
+
+  max(condition) {
+
+    // Method to add "eq" filter to the query and return a new pipeline
+    return new pipeline(this.execute, [...this.query, { type: "max", condition }], this.nPage);
+
+  }
+
+  sum(condition) {
+
+    // Method to add "eq" filter to the query and return a new pipeline
+    return new pipeline(this.execute, [...this.query, { type: "sum", condition }], this.nPage);
+
+  }
+
+  avg(condition) {
+
+    // Method to add "eq" filter to the query and return a new pipeline
+    return new pipeline(this.execute, [...this.query, { type: "avg", condition }], this.nPage);
+    
   }
 
   page(nPage) {
+
     // Method to set the page number for pagination and return a new pipeline
     return new pipeline(this.execute, this.query, nPage);
+
   }
   
   then(onFulfilled, onRejected) {
+
     // Wrapper
     // The pipeline will be automatically executed when
     // promise will be handled
@@ -192,6 +247,7 @@ class pipeline {
       }
       
     });
+
   }
 }
 
