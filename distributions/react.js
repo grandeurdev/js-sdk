@@ -37,7 +37,7 @@ export class Grandeur extends React.Component {
     grandeur.extend ? grandeur.extend(props.extensions ? props.extensions : {}) : null;
 
     // Create state to store project
-    var project = grandeur.init(props.apiKey, props.secretKey);
+    var project = grandeur.init(props.apiKey, props.secretKey, props.overrides);
 
     // Pass to state
     this.state = {
